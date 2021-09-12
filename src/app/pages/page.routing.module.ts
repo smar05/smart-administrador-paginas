@@ -1,13 +1,4 @@
-import { MessagesComponent } from './main-page/messages/messages.component';
-import { DisputesComponent } from './main-page/disputes/disputes.component';
-import { SalesComponent } from './main-page/sales/sales.component';
-import { OrdersComponent } from './main-page/orders/orders.component';
-import { ProductsComponent } from './main-page/products/products.component';
-import { StoresComponent } from './main-page/stores/stores.component';
-import { SubcategoriesComponent } from './main-page/subcategories/subcategories.component';
-import { CategoriesComponent } from './main-page/categories/categories.component';
-import { UsersComponent } from './main-page/users/users.component';
-//import { HomeComponent } from './main-page/home/home.component';
+import { Error404Component } from './main-page/error404/error404.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -81,6 +72,7 @@ const routes: Routes = [
             (m) => m.MessagesModule
           ),
       },
+      { path: '**', component: Error404Component },
     ],
   },
 ];
