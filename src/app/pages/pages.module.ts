@@ -7,9 +7,10 @@ import { SharedModule } from '../shared/shared.module';
 import { HomeComponent } from './main-page/home/home.component';
 import { UsersComponent } from './main-page/users/users.component';
 import { CategoriesComponent } from './main-page/categories/categories.component';
+import { SubcategoriesComponent } from './main-page/subcategories/subcategories.component';
 
 @NgModule({
-  declarations: [MainPageComponent, HomeComponent, UsersComponent, CategoriesComponent],
+  declarations: [MainPageComponent, HomeComponent, UsersComponent, CategoriesComponent, SubcategoriesComponent],
   imports: [CommonModule, SharedModule, AppRoutingModule],
 })
 export class PagesModule {}
