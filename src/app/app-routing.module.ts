@@ -1,3 +1,4 @@
+import { UsersComponent } from './pages/main-page/users/users.component';
 import { HomeComponent } from './pages/main-page/home/home.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
 import { NgModule } from '@angular/core';
@@ -7,7 +8,10 @@ const routes: Routes = [
   {
     path: '',
     component: MainPageComponent,
-    children: [{ path: '', component: HomeComponent }],
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'users', component: UsersComponent },
+    ],
   },
 ];
 
