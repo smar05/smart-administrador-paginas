@@ -1,3 +1,4 @@
+import { CategoriesComponent } from './pages/main-page/categories/categories.component';
 import { UsersComponent } from './pages/main-page/users/users.component';
 import { HomeComponent } from './pages/main-page/home/home.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
@@ -11,6 +12,7 @@ const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'users', component: UsersComponent },
+      { path: 'categories', component: CategoriesComponent },
     ],
   },
 ];
