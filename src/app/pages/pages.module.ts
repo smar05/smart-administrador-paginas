@@ -4,7 +4,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 
 import { AppRoutingModule } from '../app-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './main-page/home/home.component';
 
 @NgModule({
   declarations: [MainPageComponent, HomeComponent],
