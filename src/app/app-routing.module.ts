@@ -1,3 +1,9 @@
+import { MessagesComponent } from './pages/main-page/messages/messages.component';
+import { DisputesComponent } from './pages/main-page/disputes/disputes.component';
+import { SalesComponent } from './pages/main-page/sales/sales.component';
+import { OrdersComponent } from './pages/main-page/orders/orders.component';
+import { ProductsComponent } from './pages/main-page/products/products.component';
+import { StoresComponent } from './pages/main-page/stores/stores.component';
 import { SubcategoriesComponent } from './pages/main-page/subcategories/subcategories.component';
 import { CategoriesComponent } from './pages/main-page/categories/categories.component';
 import { UsersComponent } from './pages/main-page/users/users.component';
@@ -15,6 +21,12 @@ const routes: Routes = [
       { path: 'users', component: UsersComponent },
       { path: 'categories', component: CategoriesComponent },
       { path: 'subcategories', component: SubcategoriesComponent },
+      { path: 'stores', component: StoresComponent },
+      { path: 'products', component: ProductsComponent },
+      { path: 'orders', component: OrdersComponent },
+      { path: 'sales', component: SalesComponent },
+      { path: 'disputes', component: DisputesComponent },
+      { path: 'messages', component: MessagesComponent },
     ],
   },
 ];
