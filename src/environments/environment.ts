@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  urlFirebase: 'https://smar-software-default-rtdb.firebaseio.com/',
+  urlLogin:
+    'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
 };
 
 /*
