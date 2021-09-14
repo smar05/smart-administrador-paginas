@@ -26,8 +26,16 @@ export class LoginComponent implements OnInit {
     const data: Ilogin = {
       email: this.f.controls.email.value,
       password: this.f.controls.password.value,
+      returnSecureToken: true,
     };
-    console.log(this.loginService.login(data));
+    this.loginService.login(data).subscribe(
+      (resp) => {
+        console.log(resp);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
   }
 
   public invalidField(field: string): boolean {
