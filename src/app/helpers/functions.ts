@@ -1,6 +1,7 @@
 import { FormGroup } from '@angular/forms';
 
 export class functions {
+  //Validar campos del formulario
   static invalidField(
     field: string,
     f: FormGroup,
