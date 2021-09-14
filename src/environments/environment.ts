@@ -7,6 +7,8 @@ export const environment = {
   urlFirebase: 'https://smar-software-default-rtdb.firebaseio.com/',
   urlLogin:
     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
+  urlGetUser:
+    'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
 };
 
 /*
