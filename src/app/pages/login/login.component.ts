@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { functions } from '../../helpers/functions';
 import { Ilogin } from '../../interface/ilogin';
+import { alerts } from '../../helpers/alerts';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,11 @@ export class LoginComponent implements OnInit {
   });
   formSubmitted: boolean = false;
 
-  constructor(private form: FormBuilder, private loginService: LoginService) {}
+  constructor(
+    private form: FormBuilder,
+    private loginService: LoginService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {}
 
@@ -30,10 +36,18 @@ export class LoginComponent implements OnInit {
     };
     this.loginService.login(data).subscribe(
       (resp) => {
-        console.log(resp);
+        this.router.navigateByUrl('/');
       },
       (err) => {
-        console.error(err);
+        if (err.error.error.message == 'EMAIL_NOT_FOUND') {
+          alerts.basicAlert('Error', 'Email not found', 'error');
+        } else if (err.error.error.message == 'INVALID_PASSWORD') {
+          alerts.basicAlert('Error', 'Invalid password', 'error');
+        } else if (err.error.error.message == 'INVALID_EMAIL') {
+          alerts.basicAlert('Error', 'Invalid email', 'error');
+        } else {
+          alerts.basicAlert('Error', 'An error occurred', 'error');
+        }
       }
     );
   }
