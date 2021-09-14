@@ -1,6 +1,8 @@
+import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { functions } from '../../helpers/functions';
+import { Ilogin } from '../../interface/ilogin';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +16,18 @@ export class LoginComponent implements OnInit {
   });
   formSubmitted: boolean = false;
 
-  constructor(private form: FormBuilder) {}
+  constructor(private form: FormBuilder, private loginService: LoginService) {}
 
   ngOnInit(): void {}
 
   public login(): void {
     this.formSubmitted = true;
+
+    const data: Ilogin = {
+      email: this.f.controls.email.value,
+      password: this.f.controls.password.value,
+    };
+    console.log(this.loginService.login(data));
   }
 
   public invalidField(field: string): boolean {
