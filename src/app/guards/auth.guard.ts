@@ -18,10 +18,10 @@ export class AuthGuard implements CanActivate {
           idToken: localStorage.getItem('token'),
         };
         this.http.post(environment.urlGetUser, body).subscribe(
-          (resp): any => {
+          (resp: any): any => {
             resolve(true);
           },
-          (err: any) => {
+          (err: any): any => {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
             this.router.navigateByUrl('/login');
