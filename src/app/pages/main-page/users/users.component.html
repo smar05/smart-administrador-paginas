@@ -22,25 +22,14 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Title</h3>
-
-        <div class="card-tools">
-          <button
-            type="button"
-            class="btn btn-tool"
-            data-card-widget="collapse"
-            title="Collapse"
-          >
-            <i class="fas fa-minus"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-tool"
-            data-card-widget="remove"
-            title="Remove"
-          >
-            <i class="fas fa-times"></i>
-          </button>
+        <div class="row mb-2">
+          <div class="col-12 col-sm-6 col-xl-3 ml-auto">
+            <input
+              class="form-control"
+              placeholder="Buscar"
+              (keyup)="applyFilter($event)"
+            />
+          </div>
         </div>
       </div>
       <div class="card-body">
@@ -151,6 +140,13 @@
                       <strong class="mat-header-cell">Lista de deseos:</strong>
                       {{ element.wishlist | jsonToString }}
                     </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Metodo de registro:</strong
+                      >
+                      {{ element.method }}
+                    </li>
                   </ul>
                 </div>
               </td>
@@ -172,7 +168,14 @@
         </div>
       </div>
       <!-- /.card-body -->
-      <div class="card-footer">Footer</div>
+      <div class="card-footer bg-white">
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          aria-label="Select page of periodic elements"
+        >
+        </mat-paginator>
+      </div>
       <!-- /.card-footer-->
     </div>
     <!-- /.card -->
