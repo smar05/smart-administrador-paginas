@@ -1,7 +1,7 @@
 import { UsersService } from './../../../services/users.service';
 import { Iusers } from './../../../interface/iusers';
-import { Component, OnInit } from '@angular/core';
-import { functions } from '../../../helpers/functions';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   animate,
@@ -32,6 +32,9 @@ export class UsersComponent implements OnInit {
   public users: Iusers[] = [];
   public expandedElement!: Iusers | null;
   //public screenSizeSM: boolean = false;
+
+  //Paginador
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private userService: UsersService) {}
 
@@ -73,6 +76,13 @@ export class UsersComponent implements OnInit {
           } as Iusers)
       );
       this.dataSource = new MatTableDataSource(this.users);
+      this.dataSource.paginator = this.paginator;
     });
+  }
+
+  //FIltro de busqueda
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
