@@ -43,7 +43,134 @@
           </button>
         </div>
       </div>
-      <div class="card-body">Start creating your amazing application!</div>
+      <div class="card-body">
+        <div class="mat-table-container">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="mat-elevation-z8 matTable-table"
+            multiTemplateDataRows
+          >
+            <!-- Position Column -->
+            <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef>No.</th>
+              <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Correo</th>
+              <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  class="btn btn-sm btn-warning mr-2"
+                  (click)="
+                    expandedElement =
+                      expandedElement === element ? null : element
+                  "
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+              <td
+                mat-cell
+                *matCellDef="let element"
+                [attr.colspan]="displayedColumns.length"
+              >
+                <div
+                  class="example-element-detail"
+                  [@detailExpand]="
+                    element == expandedElement ? 'expanded' : 'collapsed'
+                  "
+                >
+                  <ul class="pl-0">
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Nombre:</strong>
+                      {{ element.displayName }}
+                    </li>
+                    <li class="py-2">
+                      <div
+                        *ngIf="
+                          element.method == 'google' ||
+                          element.method == 'facebook'
+                        "
+                      >
+                        <img
+                          src="{{ element.picture }}"
+                          class="rounded-circle"
+                          width="100px"
+                          alt="{{ element.username }}"
+                        />
+                      </div>
+                      <div *ngIf="element.picture == ''">
+                        <img
+                          src="../../../../assets/img/user_male_avatar_default.svg"
+                          class="rounded-circle"
+                          width="100px"
+                          alt="{{ element.username }}"
+                        />
+                      </div>
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Usuario:</strong>
+                      {{ element.username }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Pais:</strong>
+                      {{ element.country }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Ciudad:</strong>
+                      {{ element.city }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Direccion:</strong>
+                      {{ element.address }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Telefono:</strong>
+                      {{ element.phone }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Lista de deseos:</strong>
+                      {{ element.wishlist | jsonToString }}
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let element; columns: displayedColumns"
+              class="example-element-row"
+              [class.example-expanded-row]="expandedElement === element"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: ['expandedDetail']"
+              class="example-detail-row"
+            ></tr>
+          </table>
+        </div>
+      </div>
       <!-- /.card-body -->
       <div class="card-footer">Footer</div>
       <!-- /.card-footer-->

@@ -1,27 +1,63 @@
 import { UsersService } from './../../../services/users.service';
 import { Iusers } from './../../../interface/iusers';
 import { Component, OnInit } from '@angular/core';
+import { functions } from '../../../helpers/functions';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
+  ],
 })
 export class UsersComponent implements OnInit {
+  public displayedColumns: string[] = ['position', 'email', 'actions']; //Variable para nombrar las columnas de la tabla
+  public dataSource!: MatTableDataSource<Iusers>; //Instancia la data que aparecera en la tabla
   public users: Iusers[] = [];
+  public expandedElement!: Iusers | null;
+  //public screenSizeSM: boolean = false;
 
   constructor(private userService: UsersService) {}
 
   ngOnInit(): void {
     this.getData();
+
+    //Tamaño de la pantalla
+    //Pantalla pequeña si es <767
+    /*if (functions.screenSize(0, 767)) {
+      this.screenSizeSM = true;
+    } else {
+      this.screenSizeSM = false;
+      this.displayedColumns.splice(1, 0, 'displayName');
+      this.displayedColumns.splice(2, 0, 'username');
+    }*/
   }
 
   //Tomar la data de usuarios
   public getData(): void {
     this.userService.getData().subscribe((resp: any): any => {
+      let position = 1;
       this.users = Object.keys(resp).map(
         (a) =>
           ({
+            id: a,
+            position: position++,
             address: resp[a].address,
             city: resp[a].city,
             country: resp[a].country,
@@ -32,11 +68,11 @@ export class UsersComponent implements OnInit {
             method: resp[a].method,
             phone: resp[a].phone,
             picture: resp[a].picture,
-            username: resp[a].userName,
+            username: resp[a].username,
             wishlist: resp[a].wishlist,
           } as Iusers)
       );
-      console.log(this.users);
+      this.dataSource = new MatTableDataSource(this.users);
     });
   }
 }
