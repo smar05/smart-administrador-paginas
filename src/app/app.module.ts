@@ -7,10 +7,17 @@ import { HttpClientModule } from '@angular/common/http';
 
 //Modulos personalizados
 import { PagesModule } from './pages/pages.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, PagesModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    PagesModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

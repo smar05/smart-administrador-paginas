@@ -7,10 +7,17 @@ export class functions {
     f: FormGroup,
     formSubmitted: boolean
   ): boolean {
-    if (formSubmitted && f.controls[field].invalid) {
+    return formSubmitted && f.controls[field].invalid;
+  }
+
+  //Funcion para determinar el tamaño de la pantalla
+  static screenSize(minWidth: number, maxWidth: number): boolean {
+    if (
+      window.matchMedia(`(min-width:${minWidth}px)and(max-width:${maxWidth}px)`)
+        .matches
+    ) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 }
