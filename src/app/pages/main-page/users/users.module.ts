@@ -6,6 +6,7 @@ import { UsersRoutingModule } from './users-routing.module';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 import { JsonToStringPipe } from '../../../pipes/json-to-string.pipe';
 
@@ -16,6 +17,7 @@ import { JsonToStringPipe } from '../../../pipes/json-to-string.pipe';
     UsersRoutingModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
   ],
   exports: [JsonToStringPipe],
 })

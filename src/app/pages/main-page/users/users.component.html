@@ -36,19 +36,20 @@
         <div class="mat-table-container">
           <table
             mat-table
+            matSort
             [dataSource]="dataSource"
             class="mat-elevation-z8 matTable-table"
             multiTemplateDataRows
           >
             <!-- Position Column -->
             <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef>No.</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
               <td mat-cell *matCellDef="let element">{{ element.position }}</td>
             </ng-container>
 
             <!-- Email Column -->
             <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef>Correo</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Correo</th>
               <td mat-cell *matCellDef="let element">{{ element.email }}</td>
             </ng-container>
 
