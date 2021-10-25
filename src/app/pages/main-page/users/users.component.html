@@ -22,7 +22,7 @@
     <!-- Default box -->
     <div class="card">
       <div class="card-header">
-        <div class="row mb-2">
+        <div [hidden]="!loadData" class="row mb-2">
           <div class="col-12 col-sm-6 col-xl-3 ml-auto">
             <input
               class="form-control"
@@ -35,8 +35,10 @@
       <div class="card-body">
         <div class="mat-table-container">
           <table
+            [hidden]="loadData"
             mat-table
             matSort
+            matSortStart="desc"
             [dataSource]="dataSource"
             class="mat-elevation-z8 matTable-table"
             multiTemplateDataRows
@@ -102,7 +104,11 @@
                           alt="{{ element.username }}"
                         />
                       </div>
-                      <div *ngIf="element.picture == ''">
+                      <div
+                        *ngIf="
+                          element.picture == '' || element.picture == undefined
+                        "
+                      >
                         <img
                           src="../../../../assets/img/user_male_avatar_default.svg"
                           class="rounded-circle"
@@ -175,11 +181,25 @@
               </td>
             </tr>
           </table>
+          <ng-container *ngIf="loadData">
+            <div class="sk-cube-grid">
+              <div class="sk-cube sk-cube1"></div>
+              <div class="sk-cube sk-cube2"></div>
+              <div class="sk-cube sk-cube3"></div>
+              <div class="sk-cube sk-cube4"></div>
+              <div class="sk-cube sk-cube5"></div>
+              <div class="sk-cube sk-cube6"></div>
+              <div class="sk-cube sk-cube7"></div>
+              <div class="sk-cube sk-cube8"></div>
+              <div class="sk-cube sk-cube9"></div>
+            </div>
+          </ng-container>
         </div>
       </div>
       <!-- /.card-body -->
       <div class="card-footer bg-white">
         <mat-paginator
+          [hidden]="loadData"
           [pageSizeOptions]="[5, 10, 20]"
           showFirstLastButtons
           aria-label="Select page of periodic elements"

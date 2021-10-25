@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import '../../../shared/spinkit/sk-cube-grid.css';
 import {
   animate,
   state,
@@ -18,10 +19,17 @@ import {
   styleUrls: ['./users.component.css'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state(
+        'collapsed,void',
+        style({ height: '0px', minHeight: '0', display: 'none' })
+      ),
       state('expanded', style({ height: '*' })),
       transition(
         'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+      transition(
+        'expanded <=> void',
         animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
       ),
     ]),
@@ -32,6 +40,7 @@ export class UsersComponent implements OnInit {
   public dataSource!: MatTableDataSource<Iusers>; //Instancia la data que aparecera en la tabla
   public users: Iusers[] = [];
   public expandedElement!: Iusers | null;
+  public loadData: boolean = false;
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -58,6 +67,7 @@ export class UsersComponent implements OnInit {
 
   //Tomar la data de usuarios
   public getData(): void {
+    this.loadData = true;
     this.userService.getData().subscribe((resp: any): any => {
       let position = 1;
       this.users = Object.keys(resp).map(
@@ -82,6 +92,7 @@ export class UsersComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.loadData = false;
     });
   }
 
