@@ -2,6 +2,7 @@ import { UsersService } from './../../../services/users.service';
 import { Iusers } from './../../../interface/iusers';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   animate,
@@ -35,6 +36,9 @@ export class UsersComponent implements OnInit {
 
   //Paginador
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  //Orden
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private userService: UsersService) {}
 
@@ -77,6 +81,7 @@ export class UsersComponent implements OnInit {
       );
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
