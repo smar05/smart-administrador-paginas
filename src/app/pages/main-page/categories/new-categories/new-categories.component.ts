@@ -2,6 +2,12 @@ import { CategoriesService } from './../../../../services/categories.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+
+export interface Fruit {
+  name: string;
+}
 
 @Component({
   selector: 'app-new-categories',
@@ -24,7 +30,13 @@ export class NewCategoriesComponent implements OnInit {
         updateOn: 'blur',
       },
     ],
-    titleList: ['', Validators.required],
+    titleList: [
+      [],
+      [
+        Validators.required,
+        Validators.pattern('["\\[\\]\\-\\,\\a-zA-ZáéíóúñÁÉÍÓÚ ]*'),
+      ],
+    ],
   });
   //Validacion personalizada
   get name() {
@@ -33,9 +45,20 @@ export class NewCategoriesComponent implements OnInit {
   get image() {
     return this.f.controls.image;
   }
+  get titleList() {
+    return this.f.controls.titleList;
+  }
   public formSubmit: boolean = false;
   public imgTemp: string = '';
   public urlInput: string = '';
+
+  //Configuracion matChip
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  fruits: Fruit[] = [{ name: 'Lemon' }, { name: 'Lime' }, { name: 'Apple' }];
 
   constructor(
     private form: FormBuilder,
@@ -81,5 +104,27 @@ export class NewCategoriesComponent implements OnInit {
         });
       });
     };
+  }
+
+  public add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.f.controls.titleList.value.push(value.trim());
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+    this.f.controls.titleList.updateValueAndValidity();
+  }
+
+  public remove(titulo: any): void {
+    const index = this.f.controls.titleList.value.indexOf(titulo);
+
+    if (index >= 0) {
+      this.f.controls.titleList.value.splice(index, 1);
+    }
+    this.f.controls.titleList.updateValueAndValidity();
   }
 }
