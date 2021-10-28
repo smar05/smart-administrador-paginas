@@ -54,4 +54,23 @@ export class functions {
       }
     });
   }
+
+  //Crear url
+  static createUrl(value: string): string {
+    value = value.toLowerCase();
+    value = value.replace(/[ ]/g, '-');
+    value = value.replace(/[á]/g, 'a');
+    value = value.replace(/[é]/g, 'e');
+    value = value.replace(/[í]/g, 'i');
+    value = value.replace(/[ó]/g, 'o');
+    value = value.replace(/[ú]/g, 'u');
+    value = value.replace(/[Á]/g, 'A');
+    value = value.replace(/[É]/g, 'E');
+    value = value.replace(/[Í]/g, 'I');
+    value = value.replace(/[Ó]/g, 'O');
+    value = value.replace(/[Ú]/g, 'U');
+    value = value.replace(/[ñ]/g, 'n');
+    value = value.replace(/[,]/g, '');
+    return value;
+  }
 }

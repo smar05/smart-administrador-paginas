@@ -24,7 +24,6 @@ export class NewCategoriesComponent implements OnInit {
         updateOn: 'blur',
       },
     ],
-    url: ['', Validators.required],
     titleList: ['', Validators.required],
   });
   //Validacion personalizada
@@ -36,6 +35,7 @@ export class NewCategoriesComponent implements OnInit {
   }
   public formSubmit: boolean = false;
   public imgTemp: string = '';
+  public urlInput: string = '';
 
   constructor(
     private form: FormBuilder,
@@ -67,14 +67,17 @@ export class NewCategoriesComponent implements OnInit {
   //Validar que el nombre de categoria no se repita
   public isRepeatCategory() {
     return (control: AbstractControl) => {
-      const name = control.value;
+      const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.categoriesService.getFilterData('name', name).subscribe((resp) => {
+        this.categoriesService.getFilterData('url', name).subscribe((resp) => {
           console.log(resp);
 
-          Object.keys(resp).length > 0
-            ? resolve({ category: true })
-            : resolve({ category: false });
+          if (Object.keys(resp).length > 0) {
+            resolve({ category: true });
+          } else {
+            this.urlInput = name;
+            resolve({ category: false });
+          }
         });
       });
     };
