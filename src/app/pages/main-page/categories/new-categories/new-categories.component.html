@@ -1,0 +1,139 @@
+<mat-dialog-content>
+  <div class="card card-warning">
+    <div class="card-header">
+      <h2 class="card-title mb-0">Nueva categoria</h2>
+    </div>
+    <form autocomplete="off" [formGroup]="f" (ngSubmit)="saveCategory()">
+      <div class="card-body">
+        <!--Icono-->
+        <div class="form-group">
+          <label for="inputIcon"
+            >Icono (<a href="https://linearicons.com/free" target="blank"
+              >Iconos disponibles</a
+            >)</label
+          >
+          <input
+            formControlName="icon"
+            type="text"
+            id="inputIcon"
+            class="form-control"
+            placeholder="Icono"
+            [ngClass]="{ 'is-invalid': invalidField('icon') }"
+          />
+          <span class="invalid-feedback">Por favor coloque un icono</span>
+        </div>
+        <!--Imagen-->
+        <div class="form-group">
+          <label for="customFile">
+            <img
+              *ngIf="!imgTemp"
+              src="../../../../../assets/img/undraw_Images_re_0kll.svg"
+              alt=""
+              width="170px"
+              class="img-fluid"
+            />
+            <img
+              *ngIf="imgTemp"
+              [src]="imgTemp"
+              alt=""
+              width="170px"
+              class="img-fluid"
+            />
+          </label>
+          <div class="custom-file">
+            <input
+              [ngClass]="{ 'is-invalid': invalidField('image') }"
+              formControlName="image"
+              type="file"
+              class="custom-file-input"
+              id="customFile"
+              (change)="validateImage($event)"
+            />
+            <span class="invalid-feedback">Por favor coloque una imagen</span>
+            <label
+              class="custom-file-label"
+              for="customFile"
+              *ngIf="!image.value"
+              >Escoje la imagen</label
+            >
+            <label
+              class="custom-file-label"
+              for="customFile"
+              *ngIf="image.value"
+              >{{ image.value }}</label
+            >
+            <small class="mt-2"
+              >tamaño: 170px * 170px | formato: jpg o png</small
+            >
+          </div>
+        </div>
+        <!--Nombre-->
+        <div class="form-group">
+          <label for="inputName">Nombre</label>
+          <input
+            formControlName="name"
+            type="text"
+            id="inputName"
+            class="form-control"
+            placeholder="Nombre"
+            [ngClass]="{
+              'is-invalid':
+                invalidField('name') ||
+                (name.invalid && name.errors?.pattern) ||
+                (name.invalid && name.errors?.category)
+            }"
+          />
+          <span
+            class="invalid-feedback"
+            *ngIf="name.invalid && name.errors?.required"
+            >Por favor coloque un nombre</span
+          >
+          <span
+            class="invalid-feedback"
+            *ngIf="name.invalid && name.errors?.pattern"
+            >Por favor escriba correctamente el nombre</span
+          >
+          <span
+            class="invalid-feedback"
+            *ngIf="name.invalid && name.errors?.category"
+            >La categoria ya existe</span
+          >
+        </div>
+        <!--URL-->
+        <div class="form-group">
+          <label for="inputUrl">Url</label>
+          <input
+            formControlName="url"
+            type="text"
+            id="inputUrl"
+            class="form-control"
+            placeholder="Url"
+            [ngClass]="{ 'is-invalid': invalidField('url') }"
+          />
+          <span class="invalid-feedback">Por favor coloque una url</span>
+        </div>
+        <!--Lista de titulos-->
+        <div class="form-group">
+          <label for="inputTitleList">Lista de titulo</label>
+          <input
+            formControlName="titleList"
+            type="text"
+            id="inputTitleList"
+            class="form-control"
+            placeholder="Lista de titulo"
+            [ngClass]="{ 'is-invalid': invalidField('titleList') }"
+          />
+          <span class="invalid-feedback"
+            >Por favor coloque un titulo de lista</span
+          >
+        </div>
+      </div>
+      <div class="card-footer">
+        <button mat-dialog-close class="btn btn-secondary">Cerrar</button>
+        <button type="submit" class="btn btn-warning float-right">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>

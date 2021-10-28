@@ -7,17 +7,18 @@
           width="100%"
           src="../../../assets/img/template/smar-logo.png"
           alt=""
+          class="img-thumbnail"
         />
       </div>
       <div class="card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg">Regístrese para iniciar su sesión</p>
 
         <form autocomplete="off" [formGroup]="f" (ngSubmit)="login()">
           <div class="input-group mb-3">
             <input
               type="email"
               class="form-control"
-              placeholder="Email"
+              placeholder="Correo"
               formControlName="email"
               [ngClass]="{ 'is-invalid': invalidField('email') }"
             />
@@ -26,13 +27,13 @@
                 <span class="fas fa-envelope"></span>
               </div>
             </div>
-            <div class="invalid-feedback">Please fill out this field</div>
+            <div class="invalid-feedback">Por favor llene este campo</div>
           </div>
           <div class="input-group mb-3">
             <input
               type="password"
               class="form-control"
-              placeholder="Password"
+              placeholder="Contraseña"
               formControlName="password"
               [ngClass]="{ 'is-invalid': invalidField('password') }"
             />
@@ -41,13 +42,13 @@
                 <span class="fas fa-lock"></span>
               </div>
             </div>
-            <div class="invalid-feedback">Please fill out this field</div>
+            <div class="invalid-feedback">Por favor llene este campo</div>
           </div>
           <div class="row">
             <!-- /.col -->
             <div class="col-12">
               <button type="submit" class="btn btn-primary btn-block">
-                Sign In
+                Iniciar sesion
               </button>
             </div>
             <!-- /.col -->
