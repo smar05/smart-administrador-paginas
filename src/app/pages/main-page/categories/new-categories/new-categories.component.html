@@ -103,14 +103,13 @@
         <div class="form-group">
           <label for="inputUrl">Url</label>
           <input
-            formControlName="url"
             type="text"
             id="inputUrl"
             class="form-control"
             placeholder="Url"
-            [ngClass]="{ 'is-invalid': invalidField('url') }"
+            value="{{ urlInput }}"
+            readonly
           />
-          <span class="invalid-feedback">Por favor coloque una url</span>
         </div>
         <!--Lista de titulos-->
         <div class="form-group">
