@@ -1,3 +1,4 @@
+import { Icategories } from './../interface/icategories';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -18,6 +19,14 @@ export class CategoriesService {
   public getFilterData(orderBy: string, equalTo: string): Observable<any> {
     return this.http.get(
       `${environment.urlFirebase}categories.json?orderBy="${orderBy}"&equalTo="${equalTo}"&print=pretty`
+    );
+  }
+
+  //Guardar informacion de la categoria
+  public postData(data: Icategories, token: any): Observable<any> {
+    return this.http.post(
+      `${environment.urlFirebase}categories.json?auth=${token}`,
+      data
     );
   }
 }

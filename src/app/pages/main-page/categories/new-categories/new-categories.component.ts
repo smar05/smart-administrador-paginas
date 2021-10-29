@@ -1,3 +1,4 @@
+import { alerts } from './../../../../helpers/alerts';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import { Component, OnInit } from '@angular/core';
@@ -77,13 +78,27 @@ export class NewCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
-      image: '',
+      image: this.imgTemp,
       name: this.f.controls.name.value,
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
     };
-    console.log(dataCategory);
+    //Guardar en base de datos la categoria
+    this.categoriesService
+      .postData(dataCategory, localStorage.getItem('token'))
+      .subscribe(
+        (resp) => {
+          alerts.basicAlert(
+            'Listo',
+            'La categoria ha sido guardada',
+            'success'
+          );
+        },
+        (err) => {
+          alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+        }
+      );
   }
 
   public invalidField(field: string): boolean {
