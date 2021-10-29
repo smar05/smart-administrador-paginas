@@ -1,11 +1,8 @@
 {
   "hosting": {
-    "public": "dist/smar-dashboard",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "public": "public",
+    "site": "integroadmin",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",

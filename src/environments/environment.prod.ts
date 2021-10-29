@@ -12,7 +12,7 @@ export const environment = {
     projectId: 'smar-software',
     storageBucket: 'smar-software.appspot.com',
     messagingSenderId: '474388620930',
-    appId: '1:474388620930:web:7b43dcdaccc32e04e3769b',
-    measurementId: 'G-M04B4MWKQD',
+    appId: '1:474388620930:web:cefbaad0c4c544efe3769b',
+    measurementId: 'G-Q0QR49CGXL',
   },
 };
