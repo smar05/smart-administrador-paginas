@@ -5,10 +5,6 @@ import { functions } from 'src/app/helpers/functions';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 
-export interface Fruit {
-  name: string;
-}
-
 @Component({
   selector: 'app-new-categories',
   templateUrl: './new-categories.component.html',
@@ -48,9 +44,13 @@ export class NewCategoriesComponent implements OnInit {
   get titleList() {
     return this.f.controls.titleList;
   }
+  get icon() {
+    return this.f.controls.icon;
+  }
   public formSubmit: boolean = false;
   public imgTemp: string = '';
   public urlInput: string = '';
+  public iconView: string = '';
 
   //Configuracion matChip
   visible = true;
@@ -58,7 +58,6 @@ export class NewCategoriesComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  fruits: Fruit[] = [{ name: 'Lemon' }, { name: 'Lime' }, { name: 'Apple' }];
 
   constructor(
     private form: FormBuilder,
@@ -126,5 +125,11 @@ export class NewCategoriesComponent implements OnInit {
       this.f.controls.titleList.value.splice(index, 1);
     }
     this.f.controls.titleList.updateValueAndValidity();
+  }
+
+  //Visualizar icono
+  public viewIcon(e: any): void {
+    this.iconView = e.target.value;
+    e.target.value = this.f.controls.icon.value.split('"')[1];
   }
 }

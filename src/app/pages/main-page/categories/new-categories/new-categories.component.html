@@ -12,14 +12,22 @@
               >Iconos disponibles</a
             >)</label
           >
-          <input
-            formControlName="icon"
-            type="text"
-            id="inputIcon"
-            class="form-control"
-            placeholder="Icono"
-            [ngClass]="{ 'is-invalid': invalidField('icon') }"
-          />
+          <div class="input-group">
+            <input
+              formControlName="icon"
+              type="text"
+              id="inputIcon"
+              class="form-control"
+              placeholder="Icono"
+              (change)="viewIcon($event)"
+              [ngClass]="{ 'is-invalid': invalidField('icon') }"
+            />
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <div [innerHTML]="iconView"></div>
+              </div>
+            </div>
+          </div>
           <span class="invalid-feedback">Por favor coloque un icono</span>
         </div>
         <!--Imagen-->
