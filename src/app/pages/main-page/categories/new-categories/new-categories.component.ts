@@ -1,3 +1,4 @@
+import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -30,7 +31,7 @@ export class NewCategoriesComponent implements OnInit {
       [],
       [
         Validators.required,
-        Validators.pattern('["\\[\\]\\-\\,\\a-zA-ZáéíóúñÁÉÍÓÚ ]*'),
+        Validators.pattern('["\\[\\]\\-\\,\\0-9a-zA-ZáéíóúñÁÉÍÓÚ ]*'),
       ],
     ],
   });
@@ -73,6 +74,16 @@ export class NewCategoriesComponent implements OnInit {
     if (this.f.invalid) {
       return;
     }
+    //Capturamos la informacion del formulario en la interfaz
+    const dataCategory: Icategories = {
+      icon: this.f.controls.icon.value.split('"')[1],
+      image: '',
+      name: this.f.controls.name.value,
+      title_list: JSON.stringify(this.f.controls.titleList.value),
+      url: this.urlInput,
+      view: 0,
+    };
+    console.log(dataCategory);
   }
 
   public invalidField(field: string): boolean {
@@ -92,13 +103,10 @@ export class NewCategoriesComponent implements OnInit {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
         this.categoriesService.getFilterData('url', name).subscribe((resp) => {
-          console.log(resp);
-
           if (Object.keys(resp).length > 0) {
             resolve({ category: true });
           } else {
             this.urlInput = name;
-            resolve({ category: false });
           }
         });
       });
