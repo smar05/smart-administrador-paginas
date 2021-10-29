@@ -2,162 +2,178 @@
   <div class="card card-warning">
     <div class="card-header">
       <h2 class="card-title mb-0">Nueva categoria</h2>
+      <button type="button" class="close" mat-dialog-close>&times;</button>
     </div>
     <form autocomplete="off" [formGroup]="f" (ngSubmit)="saveCategory()">
       <div class="card-body">
-        <!--Icono-->
-        <div class="form-group">
-          <label for="inputIcon"
-            >Icono (<a href="https://linearicons.com/free" target="blank"
-              >Iconos disponibles</a
-            >)</label
-          >
-          <div class="input-group">
-            <input
-              formControlName="icon"
-              type="text"
-              id="inputIcon"
-              class="form-control"
-              placeholder="Icono"
-              (change)="viewIcon($event)"
-              [ngClass]="{ 'is-invalid': invalidField('icon') }"
-            />
-            <div class="input-group-append">
-              <div class="input-group-text">
-                <div [innerHTML]="iconView"></div>
+        <ng-container *ngIf="!loadData">
+          <!--Icono-->
+          <div class="form-group">
+            <label for="inputIcon"
+              >Icono (<a href="https://linearicons.com/free" target="blank"
+                >Iconos disponibles</a
+              >)</label
+            >
+            <div class="input-group">
+              <input
+                formControlName="icon"
+                type="text"
+                id="inputIcon"
+                class="form-control"
+                placeholder="Icono"
+                (change)="viewIcon($event)"
+                [ngClass]="{ 'is-invalid': invalidField('icon') }"
+              />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <div [innerHTML]="iconView"></div>
+                </div>
               </div>
             </div>
+            <span class="invalid-feedback">Por favor coloque un icono</span>
           </div>
-          <span class="invalid-feedback">Por favor coloque un icono</span>
-        </div>
-        <!--Imagen-->
-        <div class="form-group">
-          <label for="customFile">
-            <img
-              *ngIf="!imgTemp"
-              src="../../../../../assets/img/undraw_Images_re_0kll.svg"
-              alt=""
-              width="170px"
-              class="img-fluid"
-            />
-            <img
-              *ngIf="imgTemp"
-              [src]="imgTemp"
-              alt=""
-              width="170px"
-              class="img-fluid"
-            />
-          </label>
-          <div class="custom-file">
-            <input
-              [ngClass]="{ 'is-invalid': invalidField('image') }"
-              formControlName="image"
-              type="file"
-              class="custom-file-input"
-              id="customFile"
-              (change)="validateImage($event)"
-            />
-            <span class="invalid-feedback">Por favor coloque una imagen</span>
-            <label
-              class="custom-file-label"
-              for="customFile"
-              *ngIf="!image.value"
-              >Escoje la imagen</label
-            >
-            <label
-              class="custom-file-label"
-              for="customFile"
-              *ngIf="image.value"
-              >{{ image.value }}</label
-            >
-            <small class="mt-2"
-              >tamaño: 170px * 170px | formato: jpg o png</small
-            >
-          </div>
-        </div>
-        <!--Nombre-->
-        <div class="form-group">
-          <label for="inputName">Nombre</label>
-          <input
-            formControlName="name"
-            type="text"
-            id="inputName"
-            class="form-control"
-            placeholder="Nombre"
-            [ngClass]="{
-              'is-invalid':
-                invalidField('name') ||
-                (name.invalid && name.errors?.pattern) ||
-                (name.invalid && name.errors?.category)
-            }"
-          />
-          <span
-            class="invalid-feedback"
-            *ngIf="name.invalid && name.errors?.required"
-            >Por favor coloque un nombre</span
-          >
-          <span
-            class="invalid-feedback"
-            *ngIf="name.invalid && name.errors?.pattern"
-            >Por favor escriba correctamente el nombre</span
-          >
-          <span
-            class="invalid-feedback"
-            *ngIf="name.invalid && name.errors?.category"
-            >La categoria ya existe</span
-          >
-        </div>
-        <!--URL-->
-        <div class="form-group">
-          <label for="inputUrl">Url</label>
-          <input
-            type="text"
-            id="inputUrl"
-            class="form-control"
-            placeholder="Url"
-            value="{{ urlInput }}"
-            readonly
-          />
-        </div>
-        <!--Lista de titulos-->
-        <div class="form-group">
-          <label>Lista de titulos</label>
-          <div
-            class="form-control"
-            [ngClass]="{ 'is-invalid': invalidField('titleList') }"
-          >
-            <mat-chip-list #chipList aria-label="Lista de titulos">
-              <mat-chip
-                *ngFor="let title of titleList.value"
-                [selectable]="selectable"
-                [removable]="removable"
-                (removed)="remove(title)"
-              >
-                {{ title }}
-                <button matChipRemove *ngIf="removable">
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </mat-chip>
-              <input
-                placeholder="Nuevo titulo..."
-                [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add($event)"
+          <!--Imagen-->
+          <div class="form-group">
+            <label for="customFile">
+              <img
+                *ngIf="!imgTemp"
+                src="../../../../../assets/img/undraw_Images_re_0kll.svg"
+                alt=""
+                width="170px"
+                class="img-fluid"
               />
-            </mat-chip-list>
+              <img
+                *ngIf="imgTemp"
+                [src]="imgTemp"
+                alt=""
+                width="170px"
+                class="img-fluid"
+              />
+            </label>
+            <div class="custom-file">
+              <input
+                [ngClass]="{ 'is-invalid': invalidField('image') }"
+                formControlName="image"
+                type="file"
+                class="custom-file-input"
+                id="customFile"
+                (change)="validateImage($event)"
+              />
+              <span class="invalid-feedback">Por favor coloque una imagen</span>
+              <label
+                class="custom-file-label"
+                for="customFile"
+                *ngIf="!image.value"
+                >Escoje la imagen</label
+              >
+              <label
+                class="custom-file-label"
+                for="customFile"
+                *ngIf="image.value"
+                >{{ image.value }}</label
+              >
+              <small class="mt-2"
+                >tamaño: 170px * 170px | formato: jpg o png</small
+              >
+            </div>
           </div>
-          <span
-            *ngIf="titleList.invalid && titleList.errors?.required"
-            class="invalid-feedback"
-            >Por favor ingrese un titulo</span
-          >
-          <span
-            *ngIf="titleList.invalid && titleList.errors?.pattern"
-            class="invalid-feedback"
-            >Escribe correctamente el titulo</span
-          >
-        </div>
+          <!--Nombre-->
+          <div class="form-group">
+            <label for="inputName">Nombre</label>
+            <input
+              formControlName="name"
+              type="text"
+              id="inputName"
+              class="form-control"
+              placeholder="Nombre"
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('name') ||
+                  (name.invalid && name.errors?.pattern) ||
+                  (name.invalid && name.errors?.category)
+              }"
+            />
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.required"
+              >Por favor coloque un nombre</span
+            >
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.pattern"
+              >Por favor escriba correctamente el nombre</span
+            >
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.category"
+              >La categoria ya existe</span
+            >
+          </div>
+          <!--URL-->
+          <div class="form-group">
+            <label for="inputUrl">Url</label>
+            <input
+              type="text"
+              id="inputUrl"
+              class="form-control"
+              placeholder="Url"
+              value="{{ urlInput }}"
+              readonly
+            />
+          </div>
+          <!--Lista de titulos-->
+          <div class="form-group">
+            <label>Lista de titulos</label>
+            <div
+              class="form-control"
+              [ngClass]="{ 'is-invalid': invalidField('titleList') }"
+            >
+              <mat-chip-list #chipList aria-label="Lista de titulos">
+                <mat-chip
+                  *ngFor="let title of titleList.value"
+                  [selectable]="selectable"
+                  [removable]="removable"
+                  (removed)="remove(title)"
+                >
+                  {{ title }}
+                  <button matChipRemove *ngIf="removable">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="Nuevo titulo..."
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event)"
+                />
+              </mat-chip-list>
+            </div>
+            <span
+              *ngIf="titleList.invalid && titleList.errors?.required"
+              class="invalid-feedback"
+              >Por favor ingrese un titulo</span
+            >
+            <span
+              *ngIf="titleList.invalid && titleList.errors?.pattern"
+              class="invalid-feedback"
+              >Escribe correctamente el titulo</span
+            >
+          </div>
+        </ng-container>
+        <ng-container *ngIf="loadData">
+          <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+          </div>
+        </ng-container>
       </div>
       <div class="card-footer">
         <button mat-dialog-close class="btn btn-secondary">Cerrar</button>

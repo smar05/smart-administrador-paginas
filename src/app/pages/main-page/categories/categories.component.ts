@@ -107,5 +107,11 @@ export class CategoriesComponent implements OnInit {
   //Dialogo para una nueva categoria
   public newCategory(): void {
     const dialogRef = this.dialog.open(NewCategoriesComponent);
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getData();
+      }
+    });
   }
 }

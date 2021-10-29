@@ -6,6 +6,8 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatDialogRef } from '@angular/material/dialog';
+import '../../../../shared/spinkit/sk-cube-grid.css';
 
 @Component({
   selector: 'app-new-categories',
@@ -53,6 +55,7 @@ export class NewCategoriesComponent implements OnInit {
   public imgTemp: string = '';
   public urlInput: string = '';
   public iconView: string = '';
+  public loadData: boolean = false;
 
   //Configuracion matChip
   visible = true;
@@ -63,12 +66,14 @@ export class NewCategoriesComponent implements OnInit {
 
   constructor(
     private form: FormBuilder,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    public dialogRef: MatDialogRef<NewCategoriesComponent>
   ) {}
 
   ngOnInit(): void {}
 
   public saveCategory(): void {
+    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
@@ -89,6 +94,8 @@ export class NewCategoriesComponent implements OnInit {
       .postData(dataCategory, localStorage.getItem('token'))
       .subscribe(
         (resp) => {
+          this.loadData = false;
+          this.dialogRef.close('save');
           alerts.basicAlert(
             'Listo',
             'La categoria ha sido guardada',
@@ -96,6 +103,7 @@ export class NewCategoriesComponent implements OnInit {
           );
         },
         (err) => {
+          this.loadData = false;
           alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
         }
       );
