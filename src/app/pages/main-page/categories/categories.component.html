@@ -47,7 +47,8 @@
             [hidden]="loadData"
             mat-table
             matSort
-            matSortStart="desc"
+            matSortActive="position"
+            matSortDirection="asc"
             [dataSource]="dataSource"
             class="mat-elevation-z8 matTable-table"
             multiTemplateDataRows
@@ -139,6 +140,29 @@
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Vista:</strong>
                       {{ element.view }}
+                    </li>
+                    <li class="py-1">
+                      <div class="custom-control custom-switch">
+                        <input
+                          *ngIf="element.state == 'show'"
+                          type="checkbox"
+                          class="custom-control-input"
+                          id="switch_{{ element.id }}"
+                          (change)="changeState($event)"
+                          checked
+                        />
+                        <input
+                          *ngIf="element.state == 'hidden'"
+                          type="checkbox"
+                          class="custom-control-input"
+                          id="switch_{{ element.id }}"
+                          (change)="changeState($event)"
+                        />
+                        <label
+                          for="switch_{{ element.id }}"
+                          class="custom-control-label"
+                        ></label>
+                      </div>
                     </li>
                   </ul>
                 </div>
