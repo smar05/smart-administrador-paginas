@@ -74,18 +74,19 @@ export class CategoriesComponent implements OnInit {
   public getData(): void {
     this.loadData = true;
     this.categoriesService.getData().subscribe((resp: any): any => {
-      let position = 1;
+      let position = Object.keys(resp).length;
       this.categories = Object.keys(resp).map(
         (a) =>
           ({
             id: a,
-            position: position++,
+            position: position--,
             name: resp[a].name,
             icon: resp[a].icon,
             image: resp[a].image,
             title_list: resp[a].title_list,
             url: resp[a].url,
             view: resp[a].view,
+            state: resp[a].state,
           } as Icategories)
       );
       this.dataSource = new MatTableDataSource(this.categories);
@@ -113,5 +114,21 @@ export class CategoriesComponent implements OnInit {
         this.getData();
       }
     });
+  }
+
+  //Cambiar estado de la categoria
+  public changeState(e: any): void {
+    const data = e.target.checked
+      ? {
+          state: 'show',
+        }
+      : {
+          state: 'hidden',
+        };
+    this.categoriesService
+      .patchData(e.target.id.split('_')[1], data, localStorage.getItem('token'))
+      .subscribe(() => {
+        this.getData();
+      });
   }
 }

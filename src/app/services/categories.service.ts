@@ -29,4 +29,12 @@ export class CategoriesService {
       data
     );
   }
+
+  //Actualizar categoria
+  public patchData(id: string, data: object, token: any): Observable<any> {
+    return this.http.patch(
+      `${environment.urlFirebase}categories/${id}.json?auth=${token}`,
+      data
+    );
+  }
 }

@@ -88,6 +88,7 @@ export class NewCategoriesComponent implements OnInit {
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
+      state: 'hidden',
     };
     //Guardar en base de datos la categoria
     this.categoriesService

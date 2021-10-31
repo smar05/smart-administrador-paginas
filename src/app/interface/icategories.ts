@@ -5,4 +5,5 @@ export interface Icategories {
   title_list: string;
   url: string;
   view: number;
+  state: string;
 }
