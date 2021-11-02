@@ -22,6 +22,11 @@ export class CategoriesService {
     );
   }
 
+  //TOmar un item de categorias
+  public getItem(id: string): Observable<any> {
+    return this.http.get(`${environment.urlFirebase}categories/${id}.json`);
+  }
+
   //Guardar informacion de la categoria
   public postData(data: Icategories, token: any): Observable<any> {
     return this.http.post(

@@ -1,3 +1,4 @@
+import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 import { CategoriesService } from './../../../services/categories.service';
 import { Icategories } from './../../../interface/icategories';
 import { NewCategoriesComponent } from './new-categories/new-categories.component';
@@ -130,5 +131,20 @@ export class CategoriesComponent implements OnInit {
       .subscribe(() => {
         this.getData();
       });
+  }
+
+  //Editar categoria
+  public editCategorie(id: string): void {
+    const dialogRef = this.dialog.open(EditCategoriesComponent, {
+      data: {
+        id: id,
+      },
+    });
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getData();
+      }
+    });
   }
 }
