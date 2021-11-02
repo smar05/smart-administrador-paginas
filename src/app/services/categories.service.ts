@@ -42,4 +42,11 @@ export class CategoriesService {
       data
     );
   }
+
+  //Eliminar categoria
+  public deleteData(id: string, token: any): Observable<any> {
+    return this.http.delete(
+      `${environment.urlFirebase}categories/${id}.json?auth=${token}`
+    );
+  }
 }

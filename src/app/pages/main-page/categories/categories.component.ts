@@ -1,3 +1,5 @@
+import { SubcategoriesService } from './../../../services/subcategories.service';
+import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 import { CategoriesService } from './../../../services/categories.service';
 import { Icategories } from './../../../interface/icategories';
@@ -54,6 +56,7 @@ export class CategoriesComponent implements OnInit {
 
   constructor(
     private categoriesService: CategoriesService,
+    private subcategoriesService: SubcategoriesService,
     public dialog: MatDialog
   ) {}
 
@@ -146,5 +149,44 @@ export class CategoriesComponent implements OnInit {
         this.getData();
       }
     });
+  }
+
+  //Eliminar categoria
+  public deleteCategorie(id: string, name: string) {
+    alerts
+      .confirmAlert(
+        '¿Esta seguro?',
+        'La información no podra recuperarse',
+        'warning',
+        'Si, eliminar'
+      )
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          //Validar que la categoria no tenga una subcategoria
+          this.subcategoriesService
+            .getFilterData('category', name)
+            .subscribe((resp: any) => {
+              if (Object.keys(resp).length > 0) {
+                alerts.basicAlert(
+                  'Error',
+                  'La categoria tiene subcategorias',
+                  'error'
+                );
+              } else {
+                //Eliminar registro de la base de datos
+                this.categoriesService
+                  .deleteData(id, localStorage.getItem('token'))
+                  .subscribe((resp: any) => {
+                    alerts.basicAlert(
+                      'Listo',
+                      'La categoria ha sido eliminada',
+                      'success'
+                    );
+                    this.getData();
+                  });
+              }
+            });
+        }
+      });
   }
 }
