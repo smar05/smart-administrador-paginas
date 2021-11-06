@@ -222,7 +222,8 @@
       <div class="card-footer">
         <mat-paginator
           [hidden]="loadData"
-          [pageSizeOptions]="[5, 10, 20]"
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 50, 100]"
           showFirstLastButtons
           aria-label="Select page of periodic elements"
         >

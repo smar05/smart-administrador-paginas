@@ -74,7 +74,7 @@ export class CategoriesComponent implements OnInit {
     }*/
   }
 
-  //Tomar la data de usuarios
+  //Tomar la data de categorias
   public getData(): void {
     this.loadData = true;
     this.categoriesService.getData().subscribe((resp: any): any => {

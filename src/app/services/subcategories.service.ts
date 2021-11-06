@@ -9,6 +9,11 @@ import { Injectable } from '@angular/core';
 export class SubcategoriesService {
   constructor(private http: HttpClient) {}
 
+  //Tomar datos de subcategorias
+  public getData(): Observable<any> {
+    return this.http.get(`${environment.urlFirebase}sub-categories.json`);
+  }
+
   //Data filtrada de subcategorias
   public getFilterData(orderBy: string, equalTo: string): Observable<any> {
     return this.http.get(
