@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -9,7 +11,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class IntInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -27,6 +29,17 @@ export class IntInterceptor implements HttpInterceptor {
     //Calcular 15 min despues del tiempo actual
     now.setTime(now.getTime() + 15 * 60 * 1000);
     if (tokenExp.getTime() < now.getTime()) {
+      const body = {
+        grant_type: 'refresh_token',
+        refresh_token: localStorage.getItem('refreshToken'),
+      };
+      this.http
+        .post(environment.urlRefreshToken, body)
+        .subscribe((resp: any) => {
+          //Se captura el idToken y refreshToken
+          localStorage.setItem('token', resp.idToken);
+          localStorage.setItem('refreshToken', resp.refreshToken);
+        });
     }
 
     return next.handle(request);
