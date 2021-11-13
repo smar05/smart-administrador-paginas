@@ -1,3 +1,4 @@
+import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
 import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
 import { Isubcategories } from './../../../interface/isubcategories';
@@ -103,4 +104,88 @@ export class SubcategoriesComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  //Dialogo para una nueva subcategoria
+  public newSubcategory(): void {
+    const dialogRef = this.dialog.open(NewSubcategoriesComponent);
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getData();
+      }
+    });
+  }
+
+  /*
+  //Cambiar estado de la categoria
+  public changeState(e: any): void {
+    const data = e.target.checked
+      ? {
+          state: 'show',
+        }
+      : {
+          state: 'hidden',
+        };
+    this.subcategoriesService
+      .patchData(e.target.id.split('_')[1], data, localStorage.getItem('token'))
+      .subscribe(() => {
+        this.getData();
+      });
+  }
+
+  //Editar categoria
+  public editCategorie(id: string): void {
+    const dialogRef = this.dialog.open(EditCategoriesComponent, {
+      data: {
+        id: id,
+      },
+    });
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getData();
+      }
+    });
+  }
+
+  //Eliminar categoria
+  public deleteCategorie(id: string, name: string) {
+    alerts
+      .confirmAlert(
+        '¿Esta seguro?',
+        'La información no podra recuperarse',
+        'warning',
+        'Si, eliminar'
+      )
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          //Validar que la categoria no tenga una subcategoria
+          this.subcategoriesService
+            .getFilterData('category', name)
+            .subscribe((resp: any) => {
+              if (Object.keys(resp).length > 0) {
+                alerts.basicAlert(
+                  'Error',
+                  'La categoria tiene subcategorias',
+                  'error'
+                );
+              } else {
+                //Eliminar registro de la base de datos
+                this.categoriesService
+                  .deleteData(id, localStorage.getItem('token'))
+                  .subscribe((resp: any) => {
+                    alerts.basicAlert(
+                      'Listo',
+                      'La categoria ha sido eliminada',
+                      'success'
+                    );
+                    this.getData();
+                  });
+              }
+            });
+        }
+      });
+  }
+
+  }*/
 }

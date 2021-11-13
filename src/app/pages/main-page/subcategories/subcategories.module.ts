@@ -12,9 +12,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
 
 @NgModule({
-  declarations: [SubcategoriesComponent],
+  declarations: [SubcategoriesComponent, NewSubcategoriesComponent],
   imports: [
     CommonModule,
     SubcategoriesRoutingModule,

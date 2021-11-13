@@ -24,7 +24,11 @@
       <div class="card-header">
         <div [hidden]="loadData" class="row mb-2">
           <div class="col-12 col-sm-6 col-xl-3 mr-auto">
-            <button class="btn btn-block bg-gradient-primary" type="button">
+            <button
+              class="btn btn-block bg-gradient-primary"
+              type="button"
+              (click)="newSubcategory()"
+            >
               Nueva subcategoria
             </button>
           </div>
