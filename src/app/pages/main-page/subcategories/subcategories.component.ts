@@ -1,3 +1,4 @@
+import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
 import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
@@ -116,26 +117,9 @@ export class SubcategoriesComponent implements OnInit {
     });
   }
 
-  /*
-  //Cambiar estado de la categoria
-  public changeState(e: any): void {
-    const data = e.target.checked
-      ? {
-          state: 'show',
-        }
-      : {
-          state: 'hidden',
-        };
-    this.subcategoriesService
-      .patchData(e.target.id.split('_')[1], data, localStorage.getItem('token'))
-      .subscribe(() => {
-        this.getData();
-      });
-  }
-
-  //Editar categoria
-  public editCategorie(id: string): void {
-    const dialogRef = this.dialog.open(EditCategoriesComponent, {
+  //Editar subcategoria
+  public editSubcategory(id: string): void {
+    const dialogRef = this.dialog.open(EditSubcategoriesComponent, {
       data: {
         id: id,
       },
@@ -148,6 +132,7 @@ export class SubcategoriesComponent implements OnInit {
     });
   }
 
+  /*
   //Eliminar categoria
   public deleteCategorie(id: string, name: string) {
     alerts

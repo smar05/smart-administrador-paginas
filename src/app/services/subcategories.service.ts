@@ -22,10 +22,23 @@ export class SubcategoriesService {
     );
   }
 
+  //Obtener un item de la coleccion de subcategorias
+  public getItem(id: string): Observable<any> {
+    return this.http.get(`${environment.urlFirebase}sub-categories/${id}.json`);
+  }
+
   //Guardar informacion de la subcategoria
   public postData(data: Isubcategories, token: any): Observable<any> {
     return this.http.post(
       `${environment.urlFirebase}sub-categories.json?auth=${token}`,
+      data
+    );
+  }
+
+  //Actualizar subcategoria
+  public patchData(id: string, data: object, token: any): Observable<any> {
+    return this.http.patch(
+      `${environment.urlFirebase}sub-categories/${id}.json?auth=${token}`,
       data
     );
   }
