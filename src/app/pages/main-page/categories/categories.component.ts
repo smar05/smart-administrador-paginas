@@ -111,7 +111,9 @@ export class CategoriesComponent implements OnInit {
 
   //Dialogo para una nueva categoria
   public newCategory(): void {
-    const dialogRef = this.dialog.open(NewCategoriesComponent);
+    const dialogRef = this.dialog.open(NewCategoriesComponent, {
+      width: '100%',
+    });
     //actualizar estado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -139,6 +141,7 @@ export class CategoriesComponent implements OnInit {
   //Editar categoria
   public editCategorie(id: string): void {
     const dialogRef = this.dialog.open(EditCategoriesComponent, {
+      width: '100%',
       data: {
         id: id,
       },

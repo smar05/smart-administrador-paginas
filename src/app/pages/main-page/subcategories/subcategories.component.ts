@@ -110,7 +110,9 @@ export class SubcategoriesComponent implements OnInit {
 
   //Dialogo para una nueva subcategoria
   public newSubcategory(): void {
-    const dialogRef = this.dialog.open(NewSubcategoriesComponent);
+    const dialogRef = this.dialog.open(NewSubcategoriesComponent, {
+      width: '100%',
+    });
     //actualizar estado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -122,6 +124,7 @@ export class SubcategoriesComponent implements OnInit {
   //Editar subcategoria
   public editSubcategory(id: string): void {
     const dialogRef = this.dialog.open(EditSubcategoriesComponent, {
+      width: '100%',
       data: {
         id: id,
       },
