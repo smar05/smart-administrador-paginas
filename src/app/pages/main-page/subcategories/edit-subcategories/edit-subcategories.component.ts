@@ -1,3 +1,4 @@
+import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { functions } from './../../../../helpers/functions';
@@ -37,24 +38,39 @@ export class EditSubcategoriesComponent implements OnInit {
   //Variables de inventario y visualizacion
   public products_inventory: string = '';
   public view: string = '';
+  public selectTL: string = '';
+  public titleListArray: any = [];
   //Variable de precarga
   public loadData: boolean = false;
 
   constructor(
     private form: FormBuilder,
     private subcategoriesService: SubcategoriesService,
+    private categoriesService: CategoriesService,
     public dialogRef: MatDialogRef<EditSubcategoriesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData
   ) {}
 
   ngOnInit(): void {
+    this.loadData = true;
     this.subcategoriesService.getItem(this.data.id).subscribe((resp: any) => {
       this.categoryView = resp.category;
       this.titleList.setValue(resp.title_list);
+      this.selectTL = resp.title_list;
       this.nameView = resp.name;
       this.urlInput = resp.url;
       this.products_inventory = resp.products_inventory;
       this.view = resp.view;
+
+      //Traer la informacion de la categoria seleccionada
+      this.categoriesService
+        .getFilterData('name', resp.category)
+        .subscribe((resp2: any) => {
+          this.titleListArray = Object.keys(resp2).map((a) =>
+            JSON.parse(resp2[a].title_list)
+          );
+          this.loadData = false;
+        });
     });
   }
 

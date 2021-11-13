@@ -10,14 +10,20 @@
           <!--Categoria-->
           <div class="form-group">
             <label for="inputCategory">Categoria</label>
-            <input
-              type="text"
-              id="inputCategory"
+            <select
               class="form-control"
-              placeholder="Categoria"
               formControlName="category"
               [ngClass]="{ 'is-invalid': invalidField('category') }"
-            />
+              (change)="selectCategory($event)"
+            >
+              <option value="">Seleccione una categoria</option>
+              <option
+                *ngFor="let category of categories"
+                value="{{ category.name }}"
+              >
+                {{ category.name }}
+              </option>
+            </select>
 
             <span
               class="invalid-feedback"
@@ -26,18 +32,18 @@
             >
           </div>
           <!--Titulo de lista-->
-          <div class="form-group">
+          <div class="form-group" *ngIf="!category.invalid">
             <label for="inputTitleList">Titulo de lista</label>
-            <input
-              formControlName="titleList"
-              type="text"
-              id="inputName"
+            <select
               class="form-control"
-              placeholder="Titulo de lista"
-              [ngClass]="{
-                'is-invalid': invalidField('name')
-              }"
-            />
+              formControlName="titleList"
+              [ngClass]="{ 'is-invalid': invalidField('titleList') }"
+            >
+              <option value="">Seleccione la lista de titulo</option>
+              <option *ngFor="let tl of titleListArray" value="{{ tl }}">
+                {{ tl }}
+              </option>
+            </select>
             <span
               class="invalid-feedback"
               *ngIf="name.invalid && name.errors?.required"
