@@ -42,4 +42,11 @@ export class SubcategoriesService {
       data
     );
   }
+
+  //Eliminar subcategoria
+  public deleteData(id: string, token: any): Observable<any> {
+    return this.http.delete(
+      `${environment.urlFirebase}sub-categories/${id}.json?auth=${token}`
+    );
+  }
 }
