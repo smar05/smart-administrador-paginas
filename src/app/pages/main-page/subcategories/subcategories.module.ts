@@ -13,9 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
+import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 
 @NgModule({
-  declarations: [SubcategoriesComponent, NewSubcategoriesComponent],
+  declarations: [SubcategoriesComponent, NewSubcategoriesComponent, EditSubcategoriesComponent],
   imports: [
     CommonModule,
     SubcategoriesRoutingModule,
