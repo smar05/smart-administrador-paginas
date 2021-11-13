@@ -1,3 +1,4 @@
+import { ProductsService } from './../../../services/products.service';
 import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
 import { SubcategoriesService } from './../../../services/subcategories.service';
@@ -55,6 +56,7 @@ export class SubcategoriesComponent implements OnInit {
 
   constructor(
     private subcategoriesService: SubcategoriesService,
+    private productsService: ProductsService,
     public dialog: MatDialog
   ) {}
 
@@ -132,9 +134,8 @@ export class SubcategoriesComponent implements OnInit {
     });
   }
 
-  /*
-  //Eliminar categoria
-  public deleteCategorie(id: string, name: string) {
+  //Eliminar subcategoria
+  public deleteSubcategory(id: string, url: string): any {
     alerts
       .confirmAlert(
         '¿Esta seguro?',
@@ -144,24 +145,23 @@ export class SubcategoriesComponent implements OnInit {
       )
       .then((result: any) => {
         if (result.isConfirmed) {
-          //Validar que la categoria no tenga una subcategoria
-          this.subcategoriesService
-            .getFilterData('category', name)
+          this.productsService
+            .getFilterData('sub_category', url)
             .subscribe((resp: any) => {
               if (Object.keys(resp).length > 0) {
                 alerts.basicAlert(
                   'Error',
-                  'La categoria tiene subcategorias',
+                  'La subcategoria tiene productos relacionados',
                   'error'
                 );
               } else {
-                //Eliminar registro de la base de datos
-                this.categoriesService
+                //Eliminar el registro
+                this.subcategoriesService
                   .deleteData(id, localStorage.getItem('token'))
                   .subscribe((resp: any) => {
                     alerts.basicAlert(
                       'Listo',
-                      'La categoria ha sido eliminada',
+                      'La subcategoria ha sido eliminada',
                       'success'
                     );
                     this.getData();
@@ -171,6 +171,4 @@ export class SubcategoriesComponent implements OnInit {
         }
       });
   }
-
-  }*/
 }

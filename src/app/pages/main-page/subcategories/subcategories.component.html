@@ -84,7 +84,10 @@
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="btn btn-sm btn-danger mr-1">
+                <button
+                  class="btn btn-sm btn-danger mr-1"
+                  (click)="deleteSubcategory(element.id, element.url)"
+                >
                   <i class="fas fa-trash"></i>
                 </button>
               </td>
