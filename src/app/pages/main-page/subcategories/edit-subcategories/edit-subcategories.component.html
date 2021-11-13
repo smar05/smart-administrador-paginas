@@ -1,0 +1,83 @@
+<mat-dialog-content>
+  <div class="card card-warning">
+    <div class="card-header">
+      <h2 class="card-title mb-0">Editar subcategoria</h2>
+      <button type="button" class="close" mat-dialog-close>&times;</button>
+    </div>
+    <form autocomplete="off" [formGroup]="f" (ngSubmit)="editSubcategory()">
+      <div class="card-body">
+        <ng-container *ngIf="!loadData">
+          <!--Categoria-->
+          <div class="form-group">
+            <label for="inputUrl">Categoria</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{ categoryView }}"
+              readonly
+            />
+          </div>
+          <!--Titulo de lista-->
+          <div class="form-group">
+            <label for="inputTitleList">Titulo de lista</label>
+            <select
+              class="form-control"
+              formControlName="titleList"
+              [ngClass]="{ 'is-invalid': invalidField('titleList') }"
+            >
+              <option value="{{ selectTL }}">{{ selectTL }}</option>
+              <option *ngFor="let tl of titleListArray[0]" value="{{ tl }}">
+                {{ tl }}
+              </option>
+            </select>
+            <span
+              class="invalid-feedback"
+              *ngIf="titleList.invalid && titleList.errors?.required"
+              >Por favor coloque un titulo de lista</span
+            >
+          </div>
+          <!--Nombre-->
+          <div class="form-group">
+            <label for="inputUrl">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{ nameView }}"
+              readonly
+            />
+          </div>
+          <!--URL-->
+          <div class="form-group">
+            <label for="inputUrl">Url</label>
+            <input
+              type="text"
+              id="inputUrl"
+              class="form-control"
+              value="{{ urlInput }}"
+              readonly
+            />
+          </div>
+        </ng-container>
+        <ng-container *ngIf="loadData">
+          <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="card-footer">
+        <button mat-dialog-close class="btn btn-secondary">Cerrar</button>
+        <button type="submit" class="btn btn-warning float-right">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
