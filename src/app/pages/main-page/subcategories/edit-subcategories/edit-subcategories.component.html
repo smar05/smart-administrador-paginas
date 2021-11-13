@@ -20,16 +20,16 @@
           <!--Titulo de lista-->
           <div class="form-group">
             <label for="inputTitleList">Titulo de lista</label>
-            <input
-              formControlName="titleList"
-              type="text"
-              id="inputName"
+            <select
               class="form-control"
-              placeholder="Titulo de lista"
-              [ngClass]="{
-                'is-invalid': invalidField('titleList')
-              }"
-            />
+              formControlName="titleList"
+              [ngClass]="{ 'is-invalid': invalidField('titleList') }"
+            >
+              <option value="{{ selectTL }}">{{ selectTL }}</option>
+              <option *ngFor="let tl of titleListArray[0]" value="{{ tl }}">
+                {{ tl }}
+              </option>
+            </select>
             <span
               class="invalid-feedback"
               *ngIf="titleList.invalid && titleList.errors?.required"

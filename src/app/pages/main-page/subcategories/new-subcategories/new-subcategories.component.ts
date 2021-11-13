@@ -1,3 +1,4 @@
+import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { functions } from 'src/app/helpers/functions';
 import { Isubcategories } from './../../../../interface/isubcategories';
@@ -47,15 +48,28 @@ export class NewSubcategoriesComponent implements OnInit {
   }
   public formSubmit: boolean = false;
   public urlInput: string = '';
+  public categories: any = [];
+  public titleListArray: any = [];
   public loadData: boolean = false;
 
   constructor(
     private form: FormBuilder,
     private subcategoriesService: SubcategoriesService,
+    private categoriesService: CategoriesService,
     public dialogRef: MatDialogRef<NewSubcategoriesComponent>
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    //Capturamos la informacion de categorias
+    this.loadData = true;
+    this.categoriesService.getData().subscribe((resp: any) => {
+      this.categories = Object.keys(resp).map((a) => ({
+        name: resp[a].name,
+        titleList: JSON.parse(resp[a].title_list),
+      }));
+      this.loadData = false;
+    });
+  }
 
   //Guardar subcategoria
   public saveSubcategory(): void {
@@ -115,5 +129,14 @@ export class NewSubcategoriesComponent implements OnInit {
           });
       });
     };
+  }
+
+  //Filtrar el listado de titulo
+  public selectCategory(e: any): any {
+    this.categories.filter((category: any) => {
+      if (category.name == e.target.value) {
+        this.titleListArray = category.titleList;
+      }
+    });
   }
 }
