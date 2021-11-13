@@ -5,6 +5,7 @@ import { functions } from '../../helpers/functions';
 import { Ilogin } from '../../interface/ilogin';
 import { alerts } from '../../helpers/alerts';
 import { Router } from '@angular/router';
+import '../../shared/spinkit/sk-cube-grid.css';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
+  public loading = false;
   formSubmitted: boolean = false; //Valida el formulario
 
   constructor(
@@ -43,10 +45,12 @@ export class LoginComponent implements OnInit {
     };
 
     //Srvicio de login
+    this.loading = true;
     this.loginService.login(data).subscribe(
       (resp: any) => {
         //Entramos al sistema
         this.router.navigateByUrl('/');
+        this.loading = false;
       },
       (err: any) => {
         //Errores al ingresar
@@ -59,6 +63,7 @@ export class LoginComponent implements OnInit {
         } else {
           alerts.basicAlert('Error', 'An error occurred', 'error');
         }
+        this.loading = false;
       }
     );
   }
