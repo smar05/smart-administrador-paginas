@@ -96,23 +96,17 @@ export class EditCategoriesComponent implements OnInit {
     };
 
     //Guardar en base de datos la categoria
-    this.categoriesService
-      .patchData(this.data.id, dataCategory, localStorage.getItem('token'))
-      .subscribe(
-        (resp) => {
-          this.loadData = false;
-          this.dialogRef.close('save');
-          alerts.basicAlert(
-            'Listo',
-            'La categoria ha sido guardada',
-            'success'
-          );
-        },
-        (err) => {
-          this.loadData = false;
-          alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
-        }
-      );
+    this.categoriesService.patchData(this.data.id, dataCategory).subscribe(
+      (resp) => {
+        this.loadData = false;
+        this.dialogRef.close('save');
+        alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');
+      },
+      (err) => {
+        this.loadData = false;
+        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+      }
+    );
   }
 
   public invalidField(field: string): boolean {

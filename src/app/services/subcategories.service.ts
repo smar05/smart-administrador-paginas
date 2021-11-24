@@ -28,25 +28,25 @@ export class SubcategoriesService {
   }
 
   //Guardar informacion de la subcategoria
-  public postData(data: Isubcategories, token: any): Observable<any> {
+  public postData(data: Isubcategories): Observable<any> {
     return this.http.post(
-      `${environment.urlFirebase}sub-categories.json?auth=${token}`,
+      `${environment.urlFirebase}sub-categories.json`,
       data
     );
   }
 
   //Actualizar subcategoria
-  public patchData(id: string, data: object, token: any): Observable<any> {
+  public patchData(id: string, data: object): Observable<any> {
     return this.http.patch(
-      `${environment.urlFirebase}sub-categories/${id}.json?auth=${token}`,
+      `${environment.urlFirebase}sub-categories/${id}.json`,
       data
     );
   }
 
   //Eliminar subcategoria
-  public deleteData(id: string, token: any): Observable<any> {
+  public deleteData(id: string): Observable<any> {
     return this.http.delete(
-      `${environment.urlFirebase}sub-categories/${id}.json?auth=${token}`
+      `${environment.urlFirebase}sub-categories/${id}.json`
     );
   }
 }

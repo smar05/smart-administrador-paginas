@@ -90,23 +90,17 @@ export class NewSubcategoriesComponent implements OnInit {
       view: 0,
     };
     //Guardar en base de datos la categoria
-    this.subcategoriesService
-      .postData(dataCategory, localStorage.getItem('token'))
-      .subscribe(
-        (resp) => {
-          this.loadData = false;
-          this.dialogRef.close('save');
-          alerts.basicAlert(
-            'Listo',
-            'La categoria ha sido guardada',
-            'success'
-          );
-        },
-        (err) => {
-          this.loadData = false;
-          alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
-        }
-      );
+    this.subcategoriesService.postData(dataCategory).subscribe(
+      (resp) => {
+        this.loadData = false;
+        this.dialogRef.close('save');
+        alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');
+      },
+      (err) => {
+        this.loadData = false;
+        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+      }
+    );
   }
 
   public invalidField(field: string): boolean {
