@@ -92,7 +92,7 @@ export class EditSubcategoriesComponent implements OnInit {
     };
 
     this.subcategoriesService
-      .patchData(this.data.id, dataSubcategory, localStorage.getItem('token'))
+      .patchData(this.data.id, dataSubcategory)
       .subscribe(
         (resp: any) => {
           this.dialogRef.close('save');

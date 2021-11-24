@@ -132,7 +132,7 @@ export class CategoriesComponent implements OnInit {
           state: 'hidden',
         };
     this.categoriesService
-      .patchData(e.target.id.split('_')[1], data, localStorage.getItem('token'))
+      .patchData(e.target.id.split('_')[1], data)
       .subscribe(() => {
         this.getData();
       });
@@ -177,16 +177,14 @@ export class CategoriesComponent implements OnInit {
                 );
               } else {
                 //Eliminar registro de la base de datos
-                this.categoriesService
-                  .deleteData(id, localStorage.getItem('token'))
-                  .subscribe((resp: any) => {
-                    alerts.basicAlert(
-                      'Listo',
-                      'La categoria ha sido eliminada',
-                      'success'
-                    );
-                    this.getData();
-                  });
+                this.categoriesService.deleteData(id).subscribe((resp: any) => {
+                  alerts.basicAlert(
+                    'Listo',
+                    'La categoria ha sido eliminada',
+                    'success'
+                  );
+                  this.getData();
+                });
               }
             });
         }

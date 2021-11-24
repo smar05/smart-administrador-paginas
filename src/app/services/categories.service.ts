@@ -28,25 +28,20 @@ export class CategoriesService {
   }
 
   //Guardar informacion de la categoria
-  public postData(data: Icategories, token: any): Observable<any> {
-    return this.http.post(
-      `${environment.urlFirebase}categories.json?auth=${token}`,
-      data
-    );
+  public postData(data: Icategories): Observable<any> {
+    return this.http.post(`${environment.urlFirebase}categories.json`, data);
   }
 
   //Actualizar categoria
-  public patchData(id: string, data: object, token: any): Observable<any> {
+  public patchData(id: string, data: object): Observable<any> {
     return this.http.patch(
-      `${environment.urlFirebase}categories/${id}.json?auth=${token}`,
+      `${environment.urlFirebase}categories/${id}.json`,
       data
     );
   }
 
   //Eliminar categoria
-  public deleteData(id: string, token: any): Observable<any> {
-    return this.http.delete(
-      `${environment.urlFirebase}categories/${id}.json?auth=${token}`
-    );
+  public deleteData(id: string): Observable<any> {
+    return this.http.delete(`${environment.urlFirebase}categories/${id}.json`);
   }
 }

@@ -160,7 +160,7 @@ export class SubcategoriesComponent implements OnInit {
               } else {
                 //Eliminar el registro
                 this.subcategoriesService
-                  .deleteData(id, localStorage.getItem('token'))
+                  .deleteData(id)
                   .subscribe((resp: any) => {
                     alerts.basicAlert(
                       'Listo',
