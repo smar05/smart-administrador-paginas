@@ -9,6 +9,11 @@ import { Injectable } from '@angular/core';
 export class ProductsService {
   constructor(public http: HttpClient) {}
 
+  //Todos los productos de la coleccion
+  public getData(): Observable<any> {
+    return this.http.get(`${environment.urlFirebase}products.json`);
+  }
+
   //Data filtrada de productos
   public getFilterData(orderBy: string, equalTo: string): Observable<any> {
     return this.http.get(
