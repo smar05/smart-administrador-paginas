@@ -87,7 +87,7 @@ export class ProductsComponent implements OnInit {
             delivery_time: resp[a].delivery_time,
             description: resp[a].description,
             details: JSON.parse(resp[a].details),
-            feedback: resp[a].feedback,
+            feedback: JSON.parse(resp[a].feedback),
             gallery: JSON.parse(resp[a].gallery),
             horizontal_slider: JSON.parse(resp[a].horizontal_slider),
             image: resp[a].image,
@@ -99,7 +99,7 @@ export class ProductsComponent implements OnInit {
             shipping: resp[a].shipping,
             specification: resp[a].specification
               ? JSON.parse(resp[a].specification)
-              : null,
+              : [],
             stock: resp[a].stock,
             store: resp[a].store,
             sub_category: resp[a].sub_category,
@@ -119,4 +119,25 @@ export class ProductsComponent implements OnInit {
       this.loadData = false;
     });
   }
+
+  //FIltro de busqueda
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  //Dialogo para un nuevo producto
+  public newProduct(): void {}
+
+  //Cambiar estado de la categoria
+  public changeState(e: any): void {}
+
+  //Editar producto
+  public editProduct(id: string): void {}
+
+  //Eliminar producto
+  public deleteProduct(id: string, name: string) {}
 }
