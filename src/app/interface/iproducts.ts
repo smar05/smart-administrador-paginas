@@ -12,7 +12,7 @@ export interface Iproducts {
   name: string;
   offer: string;
   price: string;
-  reviews: string;
+  reviews: any;
   sales: number;
   shipping: string;
   specification: string;

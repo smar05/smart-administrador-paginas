@@ -445,20 +445,27 @@
                     </li>
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Vistas:</strong>
+                      <strong class="mat-header-cell">Vistas: </strong>
                       {{ element.views }}
                     </li>
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Ventas:</strong>
+                      <strong class="mat-header-cell">Ventas: </strong>
                       {{ element.sales }}
                     </li>
                     <li>
                       <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Criticas:</strong>
-                      <div *ngFor="let rev of element.reviews">
-                        {{ rev.review }}
-                      </div>
+                      <strong class="mat-header-cell">Criticas: </strong>
+                      <span *ngFor="let rev of element.reviews">
+                        <i
+                          *ngIf="rev == 1"
+                          class="fas fa-star text-warning"
+                        ></i>
+                        <i
+                          *ngIf="rev == 2"
+                          class="far fa-star text-warning"
+                        ></i>
+                      </span>
                     </li>
                   </ul>
                 </div>

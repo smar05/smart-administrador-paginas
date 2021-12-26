@@ -117,6 +117,11 @@ export class ProductsComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.loadData = false;
+
+      //Configuracion de las reseñas
+      for (const i in this.products) {
+        this.configReviews(this.products[i].reviews, i);
+      }
     });
   }
 
@@ -139,5 +144,31 @@ export class ProductsComponent implements OnInit {
   public editProduct(id: string): void {}
 
   //Eliminar producto
-  public deleteProduct(id: string, name: string) {}
+  public deleteProduct(id: string, name: string): void {}
+
+  //Funcion para promediar las reseñas
+  public configReviews(data: any, index: any): void {
+    let arrayReviews = [];
+
+    if (data.length > 0) {
+      let totalReview = 0;
+      let promReview = 0;
+
+      for (const i in data) {
+        totalReview += Number(data[i].review);
+      }
+
+      promReview = Math.round(totalReview / data.length);
+
+      for (let i = 1; i <= 5; i++) {
+        if (i > promReview) {
+          arrayReviews[i - 1] = 2;
+        } else {
+          arrayReviews[i - 1] = 1;
+        }
+      }
+
+      this.products[index].reviews = arrayReviews;
+    }
+  }
 }
