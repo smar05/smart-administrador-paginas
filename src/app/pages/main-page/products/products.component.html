@@ -118,7 +118,7 @@
                     element == expandedElement ? 'expanded' : 'collapsed'
                   "
                 >
-                  <ul class="pl-0">
+                  <ul class="container pl-0">
                     <li class="py-2">
                       <div
                         *ngIf="
@@ -279,6 +279,185 @@
                             </div>
                           </figure>
                         </div>
+                      </div>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Detalles: </strong>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr *ngFor="let detail of element.details">
+                            <td class="bg-light">{{ detail.title }}</td>
+                            <td>{{ detail.value }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Descripción: </strong>
+                      <div class="row">
+                        <div
+                          style="overflow-x: scroll"
+                          class="p-3"
+                          [innerHTML]="element.description"
+                        ></div>
+                      </div>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Galeria: </strong>
+                      <div class="row">
+                        <figure
+                          *ngFor="let pic of element.gallery"
+                          class="col-12 col-lg-3"
+                        >
+                          <img src="{{ pic }}" class="img-thumbnail" />
+                        </figure>
+                      </div>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Banner superior: </strong>
+                      <div class="py-3">
+                        <p>
+                          <strong>H3 tag: </strong
+                          >{{ element.top_banner["H3 tag"] }}
+                        </p>
+                        <p>
+                          <strong>P1 tag: </strong
+                          >{{ element.top_banner["P1 tag"] }}
+                        </p>
+                        <p>
+                          <strong>H4 tag: </strong
+                          >{{ element.top_banner["H4 tag"] }}
+                        </p>
+                        <p>
+                          <strong>P2 tag: </strong
+                          >{{ element.top_banner["P2 tag"] }}
+                        </p>
+                        <p>
+                          <strong>Span tag: </strong
+                          >{{ element.top_banner["Span tag"] }}
+                        </p>
+                        <p>
+                          <strong>Button tag: </strong
+                          >{{ element.top_banner["Button tag"] }}
+                        </p>
+                        <p><strong>IMG tag: </strong></p>
+                        <img
+                          *ngIf="element.top_banner['IMG tag']"
+                          src="{{ element.top_banner['IMG tag'] }}"
+                          class="img-fluid"
+                        />
+                      </div>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Banner por defecto:
+                      </strong>
+                      <img
+                        *ngIf="element.default_banner"
+                        src="{{ element.default_banner }}"
+                        class="img-fluid py-3"
+                      />
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Deslizador horizontal:
+                      </strong>
+                      <div class="py-3">
+                        <p>
+                          <strong>H4 tag: </strong
+                          >{{ element.horizontal_slider["H4 tag"] }}
+                        </p>
+                        <p>
+                          <strong>H3-1 tag: </strong
+                          >{{ element.horizontal_slider["H3-1 tag"] }}
+                        </p>
+                        <p>
+                          <strong>H3-2 tag: </strong
+                          >{{ element.horizontal_slider["H3-2 tag"] }}
+                        </p>
+                        <p>
+                          <strong>H3-3 tag: </strong
+                          >{{ element.horizontal_slider["H3-3 tag"] }}
+                        </p>
+                        <p>
+                          <strong>H3-4s tag: </strong
+                          >{{ element.horizontal_slider["H3-4s tag"] }}
+                        </p>
+                        <p>
+                          <strong>Button tag: </strong
+                          >{{ element.horizontal_slider["Button tag"] }}
+                        </p>
+                        <p>
+                          <strong>IMG tag: </strong>
+                        </p>
+                        <img
+                          *ngIf="element.horizontal_slider['IMG tag']"
+                          src="{{ element.horizontal_slider['IMG tag'] }}"
+                          class="img-fluid"
+                        />
+                      </div>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Deslizador vertical:
+                      </strong>
+                      <img
+                        *ngIf="element.vertical_slider"
+                        src="{{ element.vertical_slider }}"
+                        class="img-fluid py-3"
+                      />
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Video: </strong>
+                      <iframe
+                        *ngIf="element.video[0] === 'youtube'"
+                        class="mb-3"
+                        [src]="
+                          'https://www.youtube.com/embed/' + element.video[1]
+                            | urlSecure
+                        "
+                        width="100%"
+                        height="360"
+                        frameborder="0"
+                        allowfullscreen
+                      ></iframe>
+
+                      <iframe
+                        *ngIf="element.video[0] === 'vimeo'"
+                        class="mb-3"
+                        [src]="
+                          'https://player.vimeo.com/video/' + element.video[1]
+                            | urlSecure
+                        "
+                        width="100%"
+                        height="360"
+                        frameborder="0"
+                        allowfullscreen
+                      ></iframe>
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Vistas:</strong>
+                      {{ element.views }}
+                    </li>
+                    <li class="py-1">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Ventas:</strong>
+                      {{ element.sales }}
+                    </li>
+                    <li>
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Criticas:</strong>
+                      <div *ngFor="let rev of element.reviews">
+                        {{ rev.review }}
                       </div>
                     </li>
                   </ul>

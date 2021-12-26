@@ -94,7 +94,7 @@ export class ProductsComponent implements OnInit {
             name: resp[a].name,
             offer: resp[a].offer,
             price: resp[a].price,
-            reviews: resp[a].reviews,
+            reviews: JSON.parse(resp[a].reviews),
             sales: resp[a].sales,
             shipping: resp[a].shipping,
             specification: resp[a].specification
