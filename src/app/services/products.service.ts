@@ -25,4 +25,12 @@ export class ProductsService {
   public getItem(id: string): Observable<any> {
     return this.http.get(`${environment.urlFirebase}products/${id}.json`);
   }
+
+  //Actualizar subcategoria
+  public patchData(id: string, data: object): Observable<any> {
+    return this.http.patch(
+      `${environment.urlFirebase}products/${id}.json`,
+      data
+    );
+  }
 }

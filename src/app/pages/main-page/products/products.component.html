@@ -81,6 +81,7 @@
                 <button
                   class="btn btn-sm btn-danger mr-1 size"
                   *ngIf="element.feedback.type != 'approved'"
+                  (click)="cambiarEstado(element, 'review')"
                 >
                   <!--<i class="fas fa-clock"></i>-->
                   <i class="fas fa-times"></i>
@@ -88,6 +89,7 @@
                 <button
                   class="btn btn-sm btn-success mr-1 size"
                   *ngIf="element.feedback.type == 'approved'"
+                  (click)="cambiarEstado(element, 'approved')"
                 >
                   <i class="fas fa-check"></i>
                 </button>

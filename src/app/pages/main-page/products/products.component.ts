@@ -1,3 +1,4 @@
+import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -169,6 +170,80 @@ export class ProductsComponent implements OnInit {
       }
 
       this.products[index].reviews = arrayReviews;
+    }
+  }
+
+  //Cambia el estado del producto
+  public cambiarEstado(producto: any, estado: string): void {
+    let feedback = producto.feedback;
+    if (estado === 'approved') {
+      //Desactivar el estado
+      alerts
+        .confirmAlert(
+          '¿Esta seguro de cambiar el estado del producto?',
+          'Desea desactivar el producto',
+          'question',
+          'Si'
+        )
+        .then((result: any) => {
+          if (result.isConfirmed) {
+            feedback.type = 'review';
+            let data = {
+              feedback: JSON.stringify(feedback),
+            };
+            this.productsService.patchData(producto.id, data).subscribe(
+              (resp) => {
+                this.getData();
+                alerts.basicAlert(
+                  'Listo',
+                  'Se ha cambiado el estado del producto',
+                  'success'
+                );
+              },
+              (error) => {
+                alerts.basicAlert(
+                  'Error',
+                  'No se ha podido cambiar el estado del producto',
+                  'error'
+                );
+              }
+            );
+          }
+        });
+    } else if (estado === 'review') {
+      //Activar el estado
+      alerts
+        .confirmAlert(
+          '¿Esta seguro de cambiar el estado del producto?',
+          'Desea activar el producto',
+          'question',
+          'Si'
+        )
+        .then((result: any) => {
+          if (result.isConfirmed) {
+            feedback.type = 'approved';
+            let data = {
+              feedback: JSON.stringify(feedback),
+            };
+            this.productsService.patchData(producto.id, data).subscribe(
+              (resp) => {
+                this.getData();
+                alerts.basicAlert(
+                  'Listo',
+                  'Se ha cambiado el estado del producto',
+                  'success'
+                );
+              },
+              (err) => {
+                alerts.basicAlert(
+                  'Error',
+                  'No se ha podido cambiar el estado del producto',
+                  'error'
+                );
+              }
+            );
+          }
+        });
     }
   }
 }
