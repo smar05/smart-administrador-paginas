@@ -315,7 +315,16 @@
                           *ngFor="let pic of element.gallery"
                           class="col-12 col-lg-3"
                         >
-                          <img src="{{ pic }}" class="img-thumbnail" />
+                          <img
+                            *ngIf="!(pic == '' || pic == undefined)"
+                            src="{{ pic }}"
+                            class="img-thumbnail"
+                          />
+                          <img
+                            *ngIf="pic == '' || pic == undefined"
+                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                            class="img-thumbnail"
+                          />
                         </figure>
                       </div>
                     </li>
@@ -349,8 +358,21 @@
                         </p>
                         <p><strong>IMG tag: </strong></p>
                         <img
-                          *ngIf="element.top_banner['IMG tag']"
+                          *ngIf="
+                            !(
+                              element.top_banner['IMG tag'] == '' ||
+                              element.top_banner['IMG tag'] == undefined
+                            )
+                          "
                           src="{{ element.top_banner['IMG tag'] }}"
+                          class="img-fluid"
+                        />
+                        <img
+                          *ngIf="
+                            element.top_banner['IMG tag'] == '' ||
+                            element.top_banner['IMG tag'] == undefined
+                          "
+                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
                           class="img-fluid"
                         />
                       </div>
@@ -360,11 +382,26 @@
                       <strong class="mat-header-cell"
                         >Banner por defecto:
                       </strong>
-                      <img
-                        *ngIf="element.default_banner"
-                        src="{{ element.default_banner }}"
-                        class="img-fluid py-3"
-                      />
+                      <div class="py-3">
+                        <img
+                          *ngIf="
+                            !(
+                              element.default_banner == '' ||
+                              element.default_banner == undefined
+                            )
+                          "
+                          src="{{ element.default_banner }}"
+                          class="img-fluid py-3"
+                        />
+                        <img
+                          *ngIf="
+                            element.default_banner == '' ||
+                            element.default_banner == undefined
+                          "
+                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                          class="img-fluid py-3"
+                        />
+                      </div>
                     </li>
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
@@ -400,8 +437,21 @@
                           <strong>IMG tag: </strong>
                         </p>
                         <img
-                          *ngIf="element.horizontal_slider['IMG tag']"
+                          *ngIf="
+                            !(
+                              element.horizontal_slider['IMG tag'] == '' ||
+                              element.horizontal_slider['IMG tag'] == undefined
+                            )
+                          "
                           src="{{ element.horizontal_slider['IMG tag'] }}"
+                          class="img-fluid"
+                        />
+                        <img
+                          *ngIf="
+                            element.horizontal_slider['IMG tag'] == '' ||
+                            element.horizontal_slider['IMG tag'] == undefined
+                          "
+                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
                           class="img-fluid"
                         />
                       </div>
@@ -411,15 +461,43 @@
                       <strong class="mat-header-cell"
                         >Deslizador vertical:
                       </strong>
-                      <img
-                        *ngIf="element.vertical_slider"
-                        src="{{ element.vertical_slider }}"
-                        class="img-fluid py-3"
-                      />
+                      <div class="py-3">
+                        <img
+                          *ngIf="
+                            !(
+                              element.vertical_slider == '' ||
+                              element.vertical_slider == undefined
+                            )
+                          "
+                          src="{{ element.vertical_slider }}"
+                          class="img-fluid"
+                        />
+                        <img
+                          *ngIf="
+                            element.vertical_slider == '' ||
+                            element.vertical_slider == undefined
+                          "
+                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                          class="img-fluid"
+                        />
+                      </div>
                     </li>
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Video: </strong>
+                      <div
+                        class="py-3"
+                        *ngIf="
+                          element.video[1] == '' ||
+                          element.video[1] == undefined
+                        "
+                      >
+                        <img
+                          src="../../../../assets/img/undraw_video_files_fu10.svg"
+                          alt="Video no encontrado"
+                          class="img-fluid"
+                        />
+                      </div>
                       <iframe
                         *ngIf="element.video[0] === 'youtube'"
                         class="mb-3"
