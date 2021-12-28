@@ -20,4 +20,9 @@ export class ProductsService {
       `${environment.urlFirebase}products.json?orderBy="${orderBy}"&equalTo="${equalTo}"&print=pretty`
     );
   }
+
+  //Obtener un producto
+  public getItem(id: string): Observable<any> {
+    return this.http.get(`${environment.urlFirebase}products/${id}.json`);
+  }
 }
