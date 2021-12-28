@@ -14,9 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { PipesModule } from '../../../pipes/pipes/pipes.module';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { NewProductComponent } from './new-product/new-product.component';
 
 @NgModule({
-  declarations: [ProductsComponent],
+  declarations: [ProductsComponent, NewProductComponent],
   imports: [
     CommonModule,
     ProductsRoutingModule,

@@ -24,13 +24,12 @@
       <div class="card-header">
         <div [hidden]="loadData" class="row mb-2">
           <div class="col-12 col-sm-6 col-xl-3 mr-auto">
-            <button
+            <a
               class="btn btn-block bg-gradient-primary"
-              type="button"
-              (click)="newProduct()"
+              [routerLink]="['new-product']"
             >
               Nuevo producto
-            </button>
+            </a>
           </div>
           <div class="col-12 col-sm-6 col-xl-3 ml-auto">
             <input
