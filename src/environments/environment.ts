@@ -2,19 +2,18 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const apiKey = 'AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc';
+
 export const environment = {
   production: false,
   urlFirebase: `https://smar-software-default-rtdb.firebaseio.com/${localStorage.getItem(
     'localId'
   )}/`,
-  urlLogin:
-    'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
-  urlGetUser:
-    'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
-  urlRefreshToken:
-    'https://securetoken.googleapis.com/v1/token?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
+  urlLogin: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+  urlGetUser: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+  urlRefreshToken: `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
   firebaseConfig: {
-    apiKey: 'AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
+    apiKey: apiKey,
     authDomain: 'smar-software.firebaseapp.com',
     databaseURL: 'https://smar-software-default-rtdb.firebaseio.com',
     projectId: 'smar-software',
