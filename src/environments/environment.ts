@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  urlFirebase: 'https://smar-software-default-rtdb.firebaseio.com/',
+  urlFirebase: `https://smar-software-default-rtdb.firebaseio.com/${localStorage.getItem(
+    'localId'
+  )}/`,
   urlLogin:
     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc',
   urlGetUser:
