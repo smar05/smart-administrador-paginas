@@ -76,12 +76,11 @@ export class EditSubcategoriesComponent implements OnInit {
 
   //Guardar subcategoria
   public editSubcategory(): any {
-    this.loadData = true;
     this.formSubmitted = true;
     if (this.f.invalid) {
       return;
     }
-
+    this.loadData = true;
     const dataSubcategory: Isubcategories = {
       category: this.categoryView,
       name: this.nameView,

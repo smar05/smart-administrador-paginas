@@ -73,13 +73,13 @@ export class NewCategoriesComponent implements OnInit {
   ngOnInit(): void {}
 
   public saveCategory(): void {
-    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
     if (this.f.invalid) {
       return;
     }
+    this.loadData = true;
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
