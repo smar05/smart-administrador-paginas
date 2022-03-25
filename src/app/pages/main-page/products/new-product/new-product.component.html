@@ -35,13 +35,47 @@
               formControlName="name"
               maxlength="50"
               required
-              [ngClass]="{ 'is-invalid': invalidField('name') }"
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('name') ||
+                  (name.invalid && name.errors?.product) ||
+                  (name.invalid && name.errors?.pattern)
+              }"
             />
             <span
               class="invalid-feedback"
               *ngIf="name.invalid && name.errors?.required"
-              >Ingrese el nombre del producto</span
             >
+              Por favor ingrese el nombre del producto
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.product"
+            >
+              El producto ya existe
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.pattern"
+            >
+              Se encontraron caracteres invalidos
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.maxlength"
+            >
+              El nombre no puede tener mas de 50 caracteres
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="inputUrl">Url</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="url"
+              value="{{ urlInput }}"
+              readonly
+            />
           </div>
         </ng-container>
         <!--Spinner de carga-->
