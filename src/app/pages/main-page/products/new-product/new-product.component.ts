@@ -32,6 +32,7 @@ export class NewProductComponent implements OnInit {
     category: ['', [Validators.required]],
     sub_category: ['', [Validators.required]],
     image: ['', [Validators.required]],
+    description: ['', [Validators.required]],
   });
 
   //Validaciones personalizadas
@@ -49,6 +50,10 @@ export class NewProductComponent implements OnInit {
 
   get image() {
     return this.f.controls.image;
+  }
+
+  get description() {
+    return this.f.controls.description;
   }
 
   //Variable para validar el envio del formulario
@@ -74,6 +79,28 @@ export class NewProductComponent implements OnInit {
 
   //Galeria de imagenes del producto
   public files: File[] = [];
+
+  //Configuracion summernote
+  config = {
+    placeholder: '',
+    tabsize: 2,
+    height: 400,
+    toolbar: [
+      ['misc', ['codeview', 'undo', 'redo']],
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['para', ['style', 'ul', 'ol', 'paragraph', 'height']],
+      ['insert', ['table', 'link', 'hr']],
+    ],
+    fontNames: [
+      'Helvetica',
+      'Arial',
+      'Arial Black',
+      'Comic Sans MS',
+      'Courier New',
+      'Roboto',
+      'Times',
+    ],
+  };
 
   constructor(
     private form: FormBuilder,
@@ -128,7 +155,7 @@ export class NewProductComponent implements OnInit {
       date_created: '',
       default_banner: '',
       delivery_time: 0,
-      description: '',
+      description: this.f.controls.description.value,
       details: '',
       feedback: '',
       gallery: JSON.stringify(galleryPhotos),

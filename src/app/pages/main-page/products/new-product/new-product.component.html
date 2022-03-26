@@ -206,6 +206,21 @@
               Se permiten maximo 4 fotos
             </span>
           </div>
+          <!--Descripcion del producto-->
+          <div class="form-group">
+            <label for="">Descripcion</label>
+            <div
+              [ngxSummernote]="config"
+              formControlName="description"
+              [ngClass]="{ 'is-invalid': invalidField('description') }"
+            ></div>
+            <span
+              class="invalid-feedback"
+              *ngIf="description.invalid && description.errors?.required"
+            >
+              Por favor coloque una descripcion.
+            </span>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">
