@@ -73,13 +73,13 @@ export class NewSubcategoriesComponent implements OnInit {
 
   //Guardar subcategoria
   public saveSubcategory(): void {
-    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
     if (this.f.invalid) {
       return;
     }
+    this.loadData = true;
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Isubcategories = {
       category: this.f.controls.category.value,

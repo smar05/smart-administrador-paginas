@@ -65,14 +65,13 @@ export class EditCategoriesComponent implements OnInit {
   }
 
   public editCategory(): void {
-    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
     if (this.f.invalid) {
       return;
     }
-
+    this.loadData = true;
     //Verificar si hay cambio de imagen
     if (this.resultImg == '') {
       this.resultImg = this.nameImage;
