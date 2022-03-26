@@ -71,6 +71,9 @@ export class NewProductComponent implements OnInit {
   //Variable para la imagen del producto
   public imgTemp: string = '';
 
+  //Galeria de imagenes del producto
+  public files: File[] = [];
+
   constructor(
     private form: FormBuilder,
     private productsService: ProductsService,
@@ -90,7 +93,7 @@ export class NewProductComponent implements OnInit {
   }
 
   //Guardar producto
-  public saveProduct(): void {
+  public async saveProduct(): Promise<void> {
     this.formSubmitted = true;
 
     //Validamos que el formulario este correcto
@@ -98,6 +101,20 @@ export class NewProductComponent implements OnInit {
       return;
     }
     this.loadData = true;
+
+    //Galeria de fotos del producto
+    let galleryPhotos: string[] = [];
+    if (this.files.length > 0) {
+      let photo64: string = ''; //Foto en base 64
+      for (const file of this.files) {
+        try {
+          photo64 = await functions.fileToBase64(file);
+          galleryPhotos.push(photo64);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
 
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
@@ -108,7 +125,7 @@ export class NewProductComponent implements OnInit {
       description: '',
       details: '',
       feedback: '',
-      gallery: '',
+      gallery: JSON.stringify(galleryPhotos),
       horizontal_slider: '',
       image: this.imgTemp,
       name: this.f.controls.name.value,
@@ -194,5 +211,14 @@ export class NewProductComponent implements OnInit {
     if (type == 'image') {
       this.imgTemp = resp;
     }
+  }
+
+  //Funciones de adicionar y eliminar imagenes de la galeria
+  public onSelect(event: any) {
+    this.files.push(...event.addedFiles);
+  }
+
+  public onRemove(event: any) {
+    this.files.splice(this.files.indexOf(event), 1);
   }
 }

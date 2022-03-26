@@ -73,4 +73,15 @@ export class functions {
     value = value.replace(/[,]/g, '');
     return value;
   }
+
+  //Convertir File a base 64
+  static fileToBase64(file: File): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () =>
+        resolve(reader.result != null ? reader.result.toString() : '');
+      reader.onerror = (error) => reject(error);
+    });
+  }
 }
