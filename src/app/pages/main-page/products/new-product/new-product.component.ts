@@ -29,6 +29,7 @@ export class NewProductComponent implements OnInit {
       },
     ],
     category: ['', [Validators.required]],
+    sub_category: ['', [Validators.required]],
   });
 
   //Validaciones personalizadas
@@ -38,6 +39,10 @@ export class NewProductComponent implements OnInit {
 
   get category() {
     return this.f.controls.category;
+  }
+
+  get sub_category() {
+    return this.f.controls.sub_category;
   }
 
   //Variable para validar el envio del formulario
@@ -52,8 +57,11 @@ export class NewProductComponent implements OnInit {
   //Variable con las categorias
   public categories: any[] = [];
 
-  //Variabl con las subcategorias
+  //Variable con las subcategorias
   public subcategories: any[] = [];
+
+  //Variable para el listado de titulo
+  public titleList: string = '';
 
   constructor(
     private form: FormBuilder,
@@ -85,7 +93,7 @@ export class NewProductComponent implements OnInit {
 
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
-      category: '',
+      category: this.f.controls.category.value.split('_')[0],
       date_created: '',
       default_banner: '',
       delivery_time: 0,
@@ -104,16 +112,17 @@ export class NewProductComponent implements OnInit {
       specification: '',
       stock: 0,
       store: '',
-      sub_category: '',
+      sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: '',
       tags: '',
-      title_list: '',
+      title_list: this.titleList,
       top_banner: '',
       url: this.urlInput,
       vertical_slider: '',
       video: '',
       views: 0,
     };
+    console.log(dataProduct);
   }
 
   //Validamos el formulario
@@ -141,7 +150,7 @@ export class NewProductComponent implements OnInit {
 
   //Filtro de subcategorias
   public selectCategory(e: any): void {
-    this.categories.filter((category: any) => {
+    this.categories.filter((category: Icategories) => {
       if (category.name == e.target.value.split('_')[1]) {
         //Informacion de las subcategorias
         this.subcategoriesService
@@ -153,6 +162,15 @@ export class NewProductComponent implements OnInit {
               url: resp[a].url,
             }));
           });
+      }
+    });
+  }
+
+  //Filtro para el listado de titulo
+  public selectSubcategory(e: any): void {
+    this.subcategories.filter((subcategory: any) => {
+      if (subcategory.name == e.target.value.split('_')[1]) {
+        this.titleList = subcategory.titleList;
       }
     });
   }
