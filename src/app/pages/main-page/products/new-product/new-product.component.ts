@@ -1,3 +1,4 @@
+import { Iproducts } from './../../../../interface/iproducts';
 import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
@@ -55,6 +56,38 @@ export class NewProductComponent implements OnInit {
       return;
     }
     this.loadData = true;
+
+    //Informacion del formulario en la interfaz
+    const dataProduct: Iproducts = {
+      category: '',
+      date_created: '',
+      default_banner: '',
+      delivery_time: 0,
+      description: '',
+      details: '',
+      feedback: '',
+      gallery: '',
+      horizontal_slider: '',
+      image: '',
+      name: this.f.controls.name.value,
+      offer: '',
+      price: '',
+      reviews: '',
+      sales: 0,
+      shipping: '',
+      specification: '',
+      stock: 0,
+      store: '',
+      sub_category: '',
+      summary: '',
+      tags: '',
+      title_list: '',
+      top_banner: '',
+      url: this.urlInput,
+      vertical_slider: '',
+      video: '',
+      views: 0,
+    };
   }
 
   //Validamos el formulario
