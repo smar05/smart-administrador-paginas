@@ -67,6 +67,7 @@
               El nombre no puede tener mas de 50 caracteres
             </span>
           </div>
+          <!--Url del producto-->
           <div class="form-group">
             <label for="inputUrl">Url</label>
             <input
@@ -76,6 +77,30 @@
               value="{{ urlInput }}"
               readonly
             />
+          </div>
+          <!--Categoria del producto-->
+          <div class="form-group">
+            <label for="inputCategory">Categoria</label>
+            <select
+              class="form-control"
+              formControlName="category"
+              [ngClass]="{ 'is-invalid': invalidField('category') }"
+              (change)="selectCategory($event)"
+            >
+              <option value="" disabled>Seleccione una categoria</option>
+              <option
+                value="{{ category.url }}_{{ category.name }}"
+                *ngFor="let category of categories"
+              >
+                {{ category.name }}
+              </option>
+            </select>
+            <span
+              class="invalid-feedback"
+              *ngIf="category.invalid && category.errors?.required"
+            >
+              Porfavor seleccione una categoria
+            </span>
           </div>
         </ng-container>
         <!--Spinner de carga-->

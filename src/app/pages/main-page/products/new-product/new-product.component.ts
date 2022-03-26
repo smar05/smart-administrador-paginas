@@ -1,3 +1,7 @@
+import { Isubcategories } from './../../../../interface/isubcategories';
+import { SubcategoriesService } from './../../../../services/subcategories.service';
+import { Icategories } from './../../../../interface/icategories';
+import { CategoriesService } from './../../../../services/categories.service';
 import { Iproducts } from './../../../../interface/iproducts';
 import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
@@ -24,11 +28,16 @@ export class NewProductComponent implements OnInit {
         updateOn: 'blur',
       },
     ],
+    category: ['', [Validators.required]],
   });
 
   //Validaciones personalizadas
   get name() {
     return this.f.controls.name;
+  }
+
+  get category() {
+    return this.f.controls.category;
   }
 
   //Variable para validar el envio del formulario
@@ -40,12 +49,29 @@ export class NewProductComponent implements OnInit {
   //Variable global de la url
   public urlInput: string = '';
 
+  //Variable con las categorias
+  public categories: any[] = [];
+
+  //Variabl con las subcategorias
+  public subcategories: any[] = [];
+
   constructor(
     private form: FormBuilder,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private categoriesService: CategoriesService,
+    private subcategoriesService: SubcategoriesService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    //Categorias
+    this.categoriesService.getData().subscribe((resp: any) => {
+      this.categories = Object.keys(resp).map((a) => ({
+        name: resp[a].name,
+        titleList: JSON.parse(resp[a].title_list),
+        url: resp[a].url,
+      }));
+    });
+  }
 
   //Guardar producto
   public saveProduct(): void {
@@ -111,5 +137,23 @@ export class NewProductComponent implements OnInit {
         });
       });
     };
+  }
+
+  //Filtro de subcategorias
+  public selectCategory(e: any): void {
+    this.categories.filter((category: any) => {
+      if (category.name == e.target.value.split('_')[1]) {
+        //Informacion de las subcategorias
+        this.subcategoriesService
+          .getFilterData('category', category.name)
+          .subscribe((resp: any) => {
+            this.subcategories = Object.keys(resp).map((a) => ({
+              name: resp[a].name,
+              titleList: resp[a].title_list,
+              url: resp[a].url,
+            }));
+          });
+      }
+    });
   }
 }
