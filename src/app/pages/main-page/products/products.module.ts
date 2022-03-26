@@ -16,6 +16,8 @@ import { PipesModule } from '../../../pipes/pipes/pipes.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NewProductComponent } from './new-product/new-product.component';
 
+import { NgxDropzoneModule } from 'ngx-dropzone';
+
 @NgModule({
   declarations: [ProductsComponent, NewProductComponent],
   imports: [
@@ -29,6 +31,7 @@ import { NewProductComponent } from './new-product/new-product.component';
     MatIconModule,
     PipesModule,
     ReactiveFormsModule,
+    NgxDropzoneModule,
   ],
 })
 export class ProductsModule {}
