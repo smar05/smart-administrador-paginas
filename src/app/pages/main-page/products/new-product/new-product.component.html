@@ -189,15 +189,10 @@
               accept="image/jpeg,image/jpg,image/png,image/gif"
             >
               <ngx-dropzone-label>
-                <h2 class="text-muted">
-                  Galeria de fotos | Tamaño: 1000px * 1000px
+                <h2 class="text-muted small text-center">
+                  Galeria de fotos | Tamaño: 1000px * 1000px | Cantidad maxima:
+                  4
                 </h2>
-                <span
-                  class="text-danger small"
-                  *ngIf="files.length == 0 && formSubmitted"
-                >
-                  Por favor seleccione una imagen
-                </span>
               </ngx-dropzone-label>
               <ngx-dropzone-image-preview
                 *ngFor="let f of files"
@@ -207,6 +202,9 @@
               >
               </ngx-dropzone-image-preview>
             </ngx-dropzone>
+            <span class="text-danger small" *ngIf="files.length > 4">
+              Se permiten maximo 4 fotos
+            </span>
           </div>
         </ng-container>
         <!--Spinner de carga-->

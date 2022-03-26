@@ -1,3 +1,4 @@
+import { alerts } from './../../../../helpers/alerts';
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Icategories } from './../../../../interface/icategories';
@@ -97,7 +98,12 @@ export class NewProductComponent implements OnInit {
     this.formSubmitted = true;
 
     //Validamos que el formulario este correcto
-    if (this.f.invalid) {
+    if (this.f.invalid || this.files.length > 4) {
+      alerts.basicAlert(
+        'Error',
+        'Se encontro un error en el formulario',
+        'error'
+      );
       return;
     }
     this.loadData = true;
