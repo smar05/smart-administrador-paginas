@@ -138,6 +138,49 @@
               readonly
             />
           </div>
+          <!--Imagen del producto-->
+          <div class="form-group">
+            <label for="customFile">
+              <img
+                src="../../../../../assets/img/products/default/default-image.jpg"
+                class="img-fluid"
+                *ngIf="!imgTemp"
+              />
+              <img [src]="imgTemp" class="img-fluid" *ngIf="imgTemp" />
+            </label>
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="customFile"
+                formControlName="image"
+                [ngClass]="{ 'is-invalid': invalidField('image') }"
+                (change)="validateImage($event, 'image')"
+                accept="image/*"
+              />
+              <span class="invalid-feedback">
+                Porfavor seleccione una imagen
+              </span>
+
+              <label
+                class="custom-file-label"
+                for="customFile"
+                *ngIf="!image.value"
+              >
+                Seleccione una imagen
+              </label>
+              <label
+                class="custom-file-label"
+                for="customFile"
+                *ngIf="image.value"
+              >
+                {{ image.value }}
+              </label>
+              <small class="mt-2">
+                Tamaño: 300px * 300px | Formato: JPG o PNG
+              </small>
+            </div>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">

@@ -30,6 +30,7 @@ export class NewProductComponent implements OnInit {
     ],
     category: ['', [Validators.required]],
     sub_category: ['', [Validators.required]],
+    image: ['', [Validators.required]],
   });
 
   //Validaciones personalizadas
@@ -43,6 +44,10 @@ export class NewProductComponent implements OnInit {
 
   get sub_category() {
     return this.f.controls.sub_category;
+  }
+
+  get image() {
+    return this.f.controls.image;
   }
 
   //Variable para validar el envio del formulario
@@ -62,6 +67,9 @@ export class NewProductComponent implements OnInit {
 
   //Variable para el listado de titulo
   public titleList: string = '';
+
+  //Variable para la imagen del producto
+  public imgTemp: string = '';
 
   constructor(
     private form: FormBuilder,
@@ -102,7 +110,7 @@ export class NewProductComponent implements OnInit {
       feedback: '',
       gallery: '',
       horizontal_slider: '',
-      image: '',
+      image: this.imgTemp,
       name: this.f.controls.name.value,
       offer: '',
       price: '',
@@ -173,5 +181,18 @@ export class NewProductComponent implements OnInit {
         this.titleList = subcategory.titleList;
       }
     });
+  }
+
+  //Validamos imagen
+  public async validateImage(e: any, type: string): Promise<void> {
+    let resp: string = '';
+    try {
+      resp = await functions.validateImage(e);
+    } catch (error) {
+      console.error(error);
+    }
+    if (type == 'image') {
+      this.imgTemp = resp;
+    }
   }
 }
