@@ -223,6 +223,40 @@
               Por favor coloque una descripcion.
             </span>
           </div>
+          <!--Resumen del producto-->
+          <div class="form-group">
+            <label for="">Resumen del producto</label>
+            <div
+              class="input-group mb-3"
+              *ngFor="let inputSummary of summaryGroup; let i = index"
+            >
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="removeInput(i, 'summary')"
+                  >
+                    &times;
+                  </button>
+                </span>
+              </div>
+              <input
+                type="text"
+                class="form-control py-4"
+                maxlength="50"
+                (change)="addItem($event, 'summary', i)"
+              />
+              <span class="invalid-feedback">Por favor coloque un resumen</span>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm mb-2"
+              (click)="addInput('summary')"
+            >
+              Añadir resumen
+            </button>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">

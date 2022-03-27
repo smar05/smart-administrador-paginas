@@ -33,6 +33,7 @@ export class NewProductComponent implements OnInit {
     sub_category: ['', [Validators.required]],
     image: ['', [Validators.required]],
     description: ['', [Validators.required]],
+    summary: [[], [Validators.required]],
   });
 
   //Validaciones personalizadas
@@ -54,6 +55,10 @@ export class NewProductComponent implements OnInit {
 
   get description() {
     return this.f.controls.description;
+  }
+
+  get summary() {
+    return this.f.controls.summary;
   }
 
   //Variable para validar el envio del formulario
@@ -101,6 +106,13 @@ export class NewProductComponent implements OnInit {
       'Times',
     ],
   };
+
+  //Variable para el resumen del producto
+  public summaryGroup: any[] = [
+    {
+      input: '',
+    },
+  ];
 
   constructor(
     private form: FormBuilder,
@@ -171,7 +183,7 @@ export class NewProductComponent implements OnInit {
       stock: 0,
       store: '',
       sub_category: this.f.controls.sub_category.value.split('_')[0],
-      summary: '',
+      summary: JSON.stringify(this.f.controls.summary.value),
       tags: '',
       title_list: this.titleList,
       top_banner: '',
@@ -253,5 +265,39 @@ export class NewProductComponent implements OnInit {
 
   public onRemove(event: any) {
     this.files.splice(this.files.indexOf(event), 1);
+  }
+
+  //Adicionar input's dinamicos
+  public addInput(type: string): void {
+    if (type == 'summary') {
+      if (this.summaryGroup.length < 5) {
+        this.summaryGroup.push({
+          input: '',
+        });
+      } else {
+        alerts.basicAlert('Error', 'El limite de resumenes es de 5', 'error');
+      }
+    }
+  }
+
+  //Eliminar input's dinamicos
+  public removeInput(i: number, type: string): void {
+    if (this.summaryGroup.length > 1) {
+      if (type == 'summary') {
+        this.summaryGroup.splice(i, 1);
+        this.f.controls.summary.value.splice(i, 1);
+        this.f.controls.summary.updateValueAndValidity();
+      }
+    }
+  }
+
+  //Adicionar resumen
+  public addItem(e: any, type: string, i: number): void {
+    if (type == 'summary') {
+      if ((e.target.value || '').trim()) {
+        this.f.controls.summary.value.push(e.target.value.trim());
+      }
+      this.f.controls.summary.updateValueAndValidity();
+    }
   }
 }
