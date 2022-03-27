@@ -26,7 +26,9 @@
         <ng-container *ngIf="!loadData">
           <!--Nombre del producto-->
           <div class="form-group">
-            <label for="inputName">Nombre</label>
+            <label for="inputName"
+              >Nombre <sup class="text-danger">*</sup></label
+            >
             <input
               type="text"
               placeholder="Nombre"
@@ -80,7 +82,9 @@
           </div>
           <!--Categoria del producto-->
           <div class="form-group">
-            <label for="inputCategory">Categoria</label>
+            <label for="inputCategory"
+              >Categoria <sup class="text-danger">*</sup></label
+            >
             <select
               class="form-control"
               formControlName="category"
@@ -104,7 +108,9 @@
           </div>
           <!--Subcategoria del producto-->
           <div class="form-group" *ngIf="!category.invalid">
-            <label for="inputSubcategory">Subcategoria</label>
+            <label for="inputSubcategory"
+              >Subcategoria <sup class="text-danger">*</sup></label
+            >
             <select
               class="form-control"
               formControlName="sub_category"
@@ -140,7 +146,9 @@
           </div>
           <!--Imagen del producto-->
           <div class="form-group">
-            <label for="">Imagen principal</label>
+            <label for=""
+              >Imagen principal <sup class="text-danger">*</sup></label
+            >
             <br />
             <label for="customFile">
               <img
@@ -210,7 +218,7 @@
           </div>
           <!--Descripcion del producto-->
           <div class="form-group">
-            <label for="">Descripcion</label>
+            <label for="">Descripcion <sup class="text-danger">*</sup></label>
             <div
               [ngxSummernote]="config"
               formControlName="description"
@@ -225,7 +233,9 @@
           </div>
           <!--Resumen del producto-->
           <div class="form-group">
-            <label for="">Resumen del producto</label>
+            <label for=""
+              >Resumen del producto <sup class="text-danger">*</sup></label
+            >
             <div
               class="input-group mb-3"
               *ngFor="let inputSummary of summaryGroup; let i = index"
