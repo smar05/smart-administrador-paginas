@@ -256,8 +256,15 @@
                 class="form-control py-4"
                 maxlength="50"
                 (change)="addItem($event, 'summary', i)"
+                [ngClass]="{
+                  'is-invalid': invalidField('summary')
+                }"
               />
-              <span class="invalid-feedback">Por favor coloque un resumen</span>
+              <span
+                class="invalid-feedback"
+                *ngIf="summary.invalid && summary.errors?.required"
+                >Por favor coloque un resumen</span
+              >
             </div>
             <button
               type="button"
@@ -265,6 +272,80 @@
               (click)="addInput('summary')"
             >
               Añadir resumen
+            </button>
+          </div>
+          <!--Detalles del producto-->
+          <div class="form-group" formArrayName="details">
+            <label for=""
+              >Detalles del producto <sup class="text-danger">*</sup>
+            </label>
+            <div
+              *ngFor="let detail of details.controls; let i = index"
+              class="row mb-3"
+            >
+              <!--Titulo-->
+              <div class="col-12 col-lg-6 input-group" [formGroup]="detail">
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      (click)="removeInput(i, 'details')"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                </div>
+                <div class="input-group-append">
+                  <span class="input-group-text"> Titulo: </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control py-4"
+                  formControlName="title"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && detail.controls.title.errors?.required
+                  }"
+                />
+
+                <span
+                  *ngIf="
+                    formSubmitted && detail.controls.title.errors?.required
+                  "
+                  class="invalid-feedback"
+                  >Por favor inserte un titulo</span
+                >
+              </div>
+              <!--Valor-->
+              <div class="col-12 col-lg-6 input-group" [formGroup]="detail">
+                <div class="input-group-append">
+                  <span class="input-group-text"> Valor: </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control py-4"
+                  formControlName="value"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && detail.controls.value.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    formSubmitted && detail.controls.value.errors?.required
+                  "
+                  class="invalid-feedback"
+                  >Por favor inserte un valor</span
+                >
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm mb-2"
+              (click)="addInput('details')"
+            >
+              Añadir detalle
             </button>
           </div>
         </ng-container>

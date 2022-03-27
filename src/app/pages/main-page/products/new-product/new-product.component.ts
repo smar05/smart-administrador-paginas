@@ -6,7 +6,12 @@ import { CategoriesService } from './../../../../services/categories.service';
 import { Iproducts } from './../../../../interface/iproducts';
 import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import '../../../../shared/spinkit/sk-cube-grid.css';
 @Component({
@@ -34,6 +39,12 @@ export class NewProductComponent implements OnInit {
     image: ['', [Validators.required]],
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
+    details: new FormArray([
+      this.form.group({
+        title: ['', [Validators.required]],
+        value: ['', [Validators.required]],
+      }),
+    ]),
   });
 
   //Validaciones personalizadas
@@ -59,6 +70,10 @@ export class NewProductComponent implements OnInit {
 
   get summary() {
     return this.f.controls.summary;
+  }
+
+  get details() {
+    return this.f.controls.details as any;
   }
 
   //Variable para validar el envio del formulario
@@ -168,7 +183,7 @@ export class NewProductComponent implements OnInit {
       default_banner: '',
       delivery_time: 0,
       description: this.f.controls.description.value,
-      details: '',
+      details: JSON.stringify(this.details.value),
       feedback: '',
       gallery: JSON.stringify(galleryPhotos),
       horizontal_slider: '',
@@ -277,16 +292,31 @@ export class NewProductComponent implements OnInit {
       } else {
         alerts.basicAlert('Error', 'El limite de resumenes es de 5', 'error');
       }
+    } else if (type == 'details') {
+      if (this.details.length < 5) {
+        this.details.push(
+          this.form.group({
+            title: ['', [Validators.required]],
+            value: ['', [Validators.required]],
+          })
+        );
+      } else {
+        alerts.basicAlert('Error', 'El limite de detalles es de 5', 'error');
+      }
     }
   }
 
   //Eliminar input's dinamicos
   public removeInput(i: number, type: string): void {
-    if (this.summaryGroup.length > 1) {
-      if (type == 'summary') {
+    if (type == 'summary') {
+      if (this.summaryGroup.length > 1) {
         this.summaryGroup.splice(i, 1);
         this.f.controls.summary.value.splice(i, 1);
         this.f.controls.summary.updateValueAndValidity();
+      }
+    } else if (type == 'details') {
+      if (this.details.length > 1) {
+        this.details.removeAt(i);
       }
     }
   }
