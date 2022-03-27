@@ -45,6 +45,12 @@ export class NewProductComponent implements OnInit {
         value: ['', [Validators.required]],
       }),
     ]),
+    specifications: new FormArray([
+      this.form.group({
+        type: [''],
+        values: [[]],
+      }),
+    ]),
   });
 
   //Validaciones personalizadas
@@ -74,6 +80,10 @@ export class NewProductComponent implements OnInit {
 
   get details() {
     return this.f.controls.details as any;
+  }
+
+  get specifications() {
+    return this.f.controls.specifications as any;
   }
 
   //Variable para validar el envio del formulario
@@ -303,6 +313,17 @@ export class NewProductComponent implements OnInit {
       } else {
         alerts.basicAlert('Error', 'El limite de detalles es de 5', 'error');
       }
+    } else if (type == 'specifications') {
+      if (this.specifications.length < 5) {
+        this.specifications.push(
+          this.form.group({
+            type: [''],
+            values: [[]],
+          })
+        );
+      } else {
+        alerts.basicAlert('Error', 'El limite de detalles es de 5', 'error');
+      }
     }
   }
 
@@ -317,6 +338,10 @@ export class NewProductComponent implements OnInit {
     } else if (type == 'details') {
       if (this.details.length > 1) {
         this.details.removeAt(i);
+      }
+    } else if (type == 'specifications') {
+      if (this.specifications.length > 1) {
+        this.specifications.removeAt(i);
       }
     }
   }

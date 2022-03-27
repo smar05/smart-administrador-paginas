@@ -348,6 +348,64 @@
               Añadir detalle
             </button>
           </div>
+          <!--Especificaciones-->
+          <div class="form-group" formArrayName="details">
+            <label for="">Especificaciones del producto </label>
+            <div
+              *ngFor="
+                let specification of specifications.controls;
+                let i = index
+              "
+              class="row mb-3"
+            >
+              <!--tipo-->
+              <div
+                class="col-12 col-lg-6 input-group"
+                [formGroup]="specification"
+              >
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      (click)="removeInput(i, 'specifications')"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                </div>
+                <div class="input-group-append">
+                  <span class="input-group-text"> Tipo: </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control py-4"
+                  formControlName="type"
+                />
+              </div>
+              <!--Valor-->
+              <div
+                class="col-12 col-lg-6 input-group"
+                [formGroup]="specification"
+              >
+                <div class="input-group-append">
+                  <span class="input-group-text"> Valores: </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control py-4"
+                  formControlName="values"
+                />
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm mb-2"
+              (click)="addInput('specifications')"
+            >
+              Añadir especificacion
+            </button>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">
