@@ -391,11 +391,30 @@
                 <div class="input-group-append">
                   <span class="input-group-text"> Valores: </span>
                 </div>
-                <input
-                  type="text"
-                  class="form-control py-4"
-                  formControlName="values"
-                />
+                <mat-chip-list
+                  #chipList
+                  aria-label="Valores"
+                  class="p-2 border"
+                >
+                  <mat-chip
+                    *ngFor="let val of specification.value.values"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="remove(val, i)"
+                  >
+                    {{ val }}
+                    <button matChipRemove *ngIf="removable">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip>
+                  <input
+                    placeholder="Nuevo titulo..."
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="add($event, i)"
+                  />
+                </mat-chip-list>
               </div>
             </div>
             <button

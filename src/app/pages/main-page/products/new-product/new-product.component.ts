@@ -1,3 +1,5 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { alerts } from './../../../../helpers/alerts';
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
@@ -9,6 +11,7 @@ import { functions } from './../../../../helpers/functions';
 import {
   AbstractControl,
   FormArray,
+  FormGroup,
   FormBuilder,
   Validators,
 } from '@angular/forms';
@@ -132,6 +135,13 @@ export class NewProductComponent implements OnInit {
     ],
   };
 
+  //Configuracion matChip
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = true;
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+
   //Variable para el resumen del producto
   public summaryGroup: any[] = [
     {
@@ -186,6 +196,27 @@ export class NewProductComponent implements OnInit {
       }
     }
 
+    //Validamos las especificaciones del producto
+    let specifications: any = null;
+    let specLocal: AbstractControl = this.f.controls.specifications;
+
+    if (Object.keys(specLocal.value.length > 0)) {
+      let newSpecifications: any = [];
+
+      for (const i in specLocal.value) {
+        let newValue: any = [];
+        for (const f in specLocal.value[i].values) {
+          newValue.push(`'${specLocal.value[i].values[f]}'`);
+        }
+        newSpecifications.push(`'{${specLocal.value[i].type}':[${newValue}]}`);
+        specifications = JSON.stringify(newSpecifications);
+        specifications = specifications.replace(/["]/g, '');
+        specifications = specifications.replace(/[']/g, '"');
+      }
+    } else {
+      specifications = '';
+    }
+
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
       category: this.f.controls.category.value.split('_')[0],
@@ -204,7 +235,7 @@ export class NewProductComponent implements OnInit {
       reviews: '',
       sales: 0,
       shipping: '',
-      specification: '',
+      specification: specifications,
       stock: 0,
       store: '',
       sub_category: this.f.controls.sub_category.value.split('_')[0],
@@ -353,6 +384,33 @@ export class NewProductComponent implements OnInit {
         this.f.controls.summary.value.push(e.target.value.trim());
       }
       this.f.controls.summary.updateValueAndValidity();
+    }
+  }
+
+  //Matchips
+  public add(event: MatChipInputEvent, index: number): void {
+    const value = (event.value || '').trim();
+    let controlSpec = this.specifications.controls[index] as FormGroup;
+    // Add our specification
+    if ((value || '').trim()) {
+      if (controlSpec.controls.values.value.length < 10) {
+        controlSpec.controls.values.value.push(value.trim());
+        controlSpec.controls.values.updateValueAndValidity();
+      }
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+    controlSpec.controls.values.updateValueAndValidity();
+  }
+
+  public remove(value: any, index: number): void {
+    let controlSpec = this.specifications.controls[index] as FormGroup;
+    //const optIndex = controlSpec.controls.values.value.indexOf(value);
+
+    if (index >= 0) {
+      controlSpec.controls.values.value.splice(index, 1);
+      controlSpec.controls.values.updateValueAndValidity();
     }
   }
 }
