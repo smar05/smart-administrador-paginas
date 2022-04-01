@@ -430,7 +430,13 @@
             <label for=""
               >Palabras clave <sup class="text-danger">*</sup></label
             >
-            <div class="form-control">
+            <div
+              class="form-control"
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('tags') || (tags.invalid && tags.errors?.pattern)
+              }"
+            >
               <mat-chip-list #chipList aria-label="Palabras clave">
                 <mat-chip
                   *ngFor="let tag of tags.value"
@@ -452,7 +458,6 @@
                 />
               </mat-chip-list>
             </div>
-            <!--
             <span
               class="invalid-feedback"
               *ngIf="tags.invalid && tags.errors?.required"
@@ -465,7 +470,225 @@
             >
               Por favor solo ingrese letras y numeros
             </span>
-            -->
+          </div>
+          <!--Banner top-->
+          <div class="form-group">
+            <label for=""
+              >Top banner del producto <sup class="text-danger">*</sup></label
+            >
+            <figure class="pb-2">
+              <img
+                src="../../../../../assets/img/products/default/example-top-banner.png"
+                alt=""
+                class="img-fluid"
+              />
+            </figure>
+            <div
+              class="row"
+              *ngFor="let top of top_banner.controls; let i = index"
+            >
+              <!--H3-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for="">H3 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H3_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.H3_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.H3_tag.invalid &&
+                    top.controls.H3_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3 tag</span
+                >
+              </div>
+              <!--P1-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for="">P1 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="P1_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.P1_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.P1_tag.invalid &&
+                    top.controls.P1_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo P1 tag</span
+                >
+              </div>
+              <!--H4-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for="">H4 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H4_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.H4_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.P2_tag.invalid &&
+                    top.controls.P2_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H4 tag</span
+                >
+              </div>
+              <!--P2-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for="">P2 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="P2_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.P2_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.P2_tag.invalid &&
+                    top.controls.P2_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3 tag</span
+                >
+              </div>
+              <!--Span-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for="">Span Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="Span_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.Span_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.Span_tag.invalid &&
+                    top.controls.Span_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo Span tag</span
+                >
+              </div>
+              <!--Button-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="top"
+              >
+                <label for=""
+                  >Button Tag <sup class="text-danger">*</sup></label
+                >
+                <input
+                  type="text"
+                  formControlName="Button_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted && top.controls.Button_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    top.controls.Button_tag.invalid &&
+                    top.controls.Button_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo Button tag</span
+                >
+              </div>
+              <!--Img-->
+              <div class="col-12 form-group mx-0 pr-0 mb-3" [formGroup]="top">
+                <label for="customFileTB">
+                  <img
+                    src="../../../../../assets/img/products/default/default-top-banner.jpg"
+                    alt=""
+                    class="img-fluid"
+                    *ngIf="!imgTempTB"
+                  />
+                  <img
+                    [src]="imgTempTB"
+                    alt=""
+                    class="img-fluid"
+                    *ngIf="imgTempTB"
+                  />
+                </label>
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="customFileTB"
+                    formControlName="IMG_tag"
+                    [ngClass]="{
+                      'is-invalid':
+                        formSubmitted && top.controls.IMG_tag.invalid?.required
+                    }"
+                    (change)="validateImage($event, 'TB')"
+                    accept="image/jpeg,image/jpg,image/png,image/gif"
+                  />
+                  <span class="invalid-feedback"
+                    >Por favor inserte una imagen</span
+                  >
+                  <label
+                    for="customFileTB"
+                    class="custom-file-label"
+                    *ngIf="!top.controls.IMG_tag.value"
+                    >Seleccione una imagen</label
+                  >
+                  <label
+                    for="customFileTB"
+                    class="custom-file-label"
+                    *ngIf="top.controls.IMG_tag.value"
+                    >{{ image.value }}</label
+                  >
+                  <small class="mt-2"
+                    >1920px * 80px size | formato JPG o PNG</small
+                  >
+                </div>
+              </div>
+            </div>
           </div>
         </ng-container>
         <!--Spinner de carga-->

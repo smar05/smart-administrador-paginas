@@ -58,6 +58,17 @@ export class NewProductComponent implements OnInit {
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
+    top_banner: new FormArray([
+      this.form.group({
+        H3_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        P1_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        P2_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        Span_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        IMG_tag: ['', [Validators.required]],
+      }),
+    ]),
   });
 
   //Validaciones personalizadas
@@ -97,6 +108,10 @@ export class NewProductComponent implements OnInit {
     return this.f.controls.tags;
   }
 
+  get top_banner() {
+    return this.f.controls.top_banner as any;
+  }
+
   //Variable para validar el envio del formulario
   public formSubmitted: boolean = false;
 
@@ -120,6 +135,10 @@ export class NewProductComponent implements OnInit {
 
   //Galeria de imagenes del producto
   public files: File[] = [];
+
+  //Imagen temporal del top banner
+  public imgTempTB: string = '';
+  public uploadFileTB: string = '';
 
   //Configuracion summernote
   config = {
@@ -250,7 +269,13 @@ export class NewProductComponent implements OnInit {
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
       title_list: this.titleList,
-      top_banner: '',
+      top_banner: JSON.stringify(
+        this.top_banner.value.map((top: any) => {
+          //Se guarda a imagen en base 64
+          top.IMG_tag = this.imgTempTB;
+          return top;
+        })[0]
+      ),
       url: this.urlInput,
       vertical_slider: '',
       video: '',
@@ -319,6 +344,8 @@ export class NewProductComponent implements OnInit {
     }
     if (type == 'image') {
       this.imgTemp = resp;
+    } else if (type == 'TB') {
+      this.imgTempTB = resp;
     }
   }
 
