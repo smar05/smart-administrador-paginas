@@ -54,6 +54,10 @@ export class NewProductComponent implements OnInit {
         values: [[]],
       }),
     ]),
+    tags: [
+      [],
+      [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
+    ],
   });
 
   //Validaciones personalizadas
@@ -87,6 +91,10 @@ export class NewProductComponent implements OnInit {
 
   get specifications() {
     return this.f.controls.specifications as any;
+  }
+
+  get tags() {
+    return this.f.controls.tags;
   }
 
   //Variable para validar el envio del formulario
@@ -240,7 +248,7 @@ export class NewProductComponent implements OnInit {
       store: '',
       sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
-      tags: '',
+      tags: JSON.stringify(this.f.controls.tags.value),
       title_list: this.titleList,
       top_banner: '',
       url: this.urlInput,
@@ -388,29 +396,42 @@ export class NewProductComponent implements OnInit {
   }
 
   //Matchips
-  public add(event: MatChipInputEvent, index: number): void {
+  public add(event: MatChipInputEvent, index: number, type: string): void {
     const value = (event.value || '').trim();
-    let controlSpec = this.specifications.controls[index] as FormGroup;
-    // Add our specification
-    if ((value || '').trim()) {
-      if (controlSpec.controls.values.value.length < 10) {
-        controlSpec.controls.values.value.push(value.trim());
-        controlSpec.controls.values.updateValueAndValidity();
+    if (type == 'specifications') {
+      let controlSpec = this.specifications.controls[index] as FormGroup;
+      // Add our specification
+      if ((value || '').trim()) {
+        if (controlSpec.controls.values.value.length < 10) {
+          controlSpec.controls.values.value.push(value.trim());
+          controlSpec.controls.values.updateValueAndValidity();
+        }
       }
-    }
 
-    // Clear the input value
-    event.chipInput!.clear();
-    controlSpec.controls.values.updateValueAndValidity();
+      // Clear the input value
+      event.chipInput!.clear();
+      controlSpec.controls.values.updateValueAndValidity();
+    } else if (type == 'tags') {
+      this.f.controls.tags.value.push(value.trim());
+      this.f.controls.tags.updateValueAndValidity();
+    }
   }
 
-  public remove(value: any, index: number): void {
-    let controlSpec = this.specifications.controls[index] as FormGroup;
-    //const optIndex = controlSpec.controls.values.value.indexOf(value);
+  public remove(value: any, index: number, type: string): void {
+    if (type == 'specifications') {
+      let controlSpec = this.specifications.controls[index] as FormGroup;
+      //const optIndex = controlSpec.controls.values.value.indexOf(value);
 
-    if (index >= 0) {
-      controlSpec.controls.values.value.splice(index, 1);
-      controlSpec.controls.values.updateValueAndValidity();
+      if (index >= 0) {
+        controlSpec.controls.values.value.splice(index, 1);
+        controlSpec.controls.values.updateValueAndValidity();
+      }
+    } else if (type == 'tags') {
+      const index = this.f.controls.tags.value.indexOf(value);
+      if (index >= 0) {
+        this.f.controls.tags.value.splice(index, 1);
+        this.f.controls.tags.updateValueAndValidity();
+      }
     }
   }
 }

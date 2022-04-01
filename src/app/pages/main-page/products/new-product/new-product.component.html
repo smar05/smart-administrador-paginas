@@ -400,7 +400,7 @@
                     *ngFor="let val of specification.value.values"
                     [selectable]="selectable"
                     [removable]="removable"
-                    (removed)="remove(val, i)"
+                    (removed)="remove(val, i, 'specifications')"
                   >
                     {{ val }}
                     <button matChipRemove *ngIf="removable">
@@ -412,7 +412,7 @@
                     [matChipInputFor]="chipList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="add($event, i)"
+                    (matChipInputTokenEnd)="add($event, i, 'specifications')"
                   />
                 </mat-chip-list>
               </div>
@@ -424,6 +424,48 @@
             >
               Añadir especificacion
             </button>
+          </div>
+          <!--Palabras claves-->
+          <div class="form-group">
+            <label for=""
+              >Palabras clave <sup class="text-danger">*</sup></label
+            >
+            <div class="form-control">
+              <mat-chip-list #chipList aria-label="Palabras clave">
+                <mat-chip
+                  *ngFor="let tag of tags.value"
+                  [selectable]="selectable"
+                  [removable]="removable"
+                  (removed)="remove(tag, 0, 'tags')"
+                >
+                  {{ tag }}
+                  <button matChipRemove *ngIf="removable">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip>
+                <input
+                  placeholder="Nuevo titulo..."
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event, 0, 'tags')"
+                />
+              </mat-chip-list>
+            </div>
+            <!--
+            <span
+              class="invalid-feedback"
+              *ngIf="tags.invalid && tags.errors?.required"
+            >
+              Porfavor ingrese alguna etiqueta del producto
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="tags.invalid && tags.errors?.pattern"
+            >
+              Por favor solo ingrese letras y numeros
+            </span>
+            -->
           </div>
         </ng-container>
         <!--Spinner de carga-->
