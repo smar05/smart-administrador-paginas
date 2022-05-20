@@ -1010,6 +1010,146 @@
               </div>
             </div>
           </div>
+
+          <!--Precio de venta, envio, dias de entrega y stock-->
+          <div class="form-group">
+            <div class="row mb-3">
+              <!--Precio de venta-->
+              <div class="col-12 col-lg-3">
+                <label for=""
+                  >Precio del producto<sup class="text-danger">*</sup></label
+                >
+                <div class="input-group mx-0 pr-0">
+                  <div class="input-group-append">
+                    <span class="input-group-text"> Precio $: </span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    step="any"
+                    formControlName="price"
+                    [ngClass]="{
+                      'is-invalid':
+                        invalidField('price') ||
+                        (price.invalid && price.errors?.pattern)
+                    }"
+                    min="0"
+                  />
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="price.invalid && price.errors?.required"
+                    >Por favor ingrese un precio</span
+                  >
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="price.invalid && price.errors?.pattern"
+                    >Por favor ingrese un precio valido</span
+                  >
+                </div>
+              </div>
+              <!--Precio de envio-->
+              <div class="col-12 col-lg-3">
+                <label for=""
+                  >Precio del envio<sup class="text-danger">*</sup></label
+                >
+                <div class="input-group mx-0 pr-0">
+                  <div class="input-group-append">
+                    <span class="input-group-text"> Precio $: </span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    step="any"
+                    formControlName="shipping"
+                    [ngClass]="{
+                      'is-invalid':
+                        invalidField('shipping') ||
+                        (shipping.invalid && shipping.errors?.pattern)
+                    }"
+                    min="0"
+                  />
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="shipping.invalid && shipping.errors?.required"
+                    >Por favor ingrese un precio</span
+                  >
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="shipping.invalid && shipping.errors?.pattern"
+                    >Por favor ingrese un precio valido</span
+                  >
+                </div>
+              </div>
+              <!--Dias de entrega-->
+              <div class="col-12 col-lg-3">
+                <label for=""
+                  >Dias de entrega<sup class="text-danger">*</sup></label
+                >
+                <div class="input-group mx-0 pr-0">
+                  <div class="input-group-append">
+                    <span class="input-group-text"> Dias: </span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    step="any"
+                    formControlName="delivery_time"
+                    [ngClass]="{
+                      'is-invalid':
+                        invalidField('delivery_time') ||
+                        (delivery_time.invalid && delivery_time.errors?.pattern)
+                    }"
+                    min="0"
+                  />
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="
+                      delivery_time.invalid && delivery_time.errors?.required
+                    "
+                    >Por favor ingrese los dias</span
+                  >
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="
+                      delivery_time.invalid && delivery_time.errors?.pattern
+                    "
+                    >Por favor ingrese dias validos</span
+                  >
+                </div>
+              </div>
+              <!--Inventario-->
+              <div class="col-12 col-lg-3">
+                <label for="">Inventario<sup class="text-danger">*</sup></label>
+                <div class="input-group mx-0 pr-0">
+                  <div class="input-group-append">
+                    <span class="input-group-text"> Cantidad: </span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    step="any"
+                    formControlName="stock"
+                    [ngClass]="{
+                      'is-invalid':
+                        invalidField('stock') ||
+                        (stock.invalid && stock.errors?.pattern)
+                    }"
+                    min="0"
+                  />
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="stock.invalid && stock.errors?.required"
+                    >Por favor ingrese una cantidad</span
+                  >
+                  <span
+                    class="invalid-feedback"
+                    *ngIf="stock.invalid && stock.errors?.pattern"
+                    >Por favor ingrese un cantidad valida</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">

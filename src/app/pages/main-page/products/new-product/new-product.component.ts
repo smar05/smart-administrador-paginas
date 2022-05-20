@@ -83,6 +83,35 @@ export class NewProductComponent implements OnInit {
     ]),
     type_video: [''],
     id_video: [''],
+    price: [
+      '',
+      [
+        Validators.required,
+        Validators.min(0),
+        Validators.pattern(/[.\\,\\0-9]{1,}/),
+      ],
+    ],
+    shipping: [
+      '',
+      [
+        Validators.required,
+        Validators.min(0),
+        Validators.pattern(/[.\\,\\0-9]{1,}/),
+      ],
+    ],
+    delivery_time: [
+      '',
+      [Validators.required, Validators.min(0), Validators.pattern(/[0,9]{1,}/)],
+    ],
+    stock: [
+      '',
+      [
+        Validators.required,
+        Validators.min(0),
+        Validators.max(100),
+        Validators.pattern(/[0,9]{1,}/),
+      ],
+    ],
   });
 
   //Validaciones personalizadas
@@ -140,6 +169,22 @@ export class NewProductComponent implements OnInit {
 
   get id_video() {
     return this.f.controls.id_video;
+  }
+
+  get price() {
+    return this.f.controls.price;
+  }
+
+  get shipping() {
+    return this.f.controls.shipping;
+  }
+
+  get delivery_time() {
+    return this.f.controls.delivery_time;
+  }
+
+  get stock() {
+    return this.f.controls.stock;
   }
 
   //Variable para validar el envio del formulario
@@ -281,7 +326,7 @@ export class NewProductComponent implements OnInit {
       category: this.f.controls.category.value.split('_')[0],
       date_created: '',
       default_banner: this.imgTempDB,
-      delivery_time: 0,
+      delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
       feedback: '',
@@ -296,12 +341,12 @@ export class NewProductComponent implements OnInit {
       image: this.imgTemp,
       name: this.f.controls.name.value,
       offer: '',
-      price: '',
+      price: this.f.controls.price.value,
       reviews: '',
       sales: 0,
-      shipping: '',
+      shipping: this.f.controls.shipping.value,
       specification: specifications,
-      stock: 0,
+      stock: this.f.controls.stock.value,
       store: '',
       sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
