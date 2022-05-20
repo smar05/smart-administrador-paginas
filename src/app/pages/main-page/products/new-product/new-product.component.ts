@@ -69,6 +69,7 @@ export class NewProductComponent implements OnInit {
         IMG_tag: ['', [Validators.required]],
       }),
     ]),
+    default_banner: ['', [Validators.required]],
   });
 
   //Validaciones personalizadas
@@ -112,6 +113,10 @@ export class NewProductComponent implements OnInit {
     return this.f.controls.top_banner as any;
   }
 
+  get default_banner() {
+    return this.f.controls.default_banner;
+  }
+
   //Variable para validar el envio del formulario
   public formSubmitted: boolean = false;
 
@@ -139,6 +144,7 @@ export class NewProductComponent implements OnInit {
   //Imagen temporal del top banner
   public imgTempTB: string = '';
   public uploadFileTB: string = '';
+  public imgTempDB: string = '';
 
   //Configuracion summernote
   config = {
@@ -248,7 +254,7 @@ export class NewProductComponent implements OnInit {
     const dataProduct: Iproducts = {
       category: this.f.controls.category.value.split('_')[0],
       date_created: '',
-      default_banner: '',
+      default_banner: this.imgTempDB,
       delivery_time: 0,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
@@ -346,6 +352,8 @@ export class NewProductComponent implements OnInit {
       this.imgTemp = resp;
     } else if (type == 'TB') {
       this.imgTempTB = resp;
+    } else if (type == 'DB') {
+      this.imgTempDB = resp;
     }
   }
 

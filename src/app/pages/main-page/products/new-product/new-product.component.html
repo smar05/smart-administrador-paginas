@@ -690,6 +690,49 @@
               </div>
             </div>
           </div>
+
+          <div class="form-group">
+            <label for="customFileDB">
+              <img
+                src="../../../../../assets/img/products/default/default-banner.jpg"
+                class="img-fluid"
+                *ngIf="!imgTempDB"
+              />
+              <img [src]="imgTempDB" class="img-fluid" />
+            </label>
+
+            <div class="custom-file">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="customFileDB"
+                formControlName="default_banner"
+                [ngClass]="{ 'is-invalid': invalidField('default_banner') }"
+                (change)="validateImage($event, 'DB')"
+              />
+
+              <span class="invalid-feedback">
+                Por favor seleccione una imagen
+              </span>
+
+              <label
+                for="customFileDB"
+                class="custom-file-label"
+                *ngIf="!image.value"
+                >Seleccione una imagen</label
+              >
+              <label
+                for="customFileDB"
+                class="custom-file-label"
+                *ngIf="image.value"
+                >{{ image.value }}</label
+              >
+
+              <small class="mt-2"
+                >Tamaño: 570px * 250px | Formato: jpg o png</small
+              >
+            </div>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">
