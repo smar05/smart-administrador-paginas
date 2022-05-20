@@ -691,6 +691,7 @@
             </div>
           </div>
 
+          <!--default_banner-->
           <div class="form-group">
             <label for="customFileDB">
               <img
@@ -709,6 +710,7 @@
                 formControlName="default_banner"
                 [ngClass]="{ 'is-invalid': invalidField('default_banner') }"
                 (change)="validateImage($event, 'DB')"
+                accept="image/jpeg,image/jpg,image/png,image/gif"
               />
 
               <span class="invalid-feedback">
@@ -731,6 +733,241 @@
               <small class="mt-2"
                 >Tamaño: 570px * 250px | Formato: jpg o png</small
               >
+            </div>
+          </div>
+
+          <!--Horizontal_banner-->
+          <hr class="py-3" />
+          <div class="form-group">
+            <label for=""
+              >Banner horizontal del producto
+              <sup class="text-danger">*</sup></label
+            >
+            <figure class="pb-2">
+              <img
+                src="../../../../../assets/img/products/default/example-horizontal-slider.png"
+                alt=""
+                class="img-fluid"
+              />
+            </figure>
+            <div
+              class="row"
+              *ngFor="
+                let horizontalSlider of horizontal_slider.controls;
+                let i = index
+              "
+            >
+              <!--H4-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="">H4 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H3_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.H4_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.H4_tag.invalid &&
+                    horizontalSlider.controls.H4_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H4 tag</span
+                >
+              </div>
+              <!--P1-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="">H3-1 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H3_1_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.H3_1_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.H3_1_tag.invalid &&
+                    horizontalSlider.controls.H3_1_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3-1 tag</span
+                >
+              </div>
+              <!--H3-2-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="">H3-2 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H4_2_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.H3_2_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.H3_2_tag.invalid &&
+                    horizontalSlider.controls.H3_2_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3-2 tag</span
+                >
+              </div>
+              <!--h3-3-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="">H3-3 Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H3_3_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.H3_3_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.H3_3_tag.invalid &&
+                    horizontalSlider.controls.H3_3_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3-3 tag</span
+                >
+              </div>
+              <!--h3-4s-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="">H3-4s Tag <sup class="text-danger">*</sup></label>
+                <input
+                  type="text"
+                  formControlName="H3_4s_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.H3_4s_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.H3_4s_tag.invalid &&
+                    horizontalSlider.controls.H3_4s_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo H3-4s tag</span
+                >
+              </div>
+              <!--Button-->
+              <div
+                class="col-12 col-lg-6 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for=""
+                  >Button Tag <sup class="text-danger">*</sup></label
+                >
+                <input
+                  type="text"
+                  formControlName="Button_tag"
+                  class="form-control"
+                  placeholder="Ex: 20%"
+                  [ngClass]="{
+                    'is-invalid':
+                      formSubmitted &&
+                      horizontalSlider.controls.Button_tag.errors?.required
+                  }"
+                />
+                <span
+                  *ngIf="
+                    horizontalSlider.controls.Button_tag.invalid &&
+                    horizontalSlider.controls.Button_tag.errors?.required
+                  "
+                  class="invalid-feddback"
+                  >Ingrese el campo Button tag</span
+                >
+              </div>
+              <!--Img-->
+              <div
+                class="col-12 form-group mx-0 pr-0 mb-3"
+                [formGroup]="horizontalSlider"
+              >
+                <label for="customFileTB">
+                  <img
+                    src="../../../../../assets/img/products/default/default-horizontal-slider.jpg"
+                    alt=""
+                    class="img-fluid"
+                    *ngIf="!imgTempHSlider"
+                  />
+                  <img
+                    [src]="imgTempHSlider"
+                    alt=""
+                    class="img-fluid"
+                    *ngIf="imgTempHSlider"
+                  />
+                </label>
+                <div class="custom-file">
+                  <input
+                    type="file"
+                    class="custom-file-input"
+                    id="customFileTB"
+                    formControlName="IMG_tag"
+                    [ngClass]="{
+                      'is-invalid':
+                        formSubmitted &&
+                        horizontalSlider.controls.IMG_tag.invalid?.required
+                    }"
+                    (change)="validateImage($event, 'HSlider')"
+                    accept="image/jpeg,image/jpg,image/png,image/gif"
+                  />
+                  <span class="invalid-feedback"
+                    >Por favor inserte una imagen</span
+                  >
+                  <label
+                    for="customFileTB"
+                    class="custom-file-label"
+                    *ngIf="!horizontalSlider.controls.IMG_tag.value"
+                    >Seleccione una imagen</label
+                  >
+                  <label
+                    for="customFileTB"
+                    class="custom-file-label"
+                    *ngIf="horizontalSlider.controls.IMG_tag.value"
+                    >{{ image.value }}</label
+                  >
+                  <small class="mt-2"
+                    >1920px * 80px size | formato JPG o PNG</small
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </ng-container>

@@ -70,6 +70,17 @@ export class NewProductComponent implements OnInit {
       }),
     ]),
     default_banner: ['', [Validators.required]],
+    horizontal_slider: new FormArray([
+      this.form.group({
+        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        H3_1_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        H3_2_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        H3_3_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        H3_4s_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
+        IMG_tag: ['', [Validators.required]],
+      }),
+    ]),
   });
 
   //Validaciones personalizadas
@@ -117,6 +128,10 @@ export class NewProductComponent implements OnInit {
     return this.f.controls.default_banner;
   }
 
+  get horizontal_slider() {
+    return this.f.controls.horizontal_slider as any;
+  }
+
   //Variable para validar el envio del formulario
   public formSubmitted: boolean = false;
 
@@ -145,6 +160,7 @@ export class NewProductComponent implements OnInit {
   public imgTempTB: string = '';
   public uploadFileTB: string = '';
   public imgTempDB: string = '';
+  public imgTempHSlider: string = '';
 
   //Configuracion summernote
   config = {
@@ -260,7 +276,13 @@ export class NewProductComponent implements OnInit {
       details: JSON.stringify(this.details.value),
       feedback: '',
       gallery: JSON.stringify(galleryPhotos),
-      horizontal_slider: '',
+      horizontal_slider: JSON.stringify(
+        this.horizontal_slider.value.map((top: any) => {
+          //Se guarda a imagen en base 64
+          top.IMG_tag = this.imgTempTB;
+          return top;
+        })[0]
+      ),
       image: this.imgTemp,
       name: this.f.controls.name.value,
       offer: '',
@@ -354,6 +376,8 @@ export class NewProductComponent implements OnInit {
       this.imgTempTB = resp;
     } else if (type == 'DB') {
       this.imgTempDB = resp;
+    } else if (type == 'HSlider') {
+      this.imgTempHSlider = resp;
     }
   }
 
