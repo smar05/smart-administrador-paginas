@@ -112,6 +112,9 @@ export class NewProductComponent implements OnInit {
         Validators.pattern(/[0,9]{1,}/),
       ],
     ],
+    type_offer: ['Discount'],
+    value_offer: ['', [Validators.pattern(/^[+]?\d+([.]\d+)?$/)]],
+    date_offer: [''],
   });
 
   //Validaciones personalizadas
@@ -185,6 +188,18 @@ export class NewProductComponent implements OnInit {
 
   get stock() {
     return this.f.controls.stock;
+  }
+
+  get type_offer() {
+    return this.f.controls.type_offer;
+  }
+
+  get value_offer() {
+    return this.f.controls.value_offer;
+  }
+
+  get date_offer() {
+    return this.f.controls.date_offer;
   }
 
   //Variable para validar el envio del formulario
@@ -340,7 +355,13 @@ export class NewProductComponent implements OnInit {
       ),
       image: this.imgTemp,
       name: this.f.controls.name.value,
-      offer: '',
+      offer: this.value_offer.value
+        ? JSON.stringify([
+            this.type_offer.value,
+            this.value_offer.value,
+            this.date_offer.value,
+          ])
+        : '',
       price: this.f.controls.price.value,
       reviews: '',
       sales: 0,

@@ -1150,6 +1150,82 @@
               </div>
             </div>
           </div>
+
+          <!--Oferta del producto-->
+          <div class="form-group">
+            <label for="">Oferta del producto</label>
+
+            <div class="row mb-3">
+              <!--tipo de oferta-->
+              <div
+                class="col-12 col-lg-4 form-group__content input-group mx-0 pr-0"
+              >
+                <div class="input-group append">
+                  <span class="input-group-text"> Tipo: </span>
+                </div>
+                <select
+                  name=""
+                  id=""
+                  class="form-control"
+                  formControlName="type_offer"
+                  name="type_offer"
+                >
+                  <option value="Disccount">Descuento</option>
+                  <option value="Fixed">Fijo</option>
+                </select>
+              </div>
+
+              <!--Valor de la oferta-->
+              <div
+                class="col-12 col-lg-4 form-group__content input-group mx-0 pr-0"
+              >
+                <div class="input-group append">
+                  <span class="input-group-text">
+                    {{
+                      type_offer.value === "Fixed" ? "Precio $" : "Porcentaje %"
+                    }}
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  class="form-control"
+                  min="0"
+                  step="any"
+                  formControlName="value_offer"
+                  [ngClass]="{ 'is-invalid': invalidField('value_offer') }"
+                />
+
+                <div
+                  class="invalid-feedback"
+                  *ngIf="value_offer.invalid && value_offer.errors?.required"
+                >
+                  Por favor ingrese un valor
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="value_offer.invalid && value_offer.errors?.pattern"
+                >
+                  Por favor ingrese un valor valido
+                </div>
+              </div>
+
+              <!--Fecha de vencimiento-->
+              <div
+                class="col-12 col-lg-4 form-group__content input-group mx-0 pr-0"
+              >
+                <div class="input-group append">
+                  <span class="input-group-text"> Fin de la oferta: </span>
+                </div>
+                <input
+                  type="date"
+                  class="form-control"
+                  min="0"
+                  step="any"
+                  formControlName="date_offer"
+                />
+              </div>
+            </div>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">
