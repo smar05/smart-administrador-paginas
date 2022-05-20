@@ -970,6 +970,46 @@
               </div>
             </div>
           </div>
+
+          <!--Video-->
+          <div class="form-group">
+            <label for=""
+              >Video del producto, Ex: <strong>Tipo: </strong>Youtube,
+              <strong>Id: </strong>$1SFaskVpD4</label
+            >
+
+            <div class="row mb-3">
+              <div class="col-12 col-lg-6 input-group mx-0 pr-0">
+                <div class="input-group-append">
+                  <span class="input-group-text"> Tipo: </span>
+                </div>
+                <select name="" id="" class="form-control">
+                  <option value="">Seleccione la plataforma</option>
+                  <option value="youtube">Youtube</option>
+                  <option value="vimeo">Vimeo</option>
+                </select>
+              </div>
+
+              <div class="col-12 col-lg-6 input-group mx-0 pr-0">
+                <div class="input-group-append">
+                  <span class="input-group-text"> Id: </span>
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Id del video"
+                  formControlName="id_video"
+                />
+                <!--
+                <span
+                  class="invalid-feedback"
+                  *ngIf="id_video.invalid && id_video.errors?.pattern"
+                  >Por favor ingrese el ID</span
+                >
+                -->
+              </div>
+            </div>
+          </div>
         </ng-container>
         <!--Spinner de carga-->
         <ng-container *ngIf="loadData">

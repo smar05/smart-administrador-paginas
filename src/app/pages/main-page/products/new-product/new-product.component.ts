@@ -81,6 +81,8 @@ export class NewProductComponent implements OnInit {
         IMG_tag: ['', [Validators.required]],
       }),
     ]),
+    type_video: [''],
+    id_video: [''],
   });
 
   //Validaciones personalizadas
@@ -130,6 +132,14 @@ export class NewProductComponent implements OnInit {
 
   get horizontal_slider() {
     return this.f.controls.horizontal_slider as any;
+  }
+
+  get type_video() {
+    return this.f.controls.type_video;
+  }
+
+  get id_video() {
+    return this.f.controls.id_video;
   }
 
   //Variable para validar el envio del formulario
@@ -306,7 +316,9 @@ export class NewProductComponent implements OnInit {
       ),
       url: this.urlInput,
       vertical_slider: '',
-      video: '',
+      video: this.id_video.value
+        ? JSON.stringify([this.type_video.value, this.id_video.value])
+        : '',
       views: 0,
     };
     console.log(dataProduct);
