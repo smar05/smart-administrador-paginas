@@ -1,52 +1,74 @@
+import { IQueryParams } from './../interface/i-query-params';
+import { HttpService } from './http.service';
 import { Isubcategories } from './../interface/isubcategories';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SubcategoriesService {
-  constructor(private http: HttpClient) {}
+  private urlSubCategories: string = 'sub-categories';
 
-  //Tomar datos de subcategorias
-  public getData(): Observable<any> {
-    return this.http.get(`${environment.urlFirebase}sub-categories.json`);
+  constructor(private httpService: HttpService) {}
+
+  /**
+   * Se toma la informacion de la coleccion de subcategorias en Firebase
+   *
+   * @param {IQueryParams} [queryParams={}]
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
+  public getData(queryParams: IQueryParams = {}): Observable<any> {
+    return this.httpService.get(`${this.urlSubCategories}.json`, queryParams);
   }
 
-  //Data filtrada de subcategorias
-  public getFilterData(orderBy: string, equalTo: string): Observable<any> {
-    return this.http.get(
-      `${environment.urlFirebase}sub-categories.json?orderBy="${orderBy}"&equalTo="${equalTo}"&print=pretty`
+  /**
+   * Tomar un item de subcategorias
+   *
+   * @param {string} id
+   * @param {IQueryParams} [queryParams={}]
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
+  public getItem(id: string, queryParams: IQueryParams = {}): Observable<any> {
+    return this.httpService.get(
+      `${this.urlSubCategories}/${id}.json`,
+      queryParams
     );
   }
 
-  //Obtener un item de la coleccion de subcategorias
-  public getItem(id: string): Observable<any> {
-    return this.http.get(`${environment.urlFirebase}sub-categories/${id}.json`);
-  }
-
-  //Guardar informacion de la subcategoria
+  /**
+   * Guardar informacion de subcategorias
+   *
+   * @param {Icategories} data
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
   public postData(data: Isubcategories): Observable<any> {
-    return this.http.post(
-      `${environment.urlFirebase}sub-categories.json`,
-      data
-    );
+    return this.httpService.post(`${this.urlSubCategories}.json`, data);
   }
 
-  //Actualizar subcategoria
+  /**
+   * Actualizar subcategoria
+   *
+   * @param {string} id
+   * @param {object} data
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
   public patchData(id: string, data: object): Observable<any> {
-    return this.http.patch(
-      `${environment.urlFirebase}sub-categories/${id}.json`,
-      data
-    );
+    return this.httpService.patch(`${this.urlSubCategories}/${id}.json`, data);
   }
 
-  //Eliminar subcategoria
+  /**
+   * Eliminar subcategoria
+   *
+   * @param {string} id
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
   public deleteData(id: string): Observable<any> {
-    return this.http.delete(
-      `${environment.urlFirebase}sub-categories/${id}.json`
-    );
+    return this.httpService.delete(`${this.urlSubCategories}/${id}.json`);
   }
 }

@@ -29,7 +29,7 @@ export class CategoriesService {
    * @param {string} id
    * @param {IQueryParams} [queryParams={}]
    * @return {*}  {Observable<any>}
-   * @memberof ModelsService
+   * @memberof CategoriesService
    */
   public getItem(id: string, queryParams: IQueryParams = {}): Observable<any> {
     return this.httpService.get(
@@ -55,7 +55,7 @@ export class CategoriesService {
    * @param {string} id
    * @param {object} data
    * @return {*}  {Observable<any>}
-   * @memberof ModelsService
+   * @memberof CategoriesService
    */
   public patchData(id: string, data: object): Observable<any> {
     return this.httpService.patch(`${this.urlCategories}/${id}.json`, data);
@@ -66,7 +66,7 @@ export class CategoriesService {
    *
    * @param {string} id
    * @return {*}  {Observable<any>}
-   * @memberof ModelsService
+   * @memberof CategoriesService
    */
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlCategories}/${id}.json`);
