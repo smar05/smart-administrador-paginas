@@ -401,7 +401,12 @@ export class NewProductComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.productsService.getFilterData('url', name).subscribe((resp) => {
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.productsService.getData(params).subscribe((resp) => {
           if (Object.keys(resp).length > 0) {
             resolve({ product: true });
             this.urlInput = '';
