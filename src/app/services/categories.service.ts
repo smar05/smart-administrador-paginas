@@ -1,47 +1,74 @@
+import { IQueryParams } from './../interface/i-query-params';
+import { HttpService } from './http.service';
 import { Icategories } from './../interface/icategories';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CategoriesService {
-  constructor(private http: HttpClient) {}
+  private urlCategories: string = 'categories';
 
-  //Se toma la informacion de la coleccion de Categorias en Firebase
-  public getData(): Observable<any> {
-    return this.http.get(`${environment.urlFirebase}categories.json`);
+  constructor(private httpService: HttpService) {}
+
+  /**
+   * Se toma la informacion de la coleccion de categorias en Firebase
+   *
+   * @param {IQueryParams} [queryParams={}]
+   * @return {*}  {Observable<any>}
+   * @memberof CategoriesService
+   */
+  public getData(queryParams: IQueryParams = {}): Observable<any> {
+    return this.httpService.get(`${this.urlCategories}.json`, queryParams);
   }
 
-  //Data filtrada de categorias
-  public getFilterData(orderBy: string, equalTo: string): Observable<any> {
-    return this.http.get(
-      `${environment.urlFirebase}categories.json?orderBy="${orderBy}"&equalTo="${equalTo}"&print=pretty`
+  /**
+   * Tomar un item de categorias
+   *
+   * @param {string} id
+   * @param {IQueryParams} [queryParams={}]
+   * @return {*}  {Observable<any>}
+   * @memberof ModelsService
+   */
+  public getItem(id: string, queryParams: IQueryParams = {}): Observable<any> {
+    return this.httpService.get(
+      `${this.urlCategories}/${id}.json`,
+      queryParams
     );
   }
 
-  //TOmar un item de categorias
-  public getItem(id: string): Observable<any> {
-    return this.http.get(`${environment.urlFirebase}categories/${id}.json`);
-  }
-
-  //Guardar informacion de la categoria
+  /**
+   * Guardar informacion del categorias
+   *
+   * @param {Icategories} data
+   * @return {*}  {Observable<any>}
+   * @memberof CategoriesService
+   */
   public postData(data: Icategories): Observable<any> {
-    return this.http.post(`${environment.urlFirebase}categories.json`, data);
+    return this.httpService.post(`${this.urlCategories}.json`, data);
   }
 
-  //Actualizar categoria
+  /**
+   * Actualizar categoria
+   *
+   * @param {string} id
+   * @param {object} data
+   * @return {*}  {Observable<any>}
+   * @memberof ModelsService
+   */
   public patchData(id: string, data: object): Observable<any> {
-    return this.http.patch(
-      `${environment.urlFirebase}categories/${id}.json`,
-      data
-    );
+    return this.httpService.patch(`${this.urlCategories}/${id}.json`, data);
   }
 
-  //Eliminar categoria
+  /**
+   * Eliminar categoria
+   *
+   * @param {string} id
+   * @return {*}  {Observable<any>}
+   * @memberof ModelsService
+   */
   public deleteData(id: string): Observable<any> {
-    return this.http.delete(`${environment.urlFirebase}categories/${id}.json`);
+    return this.httpService.delete(`${this.urlCategories}/${id}.json`);
   }
 }
