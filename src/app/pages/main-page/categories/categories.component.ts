@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../interface/i-query-params';
 import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
@@ -166,27 +167,30 @@ export class CategoriesComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           //Validar que la categoria no tenga una subcategoria
-          this.subcategoriesService
-            .getFilterData('category', name)
-            .subscribe((resp: any) => {
-              if (Object.keys(resp).length > 0) {
+          let params: IQueryParams = {
+            orderBy: '"category"',
+            equalTo: `"${name}"`,
+          };
+
+          this.subcategoriesService.getData(params).subscribe((resp: any) => {
+            if (Object.keys(resp).length > 0) {
+              alerts.basicAlert(
+                'Error',
+                'La categoria tiene subcategorias',
+                'error'
+              );
+            } else {
+              //Eliminar registro de la base de datos
+              this.categoriesService.deleteData(id).subscribe((resp: any) => {
                 alerts.basicAlert(
-                  'Error',
-                  'La categoria tiene subcategorias',
-                  'error'
+                  'Listo',
+                  'La categoria ha sido eliminada',
+                  'success'
                 );
-              } else {
-                //Eliminar registro de la base de datos
-                this.categoriesService.deleteData(id).subscribe((resp: any) => {
-                  alerts.basicAlert(
-                    'Listo',
-                    'La categoria ha sido eliminada',
-                    'success'
-                  );
-                  this.getData();
-                });
-              }
-            });
+                this.getData();
+              });
+            }
+          });
         }
       });
   }

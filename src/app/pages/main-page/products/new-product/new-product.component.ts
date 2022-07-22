@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { alerts } from './../../../../helpers/alerts';
@@ -418,15 +419,18 @@ export class NewProductComponent implements OnInit {
     this.categories.filter((category: Icategories) => {
       if (category.name == e.target.value.split('_')[1]) {
         //Informacion de las subcategorias
-        this.subcategoriesService
-          .getFilterData('category', category.name)
-          .subscribe((resp: any) => {
-            this.subcategories = Object.keys(resp).map((a) => ({
-              name: resp[a].name,
-              titleList: resp[a].title_list,
-              url: resp[a].url,
-            }));
-          });
+        let params: IQueryParams = {
+          orderBy: '"category"',
+          equalTo: `"${category.name}"`,
+        };
+
+        this.subcategoriesService.getData(params).subscribe((resp: any) => {
+          this.subcategories = Object.keys(resp).map((a) => ({
+            name: resp[a].name,
+            titleList: resp[a].title_list,
+            url: resp[a].url,
+          }));
+        });
       }
     });
   }
