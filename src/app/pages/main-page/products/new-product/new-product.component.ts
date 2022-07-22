@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { alerts } from './../../../../helpers/alerts';
@@ -400,7 +401,12 @@ export class NewProductComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.productsService.getFilterData('url', name).subscribe((resp) => {
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.productsService.getData(params).subscribe((resp) => {
           if (Object.keys(resp).length > 0) {
             resolve({ product: true });
             this.urlInput = '';
@@ -418,15 +424,18 @@ export class NewProductComponent implements OnInit {
     this.categories.filter((category: Icategories) => {
       if (category.name == e.target.value.split('_')[1]) {
         //Informacion de las subcategorias
-        this.subcategoriesService
-          .getFilterData('category', category.name)
-          .subscribe((resp: any) => {
-            this.subcategories = Object.keys(resp).map((a) => ({
-              name: resp[a].name,
-              titleList: resp[a].title_list,
-              url: resp[a].url,
-            }));
-          });
+        let params: IQueryParams = {
+          orderBy: '"category"',
+          equalTo: `"${category.name}"`,
+        };
+
+        this.subcategoriesService.getData(params).subscribe((resp: any) => {
+          this.subcategories = Object.keys(resp).map((a) => ({
+            name: resp[a].name,
+            titleList: resp[a].title_list,
+            url: resp[a].url,
+          }));
+        });
       }
     });
   }

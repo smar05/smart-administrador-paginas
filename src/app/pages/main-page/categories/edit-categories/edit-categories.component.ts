@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
@@ -65,14 +66,13 @@ export class EditCategoriesComponent implements OnInit {
   }
 
   public editCategory(): void {
-    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
     if (this.f.invalid) {
       return;
     }
-
+    this.loadData = true;
     //Verificar si hay cambio de imagen
     if (this.resultImg == '') {
       this.resultImg = this.nameImage;
@@ -126,7 +126,12 @@ export class EditCategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.categoriesService.getFilterData('url', name).subscribe((resp) => {
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.categoriesService.getData(params).subscribe((resp) => {
           if (Object.keys(resp).length > 0) {
             resolve({ category: true });
           } else {

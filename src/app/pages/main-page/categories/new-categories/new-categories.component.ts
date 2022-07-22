@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
@@ -73,13 +74,13 @@ export class NewCategoriesComponent implements OnInit {
   ngOnInit(): void {}
 
   public saveCategory(): void {
-    this.loadData = true;
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
     if (this.f.invalid) {
       return;
     }
+    this.loadData = true;
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
@@ -120,7 +121,12 @@ export class NewCategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.categoriesService.getFilterData('url', name).subscribe((resp) => {
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.categoriesService.getData(params).subscribe((resp) => {
           if (Object.keys(resp).length > 0) {
             resolve({ category: true });
           } else {
