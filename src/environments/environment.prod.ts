@@ -8,6 +8,9 @@ export const environment = {
   urlLogin: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
   urlGetUser: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
   urlRefreshToken: `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
+  urlStorage: {
+    img: `/img/${localStorage.getItem('localId')}`,
+  },
   firebaseConfig: {
     apiKey: apiKey,
     authDomain: 'smar-software.firebaseapp.com',
