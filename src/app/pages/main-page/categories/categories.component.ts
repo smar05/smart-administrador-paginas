@@ -47,6 +47,7 @@ export class CategoriesComponent implements OnInit {
   public categories: Icategories[] = [];
   public expandedElement!: Icategories | null;
   public loadData: boolean = false;
+  public categoriesImages: Map<string, string> = new Map();
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -97,6 +98,11 @@ export class CategoriesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.categories);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.categories.forEach(async (categorie: Icategories) => {
+        await this.getCategorieImage(categorie);
+      });
+
       this.loadData = false;
     });
   }
@@ -193,5 +199,17 @@ export class CategoriesComponent implements OnInit {
           });
         }
       });
+  }
+
+  public async getCategorieImage(categorie: Icategories): Promise<void> {
+    let urlImage: string = '';
+
+    if (categorie.image) {
+      urlImage = await this.categoriesService.getImage(`${categorie.image}`);
+    }
+
+    if (urlImage) {
+      this.categoriesImages.set(categorie.id!, urlImage);
+    }
   }
 }
