@@ -4,6 +4,7 @@ import {
   listAll,
   getDownloadURL,
   uploadBytes,
+  deleteObject,
 } from '@angular/fire/storage';
 import { Injectable } from '@angular/core';
 
@@ -48,5 +49,18 @@ export class StorageService {
     const imgRef = ref(this.storage, url);
 
     return uploadBytes(imgRef, file);
+  }
+
+  /**
+   * Borrar imagen
+   *
+   * @param {string} url
+   * @return {*}  {Promise<void>}
+   * @memberof StorageService
+   */
+  public deleteImage(url: string): Promise<void> {
+    const imgRef = ref(this.storage, url);
+
+    return deleteObject(imgRef);
   }
 }

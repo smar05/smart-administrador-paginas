@@ -36,19 +36,20 @@
           <div class="form-group">
             <label for="customFile">
               <img
-                *ngIf="!imgTemp"
-                src="../../../../../assets/img/undraw_Images_re_0kll.svg"
-                alt=""
-                width="170px"
-                class="img-fluid"
-              />
-              <img
-                *ngIf="imgTemp"
+                *ngIf="imgTemp; else noCategorieImage"
                 [src]="imgTemp"
                 alt=""
                 width="170px"
                 class="img-fluid"
               />
+              <ng-template #noCategorieImage>
+                <img
+                  src="../../../../../assets/img/categories/default/categorie_default.svg"
+                  alt=""
+                  width="170px"
+                  class="img-fluid"
+                />
+              </ng-template>
             </label>
             <div class="custom-file">
               <input

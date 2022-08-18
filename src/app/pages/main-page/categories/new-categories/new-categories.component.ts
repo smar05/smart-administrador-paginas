@@ -101,7 +101,8 @@ export class NewCategoriesComponent implements OnInit {
     let a: any = null;
 
     try {
-      a = await this.categoriesService.saveImage(this.imageFile, name);
+      if (this.imageFile && this.imgTemp)
+        a = await this.categoriesService.saveImage(this.imageFile, name);
       dataCategory.image = name;
     } catch (error) {
       alerts.basicAlert(
@@ -145,11 +146,20 @@ export class NewCategoriesComponent implements OnInit {
 
   //Validacion de la imagen
   public validateImage(e: any): void {
-    functions.validateImage(e).then((resp: any) => {
-      this.imgTemp = resp;
+    functions
+      .validateImage(e)
+      .then((resp: any) => {
+        if (resp) {
+          this.imgTemp = resp;
 
-      this.imageFile = e.target.files[0];
-    });
+          this.imageFile = e.target.files[0];
+        } else {
+          this.imgTemp = '';
+        }
+      })
+      .catch((err) => {
+        alerts.basicAlert('Error', 'Imagen no valida', 'error');
+      });
   }
 
   //Validar que el nombre de categoria no se repita

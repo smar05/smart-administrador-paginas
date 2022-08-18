@@ -32,7 +32,8 @@ export class EditCategoriesComponent implements OnInit {
   }
   public formSubmit: boolean = false;
   public imgTemp: string = '';
-  public resultImg: string = '';
+  public imageFile!: File;
+  public imageChange: boolean = false;
   public nameImage: string = '';
   public urlInput: string = '';
   public iconView: string = '';
@@ -51,21 +52,25 @@ export class EditCategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData = true;
-    this.categoriesService.getItem(this.data.id).subscribe((resp: any) => {
-      this.icon.setValue(resp.icon);
-      this.iconView = `<i class="${resp.icon}"></i>`;
-      this.imgTemp = resp.image;
-      this.nameImage = resp.image;
-      this.nameView = resp.name;
-      this.urlInput = resp.url;
-      this.titleView = JSON.parse(resp.title_list);
-      this.state = resp.state;
-      this.view = resp.view;
-      this.loadData = false;
-    });
+    this.categoriesService
+      .getItem(this.data.id)
+      .subscribe(async (resp: any) => {
+        this.icon.setValue(resp.icon);
+        this.iconView = `<i class="${resp.icon}"></i>`;
+        this.imgTemp = resp.image
+          ? await this.categoriesService.getImage(resp.image.split('.')[0])
+          : '';
+        this.nameImage = resp.image;
+        this.nameView = resp.name;
+        this.urlInput = resp.url;
+        this.titleView = JSON.parse(resp.title_list);
+        this.state = resp.state;
+        this.view = resp.view;
+        this.loadData = false;
+      });
   }
 
-  public editCategory(): void {
+  public async editCategory(): Promise<void> {
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
@@ -73,10 +78,6 @@ export class EditCategoriesComponent implements OnInit {
       return;
     }
     this.loadData = true;
-    //Verificar si hay cambio de imagen
-    if (this.resultImg == '') {
-      this.resultImg = this.nameImage;
-    }
 
     //Verificamos cambio de icono
     let icon = this.f.controls.icon.value;
@@ -87,13 +88,51 @@ export class EditCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: icon,
-      image: this.resultImg,
+      image: this.nameImage,
       name: this.nameView,
       title_list: JSON.stringify(this.titleView),
       url: this.urlInput,
       view: Number(this.view),
       state: this.state,
     };
+
+    //Verificar si hay cambio de imagen
+    if (this.imageChange) {
+      try {
+        if (dataCategory.image)
+          await this.categoriesService.deleteImage(this.nameImage);
+      } catch (error) {
+        alerts.basicAlert(
+          'Error',
+          'No se pudo eliminar la imagen anterior',
+          'error'
+        );
+        this.loadData = false;
+        this.imageChange = false;
+        return;
+      }
+
+      let name: string = `${dataCategory.url}.${
+        this.imageFile.name.split('.')[1]
+      }`;
+
+      let a: any = null;
+
+      try {
+        if (this.imageFile)
+          a = await this.categoriesService.saveImage(this.imageFile, name);
+        dataCategory.image = name;
+      } catch (error) {
+        alerts.basicAlert(
+          'Error',
+          'Ha ocurrido un error guardando la imagen de la categoria',
+          'error'
+        );
+        this.loadData = false;
+        this.imageChange = false;
+        return;
+      }
+    }
 
     //Guardar en base de datos la categoria
     this.categoriesService.patchData(this.data.id, dataCategory).subscribe(
@@ -115,10 +154,23 @@ export class EditCategoriesComponent implements OnInit {
 
   //Validacion de la imagen
   public validateImage(e: any): void {
-    functions.validateImage(e).then((resp: any) => {
-      this.imgTemp = resp;
-      this.resultImg = resp;
-    });
+    functions
+      .validateImage(e)
+      .then((resp: any) => {
+        if (resp) {
+          this.imgTemp = resp;
+          this.imageChange = true;
+
+          this.imageFile = e.target.files[0];
+        } else {
+          this.imgTemp = '';
+          this.imageChange = false;
+        }
+      })
+      .catch((err) => {
+        this.imageChange = false;
+        alerts.basicAlert('Error', 'Imagen no valida', 'error');
+      });
   }
 
   //Validar que el nombre de categoria no se repita

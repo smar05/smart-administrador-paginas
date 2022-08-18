@@ -111,4 +111,17 @@ export class CategoriesService {
 
     return await this.storageService.saveImage(file, url);
   }
+
+  /**
+   * Eliminar la imagen de la categoria
+   *
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof CategoriesService
+   */
+  public deleteImage(name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+
+    return this.storageService.deleteImage(url);
+  }
 }
