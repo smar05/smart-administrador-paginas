@@ -1,4 +1,10 @@
-import { Storage, ref, listAll, getDownloadURL } from '@angular/fire/storage';
+import {
+  Storage,
+  ref,
+  listAll,
+  getDownloadURL,
+  uploadBytes,
+} from '@angular/fire/storage';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -28,5 +34,19 @@ export class StorageService {
    */
   public getDownloadURL(image: any): Promise<string> {
     return getDownloadURL(image);
+  }
+
+  /**
+   *  Guardar una imagen
+   *
+   * @param {File} file
+   * @param {string} url
+   * @return {*}  {Promise<any>}
+   * @memberof StorageService
+   */
+  public saveImage(file: File, url: string): Promise<any> {
+    const imgRef = ref(this.storage, url);
+
+    return uploadBytes(imgRef, file);
   }
 }
