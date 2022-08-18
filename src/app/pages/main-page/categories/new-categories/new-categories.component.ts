@@ -102,7 +102,7 @@ export class NewCategoriesComponent implements OnInit {
 
     try {
       a = await this.categoriesService.saveImage(this.imageFile, name);
-      dataCategory.image = dataCategory.url;
+      dataCategory.image = name;
     } catch (error) {
       alerts.basicAlert(
         'Error',

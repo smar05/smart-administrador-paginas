@@ -205,7 +205,9 @@ export class CategoriesComponent implements OnInit {
     let urlImage: string = '';
 
     if (categorie.image) {
-      urlImage = await this.categoriesService.getImage(`${categorie.image}`);
+      urlImage = await this.categoriesService.getImage(
+        `${categorie.image.split('.')[0]}`
+      );
     }
 
     if (urlImage) {
