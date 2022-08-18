@@ -178,25 +178,51 @@ export class CategoriesComponent implements OnInit {
             equalTo: `"${name}"`,
           };
 
-          this.subcategoriesService.getData(params).subscribe((resp: any) => {
-            if (Object.keys(resp).length > 0) {
-              alerts.basicAlert(
-                'Error',
-                'La categoria tiene subcategorias',
-                'error'
-              );
-            } else {
-              //Eliminar registro de la base de datos
-              this.categoriesService.deleteData(id).subscribe((resp: any) => {
+          this.subcategoriesService
+            .getData(params)
+            .subscribe(async (resp: any) => {
+              if (Object.keys(resp).length > 0) {
                 alerts.basicAlert(
-                  'Listo',
-                  'La categoria ha sido eliminada',
-                  'success'
+                  'Error',
+                  'La categoria tiene subcategorias',
+                  'error'
                 );
-                this.getData();
-              });
-            }
-          });
+              } else {
+                //Eliminar imagen de categoria
+                let name: string | undefined = this.categories.find(
+                  (categorie: Icategories) => categorie.id == id
+                )?.image;
+                try {
+                  if (name) await this.categoriesService.deleteImage(name);
+                } catch (error) {
+                  alerts.basicAlert(
+                    'Error',
+                    'No se pudo eliminar la imagen de la categoria',
+                    'error'
+                  );
+                  return;
+                }
+
+                //Eliminar registro de la base de datos
+                this.categoriesService.deleteData(id).subscribe(
+                  (resp: any) => {
+                    alerts.basicAlert(
+                      'Listo',
+                      'La categoria ha sido eliminada',
+                      'success'
+                    );
+                    this.getData();
+                  },
+                  (err) => {
+                    alerts.basicAlert(
+                      'Error',
+                      'No se ha podido eliminar la categoria',
+                      'error'
+                    );
+                  }
+                );
+              }
+            });
         }
       });
   }
