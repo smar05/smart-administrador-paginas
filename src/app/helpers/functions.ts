@@ -23,7 +23,7 @@ export class functions {
   }
 
   //Validar imagenes
-  static validateImage(e: any): any {
+  static validateImage(e: any): Promise<any> {
     return new Promise((resolve) => {
       const image = e.target.files[0];
       //validar el formato
@@ -43,6 +43,14 @@ export class functions {
           'error'
         );
         return;
+      }
+      //Validacion de nombre
+      else if (image['name'].split('.').length > 2) {
+        alerts.basicAlert(
+          'Error',
+          "El nombre de la imagen no puede contener caracteres de '.'",
+          'error'
+        );
       }
       //Mostrar imagen temporal
       else {
