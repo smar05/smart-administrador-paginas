@@ -97,4 +97,18 @@ export class CategoriesService {
 
     return '';
   }
+
+  /**
+   *  Guardar la imagen de categoria
+   *
+   * @param {File} file
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof CategoriesService
+   */
+  public async saveImage(file: File, name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+
+    return await this.storageService.saveImage(file, url);
+  }
 }

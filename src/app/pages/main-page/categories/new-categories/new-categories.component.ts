@@ -57,6 +57,7 @@ export class NewCategoriesComponent implements OnInit {
   public urlInput: string = '';
   public iconView: string = '';
   public loadData: boolean = false;
+  public imageFile!: File;
 
   //Configuracion matChip
   visible = true;
@@ -73,7 +74,7 @@ export class NewCategoriesComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public saveCategory(): void {
+  public async saveCategory(): Promise<void> {
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
@@ -84,25 +85,58 @@ export class NewCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
-      image: this.imgTemp,
+      image: '',
       name: this.f.controls.name.value,
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
       state: 'hidden',
     };
+
+    //Guardar la imagen en storage
+    let name: string = `${dataCategory.url}.${
+      this.imageFile.name.split('.')[1]
+    }`;
+
+    let a: any = null;
+
+    try {
+      a = await this.categoriesService.saveImage(this.imageFile, name);
+      dataCategory.image = dataCategory.url;
+    } catch (error) {
+      alerts.basicAlert(
+        'Error',
+        'Ha ocurrido un error guardando la imagen de la categoria',
+        'error'
+      );
+      this.loadData = false;
+      return;
+    }
+
     //Guardar en base de datos la categoria
-    this.categoriesService.postData(dataCategory).subscribe(
-      (resp) => {
-        this.loadData = false;
-        this.dialogRef.close('save');
-        alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');
-      },
-      (err) => {
-        this.loadData = false;
-        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
-      }
-    );
+    if (a) {
+      this.categoriesService.postData(dataCategory).subscribe(
+        (resp) => {
+          this.loadData = false;
+          this.dialogRef.close('save');
+          alerts.basicAlert(
+            'Listo',
+            'La categoria ha sido guardada',
+            'success'
+          );
+        },
+        (err) => {
+          this.loadData = false;
+          alerts.basicAlert(
+            'Error',
+            'Ha ocurrido un error guardando la categoria',
+            'error'
+          );
+        }
+      );
+    } else {
+      this.loadData = false;
+    }
   }
 
   public invalidField(field: string): boolean {
@@ -113,6 +147,8 @@ export class NewCategoriesComponent implements OnInit {
   public validateImage(e: any): void {
     functions.validateImage(e).then((resp: any) => {
       this.imgTemp = resp;
+
+      this.imageFile = e.target.files[0];
     });
   }
 
