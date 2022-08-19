@@ -44,6 +44,7 @@ export class ProductsComponent implements OnInit {
   public products: Iproducts[] = [];
   public expandedElement!: Iproducts | null;
   public loadData: boolean = false;
+  public productsImages: Map<string, string> = new Map();
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -114,6 +115,12 @@ export class ProductsComponent implements OnInit {
             views: resp[a].views,
           } as Iproducts)
       );
+
+      //Imagenes de los productos
+      this.products.forEach(async (product: Iproducts) => {
+        await this.getProductMainImage(product); //Imagen principal
+      });
+
       this.dataSource = new MatTableDataSource(this.products);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -244,6 +251,20 @@ export class ProductsComponent implements OnInit {
             );
           }
         });
+    }
+  }
+
+  public async getProductMainImage(product: Iproducts): Promise<void> {
+    let urlImage: string = '';
+
+    if (product.image) {
+      urlImage = await this.productsService.getImage(
+        `${product.image.split('.')[0]}`
+      );
+    }
+
+    if (urlImage) {
+      this.productsImages.set(`${product.id!}`, urlImage);
     }
   }
 }

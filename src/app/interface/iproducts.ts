@@ -1,4 +1,5 @@
 export interface Iproducts {
+  id?: string;
   category: string;
   date_created: string;
   default_banner: string;

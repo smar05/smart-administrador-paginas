@@ -124,27 +124,26 @@
                     <li class="py-2">
                       <div
                         *ngIf="
-                          !(element.image == '' || element.image == undefined)
+                          !(
+                            element.image == '' || element.image == undefined
+                          ) && this.productsImages.has(element.id);
+                          else noProductImage
                         "
                       >
                         <img
-                          src="{{ element.image }}"
+                          src="{{ this.productsImages.get(element.id) }}"
                           width="100"
                           alt="{{ element.name }}"
                         />
                       </div>
-                      <div
-                        *ngIf="
-                          element.image == '' || element.image == undefined
-                        "
-                      >
+                      <ng-template #noProductImage>
                         <img
                           src="../../../../assets/img/undraw_product_teardown_elol.svg"
                           class="rounded-circle"
                           width="100"
                           alt="{{ element.name }}"
                         />
-                      </div>
+                      </ng-template>
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
@@ -306,6 +305,7 @@
                         ></div>
                       </div>
                     </li>
+                    <!--
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Galeria: </strong>
@@ -327,6 +327,7 @@
                         </figure>
                       </div>
                     </li>
+                    -->
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Banner superior: </strong>
