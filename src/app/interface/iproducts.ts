@@ -9,7 +9,6 @@ export interface Iproducts {
   feedback: string;
   gallery: string;
   horizontal_slider: string;
-  image: string;
   name: string;
   offer: string;
   price: string;

@@ -92,7 +92,6 @@ export class ProductsComponent implements OnInit {
             feedback: JSON.parse(resp[a].feedback),
             gallery: JSON.parse(resp[a].gallery),
             horizontal_slider: JSON.parse(resp[a].horizontal_slider),
-            image: resp[a].image,
             name: resp[a].name,
             offer: resp[a].offer,
             price: resp[a].price,
@@ -257,14 +256,14 @@ export class ProductsComponent implements OnInit {
   public async getProductMainImage(product: Iproducts): Promise<void> {
     let urlImage: string = '';
 
-    if (product.image) {
-      urlImage = await this.productsService.getImage(
-        `${product.image.split('.')[0]}`
-      );
-    }
+    if (product.id) {
+      urlImage = await this.productsService.getImage(`${product.id}/main`);
 
-    if (urlImage) {
-      this.productsImages.set(`${product.id!}`, urlImage);
+      if (urlImage) {
+        this.productsImages.set(product.id, urlImage);
+      } else {
+        this.productsImages.set(product.id, '');
+      }
     }
   }
 }

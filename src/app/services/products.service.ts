@@ -89,7 +89,7 @@ export class ProductsService {
     ).items[0];
 
     if (image) {
-      return await this.storageService.getDownloadURL(image);
+      return this.storageService.getDownloadURL(image);
     }
 
     return '';

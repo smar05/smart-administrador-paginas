@@ -124,9 +124,7 @@
                     <li class="py-2">
                       <div
                         *ngIf="
-                          !(
-                            element.image == '' || element.image == undefined
-                          ) && this.productsImages.has(element.id);
+                          this.productsImages.has(element.id);
                           else noProductImage
                         "
                       >
