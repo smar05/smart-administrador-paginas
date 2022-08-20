@@ -2,7 +2,7 @@ import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Iproducts } from './../../../interface/iproducts';
+import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -117,7 +117,14 @@ export class ProductsComponent implements OnInit {
 
       //Imagenes de los productos
       this.products.forEach(async (product: Iproducts) => {
-        await this.getProductMainImage(product); //Imagen principal
+        await this.getProductMainImage(product, EnumProductImg.main); //Imagen principal
+        await this.getProductMainImage(product, EnumProductImg.default_banner);
+        await this.getProductMainImage(
+          product,
+          EnumProductImg.horizontal_slider
+        );
+        await this.getProductMainImage(product, EnumProductImg.top_banner);
+        await this.getProductMainImage(product, EnumProductImg.vertical_slider);
       });
 
       this.dataSource = new MatTableDataSource(this.products);
@@ -253,16 +260,22 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-  public async getProductMainImage(product: Iproducts): Promise<void> {
+  public async getProductMainImage(
+    product: Iproducts,
+    type: string
+  ): Promise<void> {
     let urlImage: string = '';
 
     if (product.id) {
-      urlImage = await this.productsService.getImage(`${product.id}/main`);
+      let url: string = type ? `${product.id}/${type}` : '';
+      let set: string = type ? `${product.id}-${type}` : '';
+
+      if (url) urlImage = await this.productsService.getImage(url);
 
       if (urlImage) {
-        this.productsImages.set(product.id, urlImage);
+        this.productsImages.set(set, urlImage);
       } else {
-        this.productsImages.set(product.id, '');
+        this.productsImages.set(set, '');
       }
     }
   }

@@ -28,3 +28,11 @@ export interface Iproducts {
   video: string;
   views: number;
 }
+
+export enum EnumProductImg {
+  main = 'main',
+  top_banner = 'top_banner',
+  default_banner = 'default_banner',
+  horizontal_slider = 'horizontal_slider',
+  vertical_slider = 'vertical_slider',
+}
