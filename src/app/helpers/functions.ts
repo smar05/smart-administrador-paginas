@@ -2,7 +2,16 @@ import { alerts } from './alerts';
 import { FormGroup } from '@angular/forms';
 
 export class functions {
-  //Validar campos del formulario
+  /**
+   *  Validar campos del formulario
+   *
+   * @static
+   * @param {string} field
+   * @param {FormGroup} f
+   * @param {boolean} formSubmitted
+   * @return {*}  {boolean}
+   * @memberof functions
+   */
   static invalidField(
     field: string,
     f: FormGroup,
@@ -22,7 +31,14 @@ export class functions {
     return false;
   }
 
-  //Validar imagenes
+  /**
+   * Valida las imagenes y retorna la imagen en base 64
+   *
+   * @static
+   * @param {*} e
+   * @return {*}  {Promise<any>}
+   * @memberof functions
+   */
   static validateImage(e: any): Promise<any> {
     return new Promise((resolve) => {
       const image = e.target.files[0];
@@ -82,7 +98,14 @@ export class functions {
     return value;
   }
 
-  //Convertir File a base 64
+  /**
+   * Convertir File a base 64
+   *
+   * @static
+   * @param {File} file
+   * @return {*}  {Promise<string>}
+   * @memberof functions
+   */
   static fileToBase64(file: File): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();

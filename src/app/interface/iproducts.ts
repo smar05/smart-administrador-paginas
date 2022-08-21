@@ -2,12 +2,10 @@ export interface Iproducts {
   id?: string;
   category: string;
   date_created: string;
-  default_banner: string;
   delivery_time: number;
   description: string;
   details: string;
   feedback: string;
-  gallery: string;
   horizontal_slider: string;
   name: string;
   offer: string;

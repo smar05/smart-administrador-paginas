@@ -2,11 +2,10 @@ import { IQueryParams } from './../../../../interface/i-query-params';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { alerts } from './../../../../helpers/alerts';
-import { Isubcategories } from './../../../../interface/isubcategories';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
-import { Iproducts } from './../../../../interface/iproducts';
+import { Iproducts, EnumProductImg } from './../../../../interface/iproducts';
 import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
 import {
@@ -40,7 +39,7 @@ export class NewProductComponent implements OnInit {
     ],
     category: ['', [Validators.required]],
     sub_category: ['', [Validators.required]],
-    image: ['', [Validators.required]],
+    image: ['', [Validators.required]], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
     details: new FormArray([
@@ -67,10 +66,10 @@ export class NewProductComponent implements OnInit {
         P2_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Span_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]],
+        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
       }),
     ]),
-    default_banner: ['', [Validators.required]],
+    default_banner: ['', [Validators.required]], //No se guarda en base de datos
     horizontal_slider: new FormArray([
       this.form.group({
         H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
@@ -79,30 +78,22 @@ export class NewProductComponent implements OnInit {
         H3_3_tag: ['', [Validators.required, Validators.maxLength(50)]],
         H3_4s_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]],
+        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
       }),
     ]),
     type_video: [''],
     id_video: [''],
     price: [
       '',
-      [
-        Validators.required,
-        Validators.min(0),
-        Validators.pattern(/[.\\,\\0-9]{1,}/),
-      ],
+      [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)],
     ],
     shipping: [
       '',
-      [
-        Validators.required,
-        Validators.min(0),
-        Validators.pattern(/[.\\,\\0-9]{1,}/),
-      ],
+      [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)],
     ],
     delivery_time: [
       '',
-      [Validators.required, Validators.min(0), Validators.pattern(/[0,9]{1,}/)],
+      [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)],
     ],
     stock: [
       '',
@@ -110,11 +101,11 @@ export class NewProductComponent implements OnInit {
         Validators.required,
         Validators.min(0),
         Validators.max(100),
-        Validators.pattern(/[0,9]{1,}/),
+        Validators.pattern(/^[0-9]+$/),
       ],
     ],
     type_offer: ['Discount'],
-    value_offer: ['', [Validators.pattern(/^[+]?\d+([.]\d+)?$/)]],
+    value_offer: ['', [Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
     date_offer: [''],
   });
 
@@ -223,6 +214,10 @@ export class NewProductComponent implements OnInit {
 
   //Variable para la imagen del producto
   public imgTemp: string = '';
+  public imgFile!: File;
+  public imgTBFile!: File;
+  public imgDBFile!: File;
+  public imgHSliderFile!: File;
 
   //Galeria de imagenes del producto
   public files: File[] = [];
@@ -277,14 +272,8 @@ export class NewProductComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //Categorias
-    this.categoriesService.getData().subscribe((resp: any) => {
-      this.categories = Object.keys(resp).map((a) => ({
-        name: resp[a].name,
-        titleList: JSON.parse(resp[a].title_list),
-        url: resp[a].url,
-      }));
-    });
+    //obtener categorias
+    this.getCategories();
   }
 
   //Guardar producto
@@ -301,20 +290,6 @@ export class NewProductComponent implements OnInit {
       return;
     }
     this.loadData = true;
-
-    //Galeria de fotos del producto
-    let galleryPhotos: string[] = [];
-    if (this.files.length > 0) {
-      let photo64: string = ''; //Foto en base 64
-      for (const file of this.files) {
-        try {
-          photo64 = await functions.fileToBase64(file);
-          galleryPhotos.push(photo64);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
 
     //Validamos las especificaciones del producto
     let specifications: any = null;
@@ -341,20 +316,16 @@ export class NewProductComponent implements OnInit {
     const dataProduct: Iproducts = {
       category: this.f.controls.category.value.split('_')[0],
       date_created: '',
-      default_banner: this.imgTempDB,
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
       feedback: '',
-      gallery: JSON.stringify(galleryPhotos),
       horizontal_slider: JSON.stringify(
         this.horizontal_slider.value.map((top: any) => {
-          //Se guarda a imagen en base 64
-          top.IMG_tag = this.imgTempTB;
+          if (top.IMG_tag) delete top.IMG_tag;
           return top;
         })[0]
       ),
-      image: this.imgTemp,
       name: this.f.controls.name.value,
       offer: this.value_offer.value
         ? JSON.stringify([
@@ -376,8 +347,7 @@ export class NewProductComponent implements OnInit {
       title_list: this.titleList,
       top_banner: JSON.stringify(
         this.top_banner.value.map((top: any) => {
-          //Se guarda a imagen en base 64
-          top.IMG_tag = this.imgTempTB;
+          if (top.IMG_tag) delete top.IMG_tag;
           return top;
         })[0]
       ),
@@ -389,6 +359,15 @@ export class NewProductComponent implements OnInit {
       views: 0,
     };
     console.log(dataProduct);
+
+    //Guardar la imagen en storage, primero se debio haber guardado el producto
+    /*
+    await this.saveProductImages(dataProduct, this.imgFile, EnumProductImg.main);
+    await this.saveProductImages(dataProduct, this.imgHSliderFile, EnumProductImg.horizontal_slider);
+    await this.saveProductImages(dataProduct, this.imgTBFile, EnumProductImg.top_banner);
+    if (this.files && this.files.length > 0)
+      await this.saveProductGallery(dataProduct, this.files);
+    */
   }
 
   //Validamos el formulario
@@ -456,15 +435,38 @@ export class NewProductComponent implements OnInit {
       resp = await functions.validateImage(e);
     } catch (error) {
       console.error(error);
+      return;
     }
-    if (type == 'image') {
-      this.imgTemp = resp;
-    } else if (type == 'TB') {
-      this.imgTempTB = resp;
-    } else if (type == 'DB') {
-      this.imgTempDB = resp;
-    } else if (type == 'HSlider') {
-      this.imgTempHSlider = resp;
+    if (resp) {
+      switch (type) {
+        case EnumProductImg.main:
+          this.imgTemp = resp;
+          this.imgFile = e.target.files[0];
+          break;
+
+        case EnumProductImg.top_banner:
+          this.imgTempTB = resp;
+          this.imgTBFile = e.target.files[0];
+          break;
+
+        case EnumProductImg.default_banner:
+          this.imgTempDB = resp;
+          this.imgDBFile = e.target.files[0];
+          break;
+
+        case EnumProductImg.horizontal_slider:
+          this.imgTempHSlider = resp;
+          this.imgHSliderFile = e.target.files[0];
+          break;
+
+        default:
+          break;
+      }
+    } else {
+      this.imgTemp = '';
+      this.imgTempTB = '';
+      this.imgTempDB = '';
+      this.imgTempHSlider = '';
     }
   }
 
@@ -577,6 +579,71 @@ export class NewProductComponent implements OnInit {
       if (index >= 0) {
         this.f.controls.tags.value.splice(index, 1);
         this.f.controls.tags.updateValueAndValidity();
+      }
+    }
+  }
+
+  public getCategories(): any {
+    this.categoriesService.getData().subscribe((resp: any) => {
+      this.categories = Object.keys(resp).map((a: any) => ({
+        name: resp[a].name,
+        titleList: JSON.parse(resp[a].title_list),
+        url: resp[a].url,
+      }));
+    });
+  }
+
+  public async saveProductImages(
+    product: Iproducts,
+    imgFile: File,
+    type: string
+  ): Promise<void> {
+    let name: string =
+      product.id && type && imgFile
+        ? `${type}.${imgFile.name.split('.')[1]}`
+        : '';
+
+    if (name) {
+      try {
+        if (imgFile)
+          await this.productsService.saveImage(imgFile, `${type}/${name}`);
+      } catch (error) {
+        alerts.basicAlert(
+          'Error',
+          `Ha ocurrido un error guardando la imagen ${type} del producto`,
+          'error'
+        );
+        this.loadData = false;
+        return;
+      }
+    }
+  }
+
+  public async saveProductGallery(
+    product: Iproducts,
+    gallery: File[]
+  ): Promise<void> {
+    for (let index = 0; index < gallery.length; index++) {
+      let name: string =
+        product.id && gallery[index]
+          ? `${index}.${gallery[index].name.split('.')[1]}`
+          : '';
+
+      if (name) {
+        try {
+          await this.productsService.saveImage(
+            gallery[index],
+            `gallery/${name}`
+          );
+        } catch (error) {
+          alerts.basicAlert(
+            'Error',
+            `Ha ocurrido un error guardando la imagen de la galeria del producto`,
+            'error'
+          );
+          this.loadData = false;
+          return;
+        }
       }
     }
   }

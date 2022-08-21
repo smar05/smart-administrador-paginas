@@ -90,7 +90,6 @@ export class ProductsComponent implements OnInit {
             description: resp[a].description,
             details: JSON.parse(resp[a].details),
             feedback: JSON.parse(resp[a].feedback),
-            gallery: JSON.parse(resp[a].gallery),
             horizontal_slider: JSON.parse(resp[a].horizontal_slider),
             name: resp[a].name,
             offer: resp[a].offer,
