@@ -110,9 +110,7 @@
                     <li class="py-2">
                       <div
                         *ngIf="
-                          !(
-                            element.image == '' || element.image == undefined
-                          ) && this.categoriesImages.has(element.id);
+                          this.categoriesImages.has(element.id);
                           else defaultCategorieImage
                         "
                       >

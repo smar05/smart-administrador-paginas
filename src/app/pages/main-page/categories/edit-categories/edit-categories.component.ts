@@ -34,7 +34,6 @@ export class EditCategoriesComponent implements OnInit {
   public imgTemp: string = '';
   public imageFile!: File;
   public imageChange: boolean = false;
-  public nameImage: string = '';
   public urlInput: string = '';
   public iconView: string = '';
   public loadData: boolean = false;
@@ -57,10 +56,9 @@ export class EditCategoriesComponent implements OnInit {
       .subscribe(async (resp: any) => {
         this.icon.setValue(resp.icon);
         this.iconView = `<i class="${resp.icon}"></i>`;
-        this.imgTemp = resp.image
-          ? await this.categoriesService.getImage(resp.image.split('.')[0])
-          : '';
-        this.nameImage = resp.image;
+        this.imgTemp = await this.categoriesService.getImage(
+          `${this.data.id}/main`
+        );
         this.nameView = resp.name;
         this.urlInput = resp.url;
         this.titleView = JSON.parse(resp.title_list);
@@ -88,7 +86,6 @@ export class EditCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: icon,
-      image: this.nameImage,
       name: this.nameView,
       title_list: JSON.stringify(this.titleView),
       url: this.urlInput,
@@ -96,47 +93,50 @@ export class EditCategoriesComponent implements OnInit {
       state: this.state,
     };
 
-    //Verificar si hay cambio de imagen
-    if (this.imageChange) {
-      try {
-        if (dataCategory.image)
-          await this.categoriesService.deleteImage(this.nameImage);
-      } catch (error) {
-        alerts.basicAlert(
-          'Error',
-          'No se pudo eliminar la imagen anterior',
-          'error'
-        );
-        this.loadData = false;
-        this.imageChange = false;
-        return;
-      }
-
-      let name: string = `${dataCategory.url}.${
-        this.imageFile.name.split('.')[1]
-      }`;
-
-      let a: any = null;
-
-      try {
-        if (this.imageFile)
-          a = await this.categoriesService.saveImage(this.imageFile, name);
-        dataCategory.image = name;
-      } catch (error) {
-        alerts.basicAlert(
-          'Error',
-          'Ha ocurrido un error guardando la imagen de la categoria',
-          'error'
-        );
-        this.loadData = false;
-        this.imageChange = false;
-        return;
-      }
-    }
-
     //Guardar en base de datos la categoria
     this.categoriesService.patchData(this.data.id, dataCategory).subscribe(
-      (resp) => {
+      async (resp: Icategories) => {
+        //Verificar si hay cambio de imagen
+        if (this.imageChange && resp) {
+          //Borrado de la imagen anterior
+          try {
+            if (this.data.id)
+              await this.categoriesService.deleteImages(
+                `${this.data.id}/main/`
+              );
+          } catch (error) {
+            alerts.basicAlert(
+              'Error',
+              'No se pudo eliminar la imagen anterior',
+              'error'
+            );
+            this.loadData = false;
+            this.imageChange = false;
+            return;
+          }
+
+          let name: string = `main.${this.imageFile.name.split('.')[1]}`;
+
+          let a: any = null;
+
+          try {
+            if (this.imageFile && this.data.id)
+              a = await this.categoriesService.saveImage(
+                this.imageFile,
+                `${this.data.id}/main/${name}`
+              );
+          } catch (error) {
+            alerts.basicAlert(
+              'Error',
+              'Ha ocurrido un error guardando la imagen de la categoria',
+              'error'
+            );
+            this.loadData = false;
+            this.imageChange = false;
+            return;
+          }
+        }
+
         this.loadData = false;
         this.dialogRef.close('save');
         alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');

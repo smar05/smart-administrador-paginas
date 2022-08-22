@@ -107,7 +107,7 @@ export class CategoriesService {
    * @memberof CategoriesService
    */
   public async saveImage(file: File, name: string): Promise<any> {
-    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+    let url: string = `${this.urlImage}/${name}`;
 
     return await this.storageService.saveImage(file, url);
   }
@@ -123,5 +123,35 @@ export class CategoriesService {
     let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
 
     return this.storageService.deleteImage(url);
+  }
+
+  /**
+   * Eliminar las imagenes de la categoria
+   *
+   * @param {string} url
+   * @return {*}  {Promise<boolean>}
+   * @memberof CategoriesService
+   */
+  public async deleteImages(url: string): Promise<boolean> {
+    let complete: boolean = true;
+    try {
+      let images: any[] = (
+        await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+      ).items;
+
+      if (images && images.length > 0) {
+        for (const image of images) {
+          if (image._location.path) {
+            await this.storageService.deleteImage(image._location.path);
+          } else {
+            continue;
+          }
+        }
+      }
+    } catch (error) {
+      complete = false;
+    }
+
+    return complete;
   }
 }

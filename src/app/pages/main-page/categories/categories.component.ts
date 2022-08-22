@@ -189,11 +189,9 @@ export class CategoriesComponent implements OnInit {
                 );
               } else {
                 //Eliminar imagen de categoria
-                let name: string | undefined = this.categories.find(
-                  (categorie: Icategories) => categorie.id == id
-                )?.image;
                 try {
-                  if (name) await this.categoriesService.deleteImage(name);
+                  if (name && id)
+                    await this.categoriesService.deleteImages(`${id}/main/`);
                 } catch (error) {
                   alerts.basicAlert(
                     'Error',
@@ -230,10 +228,8 @@ export class CategoriesComponent implements OnInit {
   public async getCategorieImage(categorie: Icategories): Promise<void> {
     let urlImage: string = '';
 
-    if (categorie.image) {
-      urlImage = await this.categoriesService.getImage(
-        `${categorie.image.split('.')[0]}`
-      );
+    if (categorie.id) {
+      urlImage = await this.categoriesService.getImage(`${categorie.id}/main`);
     }
 
     if (urlImage) {

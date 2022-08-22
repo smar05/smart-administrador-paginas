@@ -85,7 +85,6 @@ export class NewCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
-      image: '',
       name: this.f.controls.name.value,
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
@@ -93,51 +92,41 @@ export class NewCategoriesComponent implements OnInit {
       state: 'hidden',
     };
 
-    //Guardar la imagen en storage
-    let name: string = `${dataCategory.url}.${
-      this.imageFile.name.split('.')[1]
-    }`;
-
-    let a: any = null;
-
-    try {
-      if (this.imageFile && this.imgTemp)
-        a = await this.categoriesService.saveImage(this.imageFile, name);
-      dataCategory.image = name;
-    } catch (error) {
-      alerts.basicAlert(
-        'Error',
-        'Ha ocurrido un error guardando la imagen de la categoria',
-        'error'
-      );
-      this.loadData = false;
-      return;
-    }
-
     //Guardar en base de datos la categoria
-    if (a) {
-      this.categoriesService.postData(dataCategory).subscribe(
-        (resp) => {
-          this.loadData = false;
-          this.dialogRef.close('save');
-          alerts.basicAlert(
-            'Listo',
-            'La categoria ha sido guardada',
-            'success'
-          );
-        },
-        (err) => {
-          this.loadData = false;
+    this.categoriesService.postData(dataCategory).subscribe(
+      async (resp: any) => {
+        //Guardar la imagen en storage
+        let name: string = `main.${this.imageFile.name.split('.')[1]}`;
+
+        try {
+          if (this.imageFile && this.imgTemp && resp.name)
+            await this.categoriesService.saveImage(
+              this.imageFile,
+              `${resp.name}/main/${name}`
+            );
+        } catch (error) {
           alerts.basicAlert(
             'Error',
-            'Ha ocurrido un error guardando la categoria',
+            'Ha ocurrido un error guardando la imagen de la categoria',
             'error'
           );
+          this.loadData = false;
+          return;
         }
-      );
-    } else {
-      this.loadData = false;
-    }
+
+        this.loadData = false;
+        this.dialogRef.close('save');
+        alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');
+      },
+      (err) => {
+        this.loadData = false;
+        alerts.basicAlert(
+          'Error',
+          'Ha ocurrido un error guardando la categoria',
+          'error'
+        );
+      }
+    );
   }
 
   public invalidField(field: string): boolean {
