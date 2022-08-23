@@ -110,28 +110,25 @@
                     <li class="py-2">
                       <div
                         *ngIf="
-                          !(element.image == '' || element.image == undefined)
+                          this.categoriesImages.has(element.id);
+                          else defaultCategorieImage
                         "
                       >
                         <img
-                          src="{{ element.image }}"
+                          src="{{ this.categoriesImages.get(element.id) }}"
                           class="rounded-circle"
                           width="100px"
                           alt="{{ element.name }}"
                         />
                       </div>
-                      <div
-                        *ngIf="
-                          element.image == '' || element.image == undefined
-                        "
-                      >
+                      <ng-template #defaultCategorieImage>
                         <img
-                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                          src="../../../../assets/img/categories/default/categorie_default.svg"
                           class="rounded-circle"
                           width="100px"
                           alt="{{ element.name }}"
                         />
-                      </div>
+                      </ng-template>
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>

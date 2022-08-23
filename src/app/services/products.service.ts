@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+import { StorageService } from './storage.service';
 import { Iproducts } from './../interface/iproducts';
 import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
@@ -9,8 +11,12 @@ import { Injectable } from '@angular/core';
 })
 export class ProductsService {
   private urlProducts: string = 'products';
+  private urlImage: string = `${environment.urlStorage.img}/products`;
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private storageService: StorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de productos en Firebase
@@ -67,5 +73,52 @@ export class ProductsService {
    */
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlProducts}/${id}.json`);
+  }
+
+  //Storage//////////////////////
+  /**
+   *
+   *
+   * @param {string} url
+   * @return {*}  {Promise<string>}
+   * @memberof ProductsService
+   */
+  public async getImage(url: string): Promise<string> {
+    let image: any = (
+      await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+    ).items[0];
+
+    if (image) {
+      return this.storageService.getDownloadURL(image);
+    }
+
+    return '';
+  }
+
+  /**
+   *  Guardar la imagen de producto
+   *
+   * @param {File} file
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof CategoriesService
+   */
+  public async saveImage(file: File, name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+
+    return await this.storageService.saveImage(file, url);
+  }
+
+  /**
+   * Eliminar la imagen del producto
+   *
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof ProductsService
+   */
+  public deleteImage(name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+
+    return this.storageService.deleteImage(url);
   }
 }

@@ -124,27 +124,26 @@
                     <li class="py-2">
                       <div
                         *ngIf="
-                          !(element.image == '' || element.image == undefined)
+                          this.productsImages.has(element.id + '-main');
+                          else noProductImage
                         "
                       >
                         <img
-                          src="{{ element.image }}"
+                          src="{{
+                            this.productsImages.get(element.id + '-main')
+                          }}"
                           width="100"
                           alt="{{ element.name }}"
                         />
                       </div>
-                      <div
-                        *ngIf="
-                          element.image == '' || element.image == undefined
-                        "
-                      >
+                      <ng-template #noProductImage>
                         <img
                           src="../../../../assets/img/undraw_product_teardown_elol.svg"
                           class="rounded-circle"
                           width="100"
                           alt="{{ element.name }}"
                         />
-                      </div>
+                      </ng-template>
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
@@ -306,6 +305,7 @@
                         ></div>
                       </div>
                     </li>
+                    <!--
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Galeria: </strong>
@@ -327,6 +327,7 @@
                         </figure>
                       </div>
                     </li>
+                    -->
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Banner superior: </strong>
@@ -358,22 +359,20 @@
                         <p><strong>IMG tag: </strong></p>
                         <img
                           *ngIf="
-                            !(
-                              element.top_banner['IMG tag'] == '' ||
-                              element.top_banner['IMG tag'] == undefined
-                            )
+                            this.productsImages.has(element.id + '-top_banner');
+                            else noTopBanner
                           "
-                          src="{{ element.top_banner['IMG tag'] }}"
+                          src="{{
+                            this.productsImages.get(element.id + '-top_banner')
+                          }}"
                           class="img-fluid"
                         />
-                        <img
-                          *ngIf="
-                            element.top_banner['IMG tag'] == '' ||
-                            element.top_banner['IMG tag'] == undefined
-                          "
-                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                          class="img-fluid"
-                        />
+                        <ng-template #noTopBanner>
+                          <img
+                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                            class="img-fluid"
+                          />
+                        </ng-template>
                       </div>
                     </li>
                     <li class="py-1">
@@ -384,22 +383,24 @@
                       <div class="py-3">
                         <img
                           *ngIf="
-                            !(
-                              element.default_banner == '' ||
-                              element.default_banner == undefined
+                            this.productsImages.has(
+                              element.id + '-default_banner'
+                            );
+                            else noDefaultBanner
+                          "
+                          src="{{
+                            this.productsImages.get(
+                              element.id + '-default_banner'
                             )
-                          "
-                          src="{{ element.default_banner }}"
+                          }}"
                           class="img-fluid py-3"
                         />
-                        <img
-                          *ngIf="
-                            element.default_banner == '' ||
-                            element.default_banner == undefined
-                          "
-                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                          class="img-fluid py-3"
-                        />
+                        <ng-template #noDefaultBanner>
+                          <img
+                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                            class="img-fluid py-3"
+                          />
+                        </ng-template>
                       </div>
                     </li>
                     <li class="py-1">
@@ -437,22 +438,24 @@
                         </p>
                         <img
                           *ngIf="
-                            !(
-                              element.horizontal_slider['IMG tag'] == '' ||
-                              element.horizontal_slider['IMG tag'] == undefined
+                            this.productsImages.has(
+                              element.id + '-horizontal_slider'
+                            );
+                            else noHorizontalSlider
+                          "
+                          src="{{
+                            this.productsImages.get(
+                              element.id + '-horizontal_slider'
                             )
-                          "
-                          src="{{ element.horizontal_slider['IMG tag'] }}"
+                          }}"
                           class="img-fluid"
                         />
-                        <img
-                          *ngIf="
-                            element.horizontal_slider['IMG tag'] == '' ||
-                            element.horizontal_slider['IMG tag'] == undefined
-                          "
-                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                          class="img-fluid"
-                        />
+                        <ng-template #noHorizontalSlider>
+                          <img
+                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                            class="img-fluid"
+                          />
+                        </ng-template>
                       </div>
                     </li>
                     <li class="py-1">
@@ -463,22 +466,24 @@
                       <div class="py-3">
                         <img
                           *ngIf="
-                            !(
-                              element.vertical_slider == '' ||
-                              element.vertical_slider == undefined
+                            this.productsImages.has(
+                              element.id + '-vertical_slider'
+                            );
+                            else noVerticalSlider
+                          "
+                          src="{{
+                            this.productsImages.has(
+                              element.id + '-vertical_slider'
                             )
-                          "
-                          src="{{ element.vertical_slider }}"
+                          }}"
                           class="img-fluid"
                         />
-                        <img
-                          *ngIf="
-                            element.vertical_slider == '' ||
-                            element.vertical_slider == undefined
-                          "
-                          src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                          class="img-fluid"
-                        />
+                        <ng-template #noVerticalSlider>
+                          <img
+                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
+                            class="img-fluid"
+                          />
+                        </ng-template>
                       </div>
                     </li>
                     <li class="py-1">

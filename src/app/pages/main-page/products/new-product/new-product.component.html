@@ -23,7 +23,7 @@
   <div class="card card-warning">
     <form autocomplete="off" [formGroup]="f" (ngSubmit)="saveProduct()">
       <div class="card-body">
-        <ng-container *ngIf="!loadData">
+        <ng-container *ngIf="!loadData; else loading">
           <!--Nombre del producto-->
           <div class="form-group">
             <label for="inputName"
@@ -152,11 +152,16 @@
             <br />
             <label for="customFile">
               <img
-                src="../../../../../assets/img/products/default/default-image.jpg"
+                [src]="imgTemp"
                 class="img-fluid"
-                *ngIf="!imgTemp"
+                *ngIf="imgTemp; else noImgPrincipal"
               />
-              <img [src]="imgTemp" class="img-fluid" *ngIf="imgTemp" />
+              <ng-template #noImgPrincipal>
+                <img
+                  src="../../../../../assets/img/products/default/default-image.jpg"
+                  class="img-fluid"
+                />
+              </ng-template>
             </label>
             <div class="custom-file">
               <input
@@ -165,7 +170,7 @@
                 id="customFile"
                 formControlName="image"
                 [ngClass]="{ 'is-invalid': invalidField('image') }"
-                (change)="validateImage($event, 'image')"
+                (change)="validateImage($event, 'main')"
                 accept="image/*"
               />
               <span class="invalid-feedback">
@@ -643,17 +648,18 @@
               <div class="col-12 form-group mx-0 pr-0 mb-3" [formGroup]="top">
                 <label for="customFileTB">
                   <img
-                    src="../../../../../assets/img/products/default/default-top-banner.jpg"
-                    alt=""
-                    class="img-fluid"
-                    *ngIf="!imgTempTB"
-                  />
-                  <img
                     [src]="imgTempTB"
                     alt=""
                     class="img-fluid"
-                    *ngIf="imgTempTB"
+                    *ngIf="imgTempTB; else noImgTB"
                   />
+                  <ng-template #noImgTB>
+                    <img
+                      src="../../../../../assets/img/products/default/default-top-banner.jpg"
+                      alt=""
+                      class="img-fluid"
+                    />
+                  </ng-template>
                 </label>
                 <div class="custom-file">
                   <input
@@ -665,7 +671,7 @@
                       'is-invalid':
                         formSubmitted && top.controls.IMG_tag.invalid?.required
                     }"
-                    (change)="validateImage($event, 'TB')"
+                    (change)="validateImage($event, 'top_banner')"
                     accept="image/jpeg,image/jpg,image/png,image/gif"
                   />
                   <span class="invalid-feedback"
@@ -693,13 +699,20 @@
 
           <!--default_banner-->
           <div class="form-group">
+            <label for="">Default banner del producto</label>
+            <br />
             <label for="customFileDB">
               <img
-                src="../../../../../assets/img/products/default/default-banner.jpg"
+                [src]="imgTempDB"
                 class="img-fluid"
-                *ngIf="!imgTempDB"
+                *ngIf="imgTempDB; else noImgDB"
               />
-              <img [src]="imgTempDB" class="img-fluid" />
+              <ng-template #noImgDB>
+                <img
+                  src="../../../../../assets/img/products/default/default-banner.jpg"
+                  class="img-fluid"
+                />
+              </ng-template>
             </label>
 
             <div class="custom-file">
@@ -709,7 +722,7 @@
                 id="customFileDB"
                 formControlName="default_banner"
                 [ngClass]="{ 'is-invalid': invalidField('default_banner') }"
-                (change)="validateImage($event, 'DB')"
+                (change)="validateImage($event, 'default_banner')"
                 accept="image/jpeg,image/jpg,image/png,image/gif"
               />
 
@@ -765,7 +778,7 @@
                 <label for="">H4 Tag <sup class="text-danger">*</sup></label>
                 <input
                   type="text"
-                  formControlName="H3_tag"
+                  formControlName="H4_tag"
                   class="form-control"
                   placeholder="Ex: 20%"
                   [ngClass]="{
@@ -817,7 +830,7 @@
                 <label for="">H3-2 Tag <sup class="text-danger">*</sup></label>
                 <input
                   type="text"
-                  formControlName="H4_2_tag"
+                  formControlName="H3_2_tag"
                   class="form-control"
                   placeholder="Ex: 20%"
                   [ngClass]="{
@@ -920,45 +933,46 @@
                 class="col-12 form-group mx-0 pr-0 mb-3"
                 [formGroup]="horizontalSlider"
               >
-                <label for="customFileTB">
-                  <img
-                    src="../../../../../assets/img/products/default/default-horizontal-slider.jpg"
-                    alt=""
-                    class="img-fluid"
-                    *ngIf="!imgTempHSlider"
-                  />
+                <label for="customFileHSlider">
                   <img
                     [src]="imgTempHSlider"
                     alt=""
                     class="img-fluid"
-                    *ngIf="imgTempHSlider"
+                    *ngIf="imgTempHSlider; else noImgHSlider"
                   />
+                  <ng-template #noImgHSlider>
+                    <img
+                      src="../../../../../assets/img/products/default/default-horizontal-slider.jpg"
+                      alt=""
+                      class="img-fluid"
+                    />
+                  </ng-template>
                 </label>
                 <div class="custom-file">
                   <input
                     type="file"
                     class="custom-file-input"
-                    id="customFileTB"
+                    id="customFileHSlider"
                     formControlName="IMG_tag"
                     [ngClass]="{
                       'is-invalid':
                         formSubmitted &&
                         horizontalSlider.controls.IMG_tag.invalid?.required
                     }"
-                    (change)="validateImage($event, 'HSlider')"
+                    (change)="validateImage($event, 'horizontal_slider')"
                     accept="image/jpeg,image/jpg,image/png,image/gif"
                   />
                   <span class="invalid-feedback"
                     >Por favor inserte una imagen</span
                   >
                   <label
-                    for="customFileTB"
+                    for="customFileHSlider"
                     class="custom-file-label"
                     *ngIf="!horizontalSlider.controls.IMG_tag.value"
                     >Seleccione una imagen</label
                   >
                   <label
-                    for="customFileTB"
+                    for="customFileHSlider"
                     class="custom-file-label"
                     *ngIf="horizontalSlider.controls.IMG_tag.value"
                     >{{ image.value }}</label
@@ -1228,9 +1242,9 @@
           </div>
         </ng-container>
         <!--Spinner de carga-->
-        <ng-container *ngIf="loadData">
+        <ng-template #loading>
           <app-spinners [type]="'sk-cube'"></app-spinners>
-        </ng-container>
+        </ng-template>
       </div>
       <div class="card-footer">
         <button class="btn btn-secondary" [routerLink]="['/products']">

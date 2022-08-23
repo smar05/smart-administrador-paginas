@@ -1,3 +1,5 @@
+import { environment } from 'src/environments/environment';
+import { StorageService } from './storage.service';
 import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Icategories } from './../interface/icategories';
@@ -9,8 +11,12 @@ import { Injectable } from '@angular/core';
 })
 export class CategoriesService {
   private urlCategories: string = 'categories';
+  private urlImage: string = `${environment.urlStorage.img}/categories`;
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private storageService: StorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de categorias en Firebase
@@ -70,5 +76,82 @@ export class CategoriesService {
    */
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlCategories}/${id}.json`);
+  }
+
+  //Storage//////////////////////
+  /**
+   *
+   *
+   * @param {string} url
+   * @return {*}  {Promise<string>}
+   * @memberof CategoriesService
+   */
+  public async getImage(url: string): Promise<string> {
+    let image: any = (
+      await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+    ).items[0];
+
+    if (image) {
+      return await this.storageService.getDownloadURL(image);
+    }
+
+    return '';
+  }
+
+  /**
+   *  Guardar la imagen de categoria
+   *
+   * @param {File} file
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof CategoriesService
+   */
+  public async saveImage(file: File, name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name}`;
+
+    return await this.storageService.saveImage(file, url);
+  }
+
+  /**
+   * Eliminar la imagen de la categoria
+   *
+   * @param {string} name
+   * @return {*}  {Promise<any>}
+   * @memberof CategoriesService
+   */
+  public deleteImage(name: string): Promise<any> {
+    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+
+    return this.storageService.deleteImage(url);
+  }
+
+  /**
+   * Eliminar las imagenes de la categoria
+   *
+   * @param {string} url
+   * @return {*}  {Promise<boolean>}
+   * @memberof CategoriesService
+   */
+  public async deleteImages(url: string): Promise<boolean> {
+    let complete: boolean = true;
+    try {
+      let images: any[] = (
+        await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+      ).items;
+
+      if (images && images.length > 0) {
+        for (const image of images) {
+          if (image._location.path) {
+            await this.storageService.deleteImage(image._location.path);
+          } else {
+            continue;
+          }
+        }
+      }
+    } catch (error) {
+      complete = false;
+    }
+
+    return complete;
   }
 }

@@ -1,14 +1,12 @@
 export interface Iproducts {
+  id?: string;
   category: string;
   date_created: string;
-  default_banner: string;
   delivery_time: number;
   description: string;
   details: string;
   feedback: string;
-  gallery: string;
   horizontal_slider: string;
-  image: string;
   name: string;
   offer: string;
   price: string;
@@ -27,4 +25,12 @@ export interface Iproducts {
   vertical_slider: string;
   video: string;
   views: number;
+}
+
+export enum EnumProductImg {
+  main = 'main',
+  top_banner = 'top_banner',
+  default_banner = 'default_banner',
+  horizontal_slider = 'horizontal_slider',
+  vertical_slider = 'vertical_slider',
 }

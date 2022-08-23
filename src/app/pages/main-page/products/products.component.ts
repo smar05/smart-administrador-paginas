@@ -2,7 +2,7 @@ import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Iproducts } from './../../../interface/iproducts';
+import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -44,6 +44,7 @@ export class ProductsComponent implements OnInit {
   public products: Iproducts[] = [];
   public expandedElement!: Iproducts | null;
   public loadData: boolean = false;
+  public productsImages: Map<string, string> = new Map();
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -89,9 +90,7 @@ export class ProductsComponent implements OnInit {
             description: resp[a].description,
             details: JSON.parse(resp[a].details),
             feedback: JSON.parse(resp[a].feedback),
-            gallery: JSON.parse(resp[a].gallery),
             horizontal_slider: JSON.parse(resp[a].horizontal_slider),
-            image: resp[a].image,
             name: resp[a].name,
             offer: resp[a].offer,
             price: resp[a].price,
@@ -114,6 +113,19 @@ export class ProductsComponent implements OnInit {
             views: resp[a].views,
           } as Iproducts)
       );
+
+      //Imagenes de los productos
+      this.products.forEach(async (product: Iproducts) => {
+        await this.getProductMainImage(product, EnumProductImg.main); //Imagen principal
+        await this.getProductMainImage(product, EnumProductImg.default_banner);
+        await this.getProductMainImage(
+          product,
+          EnumProductImg.horizontal_slider
+        );
+        await this.getProductMainImage(product, EnumProductImg.top_banner);
+        await this.getProductMainImage(product, EnumProductImg.vertical_slider);
+      });
+
       this.dataSource = new MatTableDataSource(this.products);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -244,6 +256,26 @@ export class ProductsComponent implements OnInit {
             );
           }
         });
+    }
+  }
+
+  public async getProductMainImage(
+    product: Iproducts,
+    type: string
+  ): Promise<void> {
+    let urlImage: string = '';
+
+    if (product.id) {
+      let url: string = type ? `${product.id}/${type}` : '';
+      let set: string = type ? `${product.id}-${type}` : '';
+
+      if (url) urlImage = await this.productsService.getImage(url);
+
+      if (urlImage) {
+        this.productsImages.set(set, urlImage);
+      } else {
+        this.productsImages.set(set, '');
+      }
     }
   }
 }

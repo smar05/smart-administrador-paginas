@@ -47,6 +47,7 @@ export class CategoriesComponent implements OnInit {
   public categories: Icategories[] = [];
   public expandedElement!: Icategories | null;
   public loadData: boolean = false;
+  public categoriesImages: Map<string, string> = new Map();
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -97,6 +98,11 @@ export class CategoriesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.categories);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.categories.forEach(async (categorie: Icategories) => {
+        await this.getCategorieImage(categorie);
+      });
+
       this.loadData = false;
     });
   }
@@ -172,26 +178,62 @@ export class CategoriesComponent implements OnInit {
             equalTo: `"${name}"`,
           };
 
-          this.subcategoriesService.getData(params).subscribe((resp: any) => {
-            if (Object.keys(resp).length > 0) {
-              alerts.basicAlert(
-                'Error',
-                'La categoria tiene subcategorias',
-                'error'
-              );
-            } else {
-              //Eliminar registro de la base de datos
-              this.categoriesService.deleteData(id).subscribe((resp: any) => {
+          this.subcategoriesService
+            .getData(params)
+            .subscribe(async (resp: any) => {
+              if (Object.keys(resp).length > 0) {
                 alerts.basicAlert(
-                  'Listo',
-                  'La categoria ha sido eliminada',
-                  'success'
+                  'Error',
+                  'La categoria tiene subcategorias',
+                  'error'
                 );
-                this.getData();
-              });
-            }
-          });
+              } else {
+                //Eliminar imagen de categoria
+                try {
+                  if (name && id)
+                    await this.categoriesService.deleteImages(`${id}/main/`);
+                } catch (error) {
+                  alerts.basicAlert(
+                    'Error',
+                    'No se pudo eliminar la imagen de la categoria',
+                    'error'
+                  );
+                  return;
+                }
+
+                //Eliminar registro de la base de datos
+                this.categoriesService.deleteData(id).subscribe(
+                  (resp: any) => {
+                    alerts.basicAlert(
+                      'Listo',
+                      'La categoria ha sido eliminada',
+                      'success'
+                    );
+                    this.getData();
+                  },
+                  (err) => {
+                    alerts.basicAlert(
+                      'Error',
+                      'No se ha podido eliminar la categoria',
+                      'error'
+                    );
+                  }
+                );
+              }
+            });
         }
       });
+  }
+
+  public async getCategorieImage(categorie: Icategories): Promise<void> {
+    let urlImage: string = '';
+
+    if (categorie.id) {
+      urlImage = await this.categoriesService.getImage(`${categorie.id}/main`);
+    }
+
+    if (urlImage) {
+      this.categoriesImages.set(categorie.id!, urlImage);
+    }
   }
 }

@@ -42,7 +42,7 @@ export class HttpService {
    * @memberof ApiService
    */
   public delete(endPoint: string): Observable<any> {
-    return this.http.delete(`${this.urlApi}${endPoint}&print=pretty`);
+    return this.http.delete(`${this.urlApi}${endPoint}`);
   }
 
   /**
