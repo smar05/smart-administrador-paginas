@@ -104,7 +104,7 @@ export class ProductsService {
    * @memberof CategoriesService
    */
   public async saveImage(file: File, name: string): Promise<any> {
-    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+    let url: string = `${this.urlImage}/${name}`;
 
     return await this.storageService.saveImage(file, url);
   }

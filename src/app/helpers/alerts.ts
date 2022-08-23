@@ -1,12 +1,31 @@
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 export class alerts {
-  //Funcion de alertas basicas
+  /**
+   * Funcion de alertas basicas
+   *
+   * @static
+   * @param {string} title
+   * @param {string} text
+   * @param {SweetAlertIcon} icon
+   * @return {*}
+   * @memberof alerts
+   */
   static basicAlert(title: string, text: string, icon: SweetAlertIcon) {
-    Swal.fire(title, text, icon);
+    return Swal.fire(title, text, icon);
   }
 
-  //Funcion para alerta de confirmacion
+  /**
+   * Funcion para alerta de confirmacion
+   *
+   * @static
+   * @param {string} title
+   * @param {string} text
+   * @param {SweetAlertIcon} icon
+   * @param {string} confirmButtonText
+   * @return {*}  {*}
+   * @memberof alerts
+   */
   static confirmAlert(
     title: string,
     text: string,

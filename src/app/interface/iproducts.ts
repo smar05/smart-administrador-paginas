@@ -1,7 +1,7 @@
 export interface Iproducts {
   id?: string;
   category: string;
-  date_created: string;
+  date_created: Date;
   delivery_time: number;
   description: string;
   details: string;

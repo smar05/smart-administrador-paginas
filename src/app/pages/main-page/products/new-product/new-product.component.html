@@ -499,7 +499,7 @@
               >
                 <label for="">H3 Tag <sup class="text-danger">*</sup></label>
                 <input
-                  type="text"
+                  type="number"
                   formControlName="H3_tag"
                   class="form-control"
                   placeholder="Ex: 20%"
@@ -527,7 +527,7 @@
                   type="text"
                   formControlName="P1_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Descuento"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted && top.controls.P1_tag.errors?.required
@@ -552,7 +552,7 @@
                   type="text"
                   formControlName="H4_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Para libros"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted && top.controls.H4_tag.errors?.required
@@ -577,7 +577,7 @@
                   type="text"
                   formControlName="P2_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Ingrese a la promocion"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted && top.controls.P2_tag.errors?.required
@@ -602,7 +602,7 @@
                   type="text"
                   formControlName="Span_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: ventas2022"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted && top.controls.Span_tag.errors?.required
@@ -629,7 +629,7 @@
                   type="text"
                   formControlName="Button_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Comprar ahora"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted && top.controls.Button_tag.errors?.required
@@ -780,7 +780,7 @@
                   type="text"
                   formControlName="H4_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Edición limitada"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted &&
@@ -806,7 +806,7 @@
                   type="text"
                   formControlName="H3_1_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Feliz verano"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted &&
@@ -832,7 +832,7 @@
                   type="text"
                   formControlName="H3_2_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Combo super"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted &&
@@ -858,7 +858,7 @@
                   type="text"
                   formControlName="H3_3_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Descuento"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted &&
@@ -881,7 +881,7 @@
               >
                 <label for="">H3-4s Tag <sup class="text-danger">*</sup></label>
                 <input
-                  type="text"
+                  type="number"
                   formControlName="H3_4s_tag"
                   class="form-control"
                   placeholder="Ex: 20%"
@@ -912,7 +912,7 @@
                   type="text"
                   formControlName="Button_tag"
                   class="form-control"
-                  placeholder="Ex: 20%"
+                  placeholder="Ex: Comprar ahora"
                   [ngClass]="{
                     'is-invalid':
                       formSubmitted &&
@@ -997,8 +997,13 @@
                 <div class="input-group-append">
                   <span class="input-group-text"> Tipo: </span>
                 </div>
-                <select name="" id="" class="form-control">
-                  <option value="">Seleccione la plataforma</option>
+                <select
+                  name="type_video"
+                  id="type_video"
+                  class="form-control"
+                  formControlName="type_video"
+                >
+                  <option selected value="">Seleccione la plataforma</option>
                   <option value="youtube">Youtube</option>
                   <option value="vimeo">Vimeo</option>
                 </select>

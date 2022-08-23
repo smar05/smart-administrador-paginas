@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import '../../../../shared/spinkit/sk-cube-grid.css';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
@@ -268,7 +269,8 @@ export class NewProductComponent implements OnInit {
     private form: FormBuilder,
     private productsService: ProductsService,
     private categoriesService: CategoriesService,
-    private subcategoriesService: SubcategoriesService
+    private subcategoriesService: SubcategoriesService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -300,14 +302,18 @@ export class NewProductComponent implements OnInit {
 
       for (const i in specLocal.value) {
         let newValue: any = [];
+        let a: any = {};
         for (const f in specLocal.value[i].values) {
-          newValue.push(`'${specLocal.value[i].values[f]}'`);
+          newValue.push(`${specLocal.value[i].values[f]}`);
         }
-        newSpecifications.push(`'{${specLocal.value[i].type}':[${newValue}]}`);
-        specifications = JSON.stringify(newSpecifications);
-        specifications = specifications.replace(/["]/g, '');
-        specifications = specifications.replace(/[']/g, '"');
+        a[specLocal.value[i].type] = newValue;
+        newSpecifications.push(a);
       }
+      console.log(
+        '🚀 ~ file: new-product.component.ts ~ line 314 ~ NewProductComponent ~ saveProduct ~ newSpecifications',
+        newSpecifications
+      );
+      specifications = JSON.stringify(newSpecifications);
     } else {
       specifications = '';
     }
@@ -315,11 +321,11 @@ export class NewProductComponent implements OnInit {
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
       category: this.f.controls.category.value.split('_')[0],
-      date_created: '',
+      date_created: new Date(),
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
-      feedback: '',
+      feedback: JSON.stringify({ type: 'approved', comment: '' }),
       horizontal_slider: JSON.stringify(
         this.horizontal_slider.value.map((top: any) => {
           if (top.IMG_tag) delete top.IMG_tag;
@@ -335,7 +341,7 @@ export class NewProductComponent implements OnInit {
           ])
         : '',
       price: this.f.controls.price.value,
-      reviews: '',
+      reviews: JSON.stringify([]),
       sales: 0,
       shipping: this.f.controls.shipping.value,
       specification: specifications,
@@ -358,16 +364,53 @@ export class NewProductComponent implements OnInit {
         : '',
       views: 0,
     };
+
     console.log(dataProduct);
 
-    //Guardar la imagen en storage, primero se debio haber guardado el producto
-    /*
-    await this.saveProductImages(dataProduct, this.imgFile, EnumProductImg.main);
-    await this.saveProductImages(dataProduct, this.imgHSliderFile, EnumProductImg.horizontal_slider);
-    await this.saveProductImages(dataProduct, this.imgTBFile, EnumProductImg.top_banner);
-    if (this.files && this.files.length > 0)
-      await this.saveProductGallery(dataProduct, this.files);
-    */
+    //Guardar la informacion del producto en base de datos
+    this.productsService.postData(dataProduct).subscribe(
+      async (res: any) => {
+        //Guardar las imagenes en storage
+        if (this.imgFile)
+          await this.saveProductImages(
+            res.name,
+            this.imgFile,
+            EnumProductImg.main
+          );
+        if (this.imgHSliderFile)
+          await this.saveProductImages(
+            res.name,
+            this.imgHSliderFile,
+            EnumProductImg.horizontal_slider
+          );
+        if (this.imgTBFile)
+          await this.saveProductImages(
+            res.name,
+            this.imgTBFile,
+            EnumProductImg.top_banner
+          );
+        if (this.imgDBFile)
+          await this.saveProductImages(
+            res.name,
+            this.imgDBFile,
+            EnumProductImg.default_banner
+          );
+        if (this.files && this.files.length > 0)
+          await this.saveProductGallery(res.name, this.files);
+
+        this.loadData = false;
+        alerts.basicAlert('Listo', 'El producto ha sido guardado', 'success');
+        this.router.navigate(['products']);
+      },
+      (err: any) => {
+        this.loadData = false;
+        alerts.basicAlert(
+          'Error',
+          'No se ha podido guardar el producto',
+          'error'
+        );
+      }
+    );
   }
 
   //Validamos el formulario
@@ -594,19 +637,22 @@ export class NewProductComponent implements OnInit {
   }
 
   public async saveProductImages(
-    product: Iproducts,
+    idProduct: string,
     imgFile: File,
     type: string
   ): Promise<void> {
     let name: string =
-      product.id && type && imgFile
+      idProduct && type && imgFile
         ? `${type}.${imgFile.name.split('.')[1]}`
         : '';
 
     if (name) {
       try {
-        if (imgFile)
-          await this.productsService.saveImage(imgFile, `${type}/${name}`);
+        if (imgFile && idProduct)
+          await this.productsService.saveImage(
+            imgFile,
+            `${idProduct}/${type}/${name}`
+          );
       } catch (error) {
         alerts.basicAlert(
           'Error',
@@ -620,20 +666,20 @@ export class NewProductComponent implements OnInit {
   }
 
   public async saveProductGallery(
-    product: Iproducts,
+    idProduct: string,
     gallery: File[]
   ): Promise<void> {
     for (let index = 0; index < gallery.length; index++) {
       let name: string =
-        product.id && gallery[index]
+        idProduct && gallery[index]
           ? `${index}.${gallery[index].name.split('.')[1]}`
           : '';
 
-      if (name) {
+      if (name && idProduct) {
         try {
           await this.productsService.saveImage(
             gallery[index],
-            `gallery/${name}`
+            `${idProduct}/gallery/${name}`
           );
         } catch (error) {
           alerts.basicAlert(
