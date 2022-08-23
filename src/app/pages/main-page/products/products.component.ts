@@ -117,6 +117,7 @@ export class ProductsComponent implements OnInit {
       //Imagenes de los productos
       this.products.forEach(async (product: Iproducts) => {
         await this.getProductMainImage(product, EnumProductImg.main); //Imagen principal
+        /*
         await this.getProductMainImage(product, EnumProductImg.default_banner);
         await this.getProductMainImage(
           product,
@@ -124,6 +125,7 @@ export class ProductsComponent implements OnInit {
         );
         await this.getProductMainImage(product, EnumProductImg.top_banner);
         await this.getProductMainImage(product, EnumProductImg.vertical_slider);
+        */
       });
 
       this.dataSource = new MatTableDataSource(this.products);
