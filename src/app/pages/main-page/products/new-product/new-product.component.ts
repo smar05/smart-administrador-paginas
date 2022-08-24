@@ -679,7 +679,7 @@ export class NewProductComponent implements OnInit {
         try {
           await this.productsService.saveImage(
             gallery[index],
-            `${idProduct}/gallery/${name}`
+            `${idProduct}/${EnumProductImg.gallery}/${name}`
           );
         } catch (error) {
           alerts.basicAlert(

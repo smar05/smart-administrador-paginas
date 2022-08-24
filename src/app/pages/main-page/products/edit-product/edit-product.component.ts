@@ -283,11 +283,25 @@ export class EditProductComponent implements OnInit {
   }
 
   public getData(): void {
-    this.productsService.getItem(this.id).subscribe((resp: Iproducts) => {
+    this.productsService.getItem(this.id).subscribe(async (resp: Iproducts) => {
       this.name.setValue(resp.name);
       this.urlInput = resp.url;
       this.categoryName = resp.category;
       this.titleList = resp.title_list;
+
+      //Obtener imagenes del producto
+      this.imgTemp = await this.productsService.getImage(
+        `${this.id}/${EnumProductImg.main}`
+      );
+      this.imgTempDB = await this.productsService.getImage(
+        `${this.id}/${EnumProductImg.default_banner}`
+      );
+      this.imgTempHSlider = await this.productsService.getImage(
+        `${this.id}/${EnumProductImg.horizontal_slider}`
+      );
+      this.imgTempTB = await this.productsService.getImage(
+        `${this.id}/${EnumProductImg.top_banner}`
+      );
 
       let category: Icategories = this.categories.find(
         (category: Icategories) => {

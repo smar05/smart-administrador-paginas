@@ -33,4 +33,5 @@ export enum EnumProductImg {
   default_banner = 'default_banner',
   horizontal_slider = 'horizontal_slider',
   vertical_slider = 'vertical_slider',
+  gallery = 'gallery',
 }
