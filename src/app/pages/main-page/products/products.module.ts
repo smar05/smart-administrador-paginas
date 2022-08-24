@@ -19,9 +19,10 @@ import { NewProductComponent } from './new-product/new-product.component';
 
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { NgxSummernoteModule } from 'ngx-summernote';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 @NgModule({
-  declarations: [ProductsComponent, NewProductComponent],
+  declarations: [ProductsComponent, NewProductComponent, EditProductComponent],
   imports: [
     CommonModule,
     ProductsRoutingModule,
