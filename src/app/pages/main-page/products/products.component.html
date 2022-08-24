@@ -94,7 +94,7 @@
                 </button>
                 <button
                   class="btn btn-sm btn-dark mr-1 size"
-                  (click)="editProduct(element.id)"
+                  [routerLink]="['edit-product/', element.id]"
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>

@@ -155,9 +155,6 @@ export class ProductsComponent implements OnInit {
   //Cambiar estado de la categoria
   public changeState(e: any): void {}
 
-  //Editar producto
-  public editProduct(id: string): void {}
-
   //Eliminar producto
   public deleteProduct(id: string, name: string): void {}
 
