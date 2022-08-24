@@ -287,6 +287,7 @@ export class EditProductComponent implements OnInit {
       this.name.setValue(resp.name);
       this.urlInput = resp.url;
       this.categoryName = resp.category;
+      this.titleList = resp.title_list;
 
       let category: Icategories = this.categories.find(
         (category: Icategories) => {
@@ -358,7 +359,7 @@ export class EditProductComponent implements OnInit {
 
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
-      category: '',
+      category: this.categoryName,
       date_created: new Date(),
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
@@ -385,7 +386,7 @@ export class EditProductComponent implements OnInit {
       specification: specifications,
       stock: this.f.controls.stock.value,
       store: '',
-      sub_category: '',
+      sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
       title_list: this.titleList,
