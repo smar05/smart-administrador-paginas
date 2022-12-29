@@ -310,6 +310,12 @@ export class NewProductComponent implements OnInit {
         newSpecifications.push(a);
       }
       specifications = JSON.stringify(newSpecifications);
+      specifications = specifications.replace(/["]/g, '');
+      specifications = specifications.replace(/[']/g, '');
+
+      if (specifications == '[{"":[]}]') {
+        specifications = '';
+      }
     } else {
       specifications = '';
     }

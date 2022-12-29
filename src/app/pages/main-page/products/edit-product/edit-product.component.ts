@@ -46,12 +46,7 @@ export class EditProductComponent implements OnInit {
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
     details: new FormArray([]),
-    specifications: new FormArray([
-      this.form.group({
-        type: [''],
-        values: [[]],
-      }),
-    ]),
+    specifications: new FormArray([]),
     tags: [
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
@@ -309,6 +304,25 @@ export class EditProductComponent implements OnInit {
         );
       });
 
+      if (JSON.parse(resp.specification).length > 0) {
+        JSON.parse(resp.specification).forEach((spec: any, index: number) => {
+          const specValue = Object.keys(spec).map(
+            (a: any) =>
+              ({
+                key: a,
+                values: spec[a],
+              } as any)
+          );
+
+          this.specifications.push(
+            this.form.group({
+              type: [specValue[0].key],
+              values: [specValue[0].values],
+            })
+          );
+        });
+      }
+
       //Obtener imagenes del producto
       this.imgTemp = await this.productsService.getImage(
         `${this.id}/${EnumProductImg.main}`
@@ -394,6 +408,12 @@ export class EditProductComponent implements OnInit {
         newSpecifications.push(a);
       }
       specifications = JSON.stringify(newSpecifications);
+      specifications = specifications.replace(/["]/g, '');
+      specifications = specifications.replace(/[']/g, '');
+
+      if (specifications == '[{"":[]}]') {
+        specifications = '';
+      }
     } else {
       specifications = '';
     }
