@@ -183,6 +183,20 @@
           <!--Galeria del producto-->
           <div class="form-group">
             <label for="">Galeria del producto</label>
+
+            <div class="row">
+              <figure class="col-sm-2 pb-3" *ngFor="let pic of editGallery">
+                <img src="{{ pic }}" alt="" class="img-fluid" />
+
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="removeGallery(pic)"
+                >
+                  Remover
+                </button>
+              </figure>
+            </div>
+
             <ngx-dropzone
               (change)="onSelect($event)"
               accept="image/jpeg,image/jpg,image/png,image/gif"
@@ -705,7 +719,9 @@
                 class="custom-file-input"
                 id="customFileDB"
                 formControlName="default_banner"
-                [ngClass]="{ 'is-invalid': invalidField('default_banner') }"
+                [ngClass]="{
+                  'is-invalid': formSubmitted && default_banner.invalid
+                }"
                 (change)="validateImage($event, 'default_banner')"
                 accept="image/jpeg,image/jpg,image/png,image/gif"
               />

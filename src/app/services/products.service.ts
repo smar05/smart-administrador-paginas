@@ -96,6 +96,29 @@ export class ProductsService {
   }
 
   /**
+   *
+   *
+   * @param {string} url
+   * @return {*}  {Promise<string[]>}
+   * @memberof ProductsService
+   */
+  public async getImages(url: string): Promise<string[]> {
+    let images: any[] = (
+      await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+    ).items;
+
+    if (images) {
+      let imagesUrl: string[] = [];
+      for (const image of images) {
+        imagesUrl.push(await this.storageService.getDownloadURL(image));
+      }
+      return imagesUrl;
+    }
+
+    return [];
+  }
+
+  /**
    *  Guardar la imagen de producto
    *
    * @param {File} file
@@ -117,8 +140,38 @@ export class ProductsService {
    * @memberof ProductsService
    */
   public deleteImage(name: string): Promise<any> {
-    let url: string = `${this.urlImage}/${name.split('.')[0]}/${name}`;
+    let url: string = `${this.urlImage}/${name}`;
 
     return this.storageService.deleteImage(url);
+  }
+
+  /**
+   * Eliminar las imagenes del producto
+   *
+   * @param {string} url
+   * @return {*}  {Promise<boolean>}
+   * @memberof ProductsService
+   */
+  public async deleteImages(url: string): Promise<boolean> {
+    let complete: boolean = true;
+    try {
+      let images: any[] = (
+        await this.storageService.getStorageListAll(`${this.urlImage}/${url}`)
+      ).items;
+
+      if (images && images.length > 0) {
+        for (const image of images) {
+          if (image._location.path) {
+            await this.storageService.deleteImage(image._location.path);
+          } else {
+            continue;
+          }
+        }
+      }
+    } catch (error) {
+      complete = false;
+    }
+
+    return complete;
   }
 }

@@ -26,6 +26,7 @@ import { alerts } from 'src/app/helpers/alerts';
 })
 export class EditProductComponent implements OnInit {
   public id: string = '';
+  public productEnDb!: Iproducts;
 
   public f = this.form.group({
     name: [
@@ -41,7 +42,7 @@ export class EditProductComponent implements OnInit {
       },
     ],
     sub_category: ['', [Validators.required]],
-    image: ['', [Validators.required]], //No se guarda en base de datos
+    image: ['', []], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
     details: new FormArray([
@@ -68,7 +69,7 @@ export class EditProductComponent implements OnInit {
         P2_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Span_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
+        IMG_tag: ['', []], //No se guarda en base de datos
       }),
     ]),
     default_banner: ['', [Validators.required]], //No se guarda en base de datos
@@ -80,7 +81,7 @@ export class EditProductComponent implements OnInit {
         H3_3_tag: ['', [Validators.required, Validators.maxLength(50)]],
         H3_4s_tag: ['', [Validators.required, Validators.maxLength(50)]],
         Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
+        IMG_tag: ['', []], //No se guarda en base de datos
       }),
     ]),
     type_video: [''],
@@ -220,6 +221,8 @@ export class EditProductComponent implements OnInit {
 
   //Galeria de imagenes del producto
   public files: File[] = [];
+  public editGallery: string[] = [];
+  public allGallery: string[] = [];
 
   //Imagen temporal del top banner
   public imgTempTB: string = '';
@@ -284,10 +287,19 @@ export class EditProductComponent implements OnInit {
 
   public getData(): void {
     this.productsService.getItem(this.id).subscribe(async (resp: Iproducts) => {
+      this.productEnDb = resp;
+
       this.name.setValue(resp.name);
       this.urlInput = resp.url;
       this.categoryName = resp.category;
       this.titleList = resp.title_list;
+      this.delivery_time.setValue(resp.delivery_time);
+      this.description.setValue(resp.description);
+      this.price.setValue(resp.price);
+      this.shipping.setValue(resp.shipping);
+      this.stock.setValue(resp.stock);
+      this.summary.setValue(JSON.parse(resp.summary));
+      this.tags.setValue(JSON.parse(resp.tags));
 
       //Obtener imagenes del producto
       this.imgTemp = await this.productsService.getImage(
@@ -301,6 +313,9 @@ export class EditProductComponent implements OnInit {
       );
       this.imgTempTB = await this.productsService.getImage(
         `${this.id}/${EnumProductImg.top_banner}`
+      );
+      this.allGallery = this.editGallery = await this.productsService.getImages(
+        `${this.id}/${EnumProductImg.gallery}`
       );
 
       let category: Icategories = this.categories.find(
@@ -336,10 +351,18 @@ export class EditProductComponent implements OnInit {
     this.formSubmitted = true;
 
     //Validamos que el formulario este correcto
-    if (this.f.invalid || this.files.length > 4) {
+    if (this.f.invalid) {
       alerts.basicAlert(
         'Error',
         'Se encontro un error en el formulario',
+        'error'
+      );
+      return;
+    }
+    if (this.files.length + this.editGallery.length > 4) {
+      alerts.basicAlert(
+        'Error',
+        'Ha seleccionado mas de 4 imagenes de la galeria',
         'error'
       );
       return;
@@ -362,10 +385,6 @@ export class EditProductComponent implements OnInit {
         a[specLocal.value[i].type] = newValue;
         newSpecifications.push(a);
       }
-      console.log(
-        '🚀 ~ file: new-product.component.ts ~ line 314 ~ NewProductComponent ~ saveProduct ~ newSpecifications',
-        newSpecifications
-      );
       specifications = JSON.stringify(newSpecifications);
     } else {
       specifications = '';
@@ -424,32 +443,49 @@ export class EditProductComponent implements OnInit {
     this.productsService.postData(dataProduct).subscribe(
       async (res: any) => {
         //Guardar las imagenes en storage
-        if (this.imgFile)
+        if (this.imgFile && this.imgTemp) {
+          await this.productsService.deleteImages(
+            `${this.id}/${EnumProductImg.main}`
+          );
           await this.saveProductImages(
             res.name,
             this.imgFile,
             EnumProductImg.main
           );
-        if (this.imgHSliderFile)
+        }
+        if (this.imgHSliderFile && this.imgTempHSlider) {
+          await this.productsService.deleteImages(
+            `${this.id}/${EnumProductImg.horizontal_slider}`
+          );
           await this.saveProductImages(
             res.name,
             this.imgHSliderFile,
             EnumProductImg.horizontal_slider
           );
-        if (this.imgTBFile)
+        }
+        if (this.imgTBFile && this.imgTempTB) {
+          await this.productsService.deleteImages(
+            `${this.id}/${EnumProductImg.top_banner}`
+          );
           await this.saveProductImages(
             res.name,
             this.imgTBFile,
             EnumProductImg.top_banner
           );
-        if (this.imgDBFile)
+        }
+        if (this.imgDBFile && this.imgTempDB) {
+          await this.productsService.deleteImages(
+            `${this.id}/${EnumProductImg.default_banner}`
+          );
           await this.saveProductImages(
             res.name,
             this.imgDBFile,
             EnumProductImg.default_banner
           );
-        if (this.files && this.files.length > 0)
+        }
+        if (this.files && this.files.length > 0) {
           await this.saveProductGallery(res.name, this.files);
+        }
 
         this.loadData = false;
         alerts.basicAlert('Listo', 'El producto ha sido guardado', 'success');
@@ -482,7 +518,7 @@ export class EditProductComponent implements OnInit {
         };
 
         this.productsService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 0) {
+          if (Object.keys(resp).length > 1) {
             resolve({ product: true });
             this.urlInput = '';
           } else {
@@ -725,14 +761,16 @@ export class EditProductComponent implements OnInit {
     for (let index = 0; index < gallery.length; index++) {
       let name: string =
         idProduct && gallery[index]
-          ? `${index}.${gallery[index].name.split('.')[1]}`
+          ? `${new Date().getTime()}_${index}.${
+              gallery[index].name.split('.')[1]
+            }`
           : '';
 
       if (name && idProduct) {
         try {
           await this.productsService.saveImage(
             gallery[index],
-            `${idProduct}/gallery/${name}`
+            `${idProduct}/${EnumProductImg.gallery}/${name}`
           );
         } catch (error) {
           alerts.basicAlert(
@@ -745,5 +783,10 @@ export class EditProductComponent implements OnInit {
         }
       }
     }
+  }
+
+  //Remover fotos de la galeria
+  public removeGallery(pic: string): void {
+    this.editGallery.splice(this.editGallery.indexOf(pic), 1);
   }
 }

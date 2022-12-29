@@ -309,10 +309,6 @@ export class NewProductComponent implements OnInit {
         a[specLocal.value[i].type] = newValue;
         newSpecifications.push(a);
       }
-      console.log(
-        '🚀 ~ file: new-product.component.ts ~ line 314 ~ NewProductComponent ~ saveProduct ~ newSpecifications',
-        newSpecifications
-      );
       specifications = JSON.stringify(newSpecifications);
     } else {
       specifications = '';
@@ -364,8 +360,6 @@ export class NewProductComponent implements OnInit {
         : '',
       views: 0,
     };
-
-    console.log(dataProduct);
 
     //Guardar la informacion del producto en base de datos
     this.productsService.postData(dataProduct).subscribe(
@@ -672,7 +666,9 @@ export class NewProductComponent implements OnInit {
     for (let index = 0; index < gallery.length; index++) {
       let name: string =
         idProduct && gallery[index]
-          ? `${index}.${gallery[index].name.split('.')[1]}`
+          ? `${new Date().getTime()}_${index}.${
+              gallery[index].name.split('.')[1]
+            }`
           : '';
 
       if (name && idProduct) {
