@@ -45,12 +45,7 @@ export class EditProductComponent implements OnInit {
     image: ['', []], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
-    details: new FormArray([
-      this.form.group({
-        title: ['', [Validators.required]],
-        value: ['', [Validators.required]],
-      }),
-    ]),
+    details: new FormArray([]),
     specifications: new FormArray([
       this.form.group({
         type: [''],
@@ -303,6 +298,15 @@ export class EditProductComponent implements OnInit {
 
       JSON.parse(resp.summary).forEach((sum: string, index: number) => {
         this.summaryGroup[index] = { input: sum };
+      });
+
+      JSON.parse(resp.details).forEach((detail: any, index: number) => {
+        this.details.push(
+          this.form.group({
+            title: [detail.title, [Validators.required]],
+            value: [detail.value, [Validators.required]],
+          })
+        );
       });
 
       //Obtener imagenes del producto
