@@ -259,6 +259,7 @@
                 class="form-control py-4"
                 maxlength="50"
                 (change)="addItem($event, 'summary', i)"
+                value="{{ inputSummary.input }}"
                 [ngClass]="{
                   'is-invalid': invalidField('summary')
                 }"

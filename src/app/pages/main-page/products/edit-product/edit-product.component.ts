@@ -301,6 +301,10 @@ export class EditProductComponent implements OnInit {
       this.summary.setValue(JSON.parse(resp.summary));
       this.tags.setValue(JSON.parse(resp.tags));
 
+      JSON.parse(resp.summary).forEach((sum: string, index: number) => {
+        this.summaryGroup[index] = { input: sum };
+      });
+
       //Obtener imagenes del producto
       this.imgTemp = await this.productsService.getImage(
         `${this.id}/${EnumProductImg.main}`
