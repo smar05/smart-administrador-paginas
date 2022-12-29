@@ -51,17 +51,7 @@ export class EditProductComponent implements OnInit {
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
-    top_banner: new FormArray([
-      this.form.group({
-        H3_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        P1_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        P2_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Span_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', []], //No se guarda en base de datos
-      }),
-    ]),
+    top_banner: new FormArray([]),
     default_banner: ['', [Validators.required]], //No se guarda en base de datos
     horizontal_slider: new FormArray([
       this.form.group({
@@ -322,6 +312,36 @@ export class EditProductComponent implements OnInit {
           );
         });
       }
+
+      this.top_banner.push(
+        this.form.group({
+          H3_tag: [
+            JSON.parse(resp.top_banner)['H3_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          P1_tag: [
+            JSON.parse(resp.top_banner)['P1_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          H4_tag: [
+            JSON.parse(resp.top_banner)['H4_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          P2_tag: [
+            JSON.parse(resp.top_banner)['P2_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          Span_tag: [
+            JSON.parse(resp.top_banner)['Span_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          Button_tag: [
+            JSON.parse(resp.top_banner)['Button_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          IMG_tag: ['', []], //No se guarda en base de datos
+        })
+      );
 
       //Obtener imagenes del producto
       this.imgTemp = await this.productsService.getImage(
