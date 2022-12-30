@@ -270,6 +270,8 @@ export class EditProductComponent implements OnInit {
       this.stock.setValue(resp.stock);
       this.summary.setValue(JSON.parse(resp.summary));
       this.tags.setValue(JSON.parse(resp.tags));
+      this.type_video.setValue(JSON.parse(resp.video)[0]);
+      this.id_video.setValue(JSON.parse(resp.video)[1]);
 
       JSON.parse(resp.summary).forEach((sum: string, index: number) => {
         this.summaryGroup[index] = { input: sum };
