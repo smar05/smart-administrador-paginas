@@ -53,17 +53,7 @@ export class EditProductComponent implements OnInit {
     ],
     top_banner: new FormArray([]),
     default_banner: ['', []], //No se guarda en base de datos
-    horizontal_slider: new FormArray([
-      this.form.group({
-        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_1_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_2_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_3_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_4s_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', []], //No se guarda en base de datos
-      }),
-    ]),
+    horizontal_slider: new FormArray([]),
     type_video: [''],
     id_video: [''],
     price: [
@@ -337,6 +327,36 @@ export class EditProductComponent implements OnInit {
           ],
           Button_tag: [
             JSON.parse(resp.top_banner)['Button_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          IMG_tag: ['', []], //No se guarda en base de datos
+        })
+      );
+
+      this.horizontal_slider.push(
+        this.form.group({
+          H4_tag: [
+            JSON.parse(resp.horizontal_slider)['H4_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          H3_1_tag: [
+            JSON.parse(resp.horizontal_slider)['H3_1_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          H3_2_tag: [
+            JSON.parse(resp.horizontal_slider)['H3_2_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          H3_3_tag: [
+            JSON.parse(resp.horizontal_slider)['H3_3_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          H3_4s_tag: [
+            JSON.parse(resp.horizontal_slider)['H3_4s_tag'],
+            [Validators.required, Validators.maxLength(50)],
+          ],
+          Button_tag: [
+            JSON.parse(resp.horizontal_slider)['Button_tag'],
             [Validators.required, Validators.maxLength(50)],
           ],
           IMG_tag: ['', []], //No se guarda en base de datos
