@@ -463,7 +463,7 @@ export class EditProductComponent implements OnInit {
     //Informacion del formulario en la interfaz
     const dataProduct: Iproducts = {
       category: this.categoryName,
-      date_created: new Date(),
+      date_created: this.productEnDb.date_created,
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
@@ -484,11 +484,11 @@ export class EditProductComponent implements OnInit {
         : '',
       price: this.f.controls.price.value,
       reviews: JSON.stringify([]),
-      sales: 0,
+      sales: this.productEnDb.sales,
       shipping: this.f.controls.shipping.value,
       specification: specifications,
       stock: this.f.controls.stock.value,
-      store: '',
+      store: this.productEnDb.store,
       sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
@@ -500,11 +500,11 @@ export class EditProductComponent implements OnInit {
         })[0]
       ),
       url: this.urlInput,
-      vertical_slider: '',
+      vertical_slider: this.productEnDb.vertical_slider,
       video: this.id_video.value
         ? JSON.stringify([this.type_video.value, this.id_video.value])
         : '',
-      views: 0,
+      views: this.productEnDb.views,
     };
 
     console.log(dataProduct);
