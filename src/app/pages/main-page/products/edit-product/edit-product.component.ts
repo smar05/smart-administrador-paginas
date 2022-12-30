@@ -77,7 +77,7 @@ export class EditProductComponent implements OnInit {
         Validators.pattern(/^[0-9]+$/),
       ],
     ],
-    type_offer: ['Discount'],
+    type_offer: [''],
     value_offer: ['', [Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
     date_offer: [''],
   });
@@ -272,6 +272,9 @@ export class EditProductComponent implements OnInit {
       this.tags.setValue(JSON.parse(resp.tags));
       this.type_video.setValue(JSON.parse(resp.video)[0]);
       this.id_video.setValue(JSON.parse(resp.video)[1]);
+      this.type_offer.setValue(JSON.parse(resp.offer)[0]);
+      this.value_offer.setValue(JSON.parse(resp.offer)[1]);
+      this.date_offer.setValue(JSON.parse(resp.offer)[2]);
 
       JSON.parse(resp.summary).forEach((sum: string, index: number) => {
         this.summaryGroup[index] = { input: sum };
