@@ -453,12 +453,6 @@ export class EditProductComponent implements OnInit {
         newSpecifications.push(a);
       }
       specifications = JSON.stringify(newSpecifications);
-      specifications = specifications.replace(/["]/g, '');
-      specifications = specifications.replace(/[']/g, '');
-
-      if (specifications == '[{"":[]}]') {
-        specifications = '';
-      }
     } else {
       specifications = '';
     }
@@ -513,7 +507,7 @@ export class EditProductComponent implements OnInit {
     console.log(dataProduct);
 
     //Guardar la informacion del producto en base de datos
-    this.productsService.postData(dataProduct).subscribe(
+    this.productsService.patchData(this.id, dataProduct).subscribe(
       async (res: any) => {
         //Guardar las imagenes en storage
         if (this.imgFile && this.imgTemp) {
