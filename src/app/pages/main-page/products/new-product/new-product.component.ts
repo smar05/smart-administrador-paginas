@@ -366,6 +366,7 @@ export class NewProductComponent implements OnInit {
         : '',
       views: 0,
       gallery: '',
+      delete: false,
     };
 
     //Guardar la informacion del producto en base de datos

@@ -258,6 +258,7 @@ export class EditProductComponent implements OnInit {
   }
 
   public getData(): void {
+    this.loadData = true;
     this.productsService.getItem(this.id).subscribe(async (resp: Iproducts) => {
       this.productEnDb = resp;
 
@@ -419,6 +420,8 @@ export class EditProductComponent implements OnInit {
 
         this.sub_category.setValue(`${subCategory.url}_${subCategory.name}`);
       });
+
+      this.loadData = false;
     });
   }
 
@@ -512,6 +515,7 @@ export class EditProductComponent implements OnInit {
         : '',
       views: this.productEnDb.views,
       gallery: this.productEnDb.gallery,
+      delete: false,
     };
 
     //Guardar la informacion del producto en base de datos

@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../interface/i-query-params';
 import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
@@ -75,7 +76,11 @@ export class ProductsComponent implements OnInit {
   //Tomar la data de productos
   public getData(): void {
     this.loadData = true;
-    this.productsService.getData().subscribe((resp: any): any => {
+    let params: IQueryParams = {
+      orderBy: '"delete"',
+      equalTo: false,
+    };
+    this.productsService.getData(params).subscribe((resp: any): any => {
       //Integrar la respuesta del servidor con la interfaz
       let position = Object.keys(resp).length;
       this.products = Object.keys(resp).map(
@@ -112,6 +117,7 @@ export class ProductsComponent implements OnInit {
             video: JSON.parse(resp[a].video),
             views: resp[a].views,
             gallery: resp[a].gallery,
+            delete: resp[a].delete,
           } as Iproducts)
       );
 
@@ -157,7 +163,42 @@ export class ProductsComponent implements OnInit {
   public changeState(e: any): void {}
 
   //Eliminar producto
-  public deleteProduct(id: string, name: string): void {}
+  public deleteProduct(id: string): void {
+    let product: Iproducts | undefined = this.products.find(
+      (producto: Iproducts) => producto.id == id
+    );
+
+    alerts
+      .confirmAlert(
+        '¿Esta seguro?',
+        'La información no podra recuperarse',
+        'warning',
+        'Si, eliminar'
+      )
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          if (product) {
+            this.productsService
+              .patchData(id, { delete: true })
+              .toPromise()
+              .then((res: any) => {
+                this.products = this.products.filter(
+                  (producto: Iproducts) => producto.id != id
+                );
+
+                this.dataSource = new MatTableDataSource(this.products);
+              })
+              .catch((err: any) => {
+                alerts.basicAlert(
+                  'Error',
+                  'No se pudo eliminar el producto',
+                  'error'
+                );
+              });
+          }
+        }
+      });
+  }
 
   //Funcion para promediar las reseñas
   public configReviews(data: any, index: any): void {
