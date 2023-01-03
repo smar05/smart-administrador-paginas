@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../interface/i-query-params';
 import { ProductsService } from './../../../services/products.service';
 import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
@@ -148,29 +149,32 @@ export class SubcategoriesComponent implements OnInit {
       )
       .then((result: any) => {
         if (result.isConfirmed) {
-          this.productsService
-            .getFilterData('sub_category', url)
-            .subscribe((resp: any) => {
-              if (Object.keys(resp).length > 0) {
-                alerts.basicAlert(
-                  'Error',
-                  'La subcategoria tiene productos relacionados',
-                  'error'
-                );
-              } else {
-                //Eliminar el registro
-                this.subcategoriesService
-                  .deleteData(id)
-                  .subscribe((resp: any) => {
-                    alerts.basicAlert(
-                      'Listo',
-                      'La subcategoria ha sido eliminada',
-                      'success'
-                    );
-                    this.getData();
-                  });
-              }
-            });
+          let params: IQueryParams = {
+            orderBy: '"sub_category"',
+            equalTo: `"${url}"`,
+          };
+
+          this.productsService.getData(params).subscribe((resp: any) => {
+            if (Object.keys(resp).length > 0) {
+              alerts.basicAlert(
+                'Error',
+                'La subcategoria tiene productos relacionados',
+                'error'
+              );
+            } else {
+              //Eliminar el registro
+              this.subcategoriesService
+                .deleteData(id)
+                .subscribe((resp: any) => {
+                  alerts.basicAlert(
+                    'Listo',
+                    'La subcategoria ha sido eliminada',
+                    'success'
+                  );
+                  this.getData();
+                });
+            }
+          });
         }
       });
   }

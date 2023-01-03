@@ -1,3 +1,4 @@
+import { SharedModule } from 'src/app/shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -18,7 +19,11 @@ import { NewCategoriesComponent } from './new-categories/new-categories.componen
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 
 @NgModule({
-  declarations: [CategoriesComponent, NewCategoriesComponent, EditCategoriesComponent],
+  declarations: [
+    CategoriesComponent,
+    NewCategoriesComponent,
+    EditCategoriesComponent,
+  ],
   imports: [
     CommonModule,
     CategoriesRoutingModule,
@@ -30,6 +35,7 @@ import { EditCategoriesComponent } from './edit-categories/edit-categories.compo
     MatIconModule,
     PipesModule,
     ReactiveFormsModule,
+    SharedModule,
   ],
 })
 export class CategoriesModule {}

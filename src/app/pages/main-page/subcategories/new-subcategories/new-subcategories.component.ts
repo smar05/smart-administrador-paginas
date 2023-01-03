@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { functions } from 'src/app/helpers/functions';
@@ -112,15 +113,18 @@ export class NewSubcategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.subcategoriesService
-          .getFilterData('url', name)
-          .subscribe((resp) => {
-            if (Object.keys(resp).length > 0) {
-              resolve({ subcategory: true });
-            } else {
-              this.urlInput = name;
-            }
-          });
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.subcategoriesService.getData(params).subscribe((resp) => {
+          if (Object.keys(resp).length > 0) {
+            resolve({ subcategory: true });
+          } else {
+            this.urlInput = name;
+          }
+        });
       });
     };
   }

@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
@@ -56,6 +57,7 @@ export class NewCategoriesComponent implements OnInit {
   public urlInput: string = '';
   public iconView: string = '';
   public loadData: boolean = false;
+  public imageFile!: File;
 
   //Configuracion matChip
   visible = true;
@@ -72,7 +74,7 @@ export class NewCategoriesComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public saveCategory(): void {
+  public async saveCategory(): Promise<void> {
     //Validamos que el formulario haya sido enviado
     this.formSubmit = true;
     //Validamos que el formulario este correcto
@@ -83,23 +85,46 @@ export class NewCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
-      image: this.imgTemp,
       name: this.f.controls.name.value,
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
       state: 'hidden',
     };
+
     //Guardar en base de datos la categoria
     this.categoriesService.postData(dataCategory).subscribe(
-      (resp) => {
+      async (resp: any) => {
+        //Guardar la imagen en storage
+        let name: string = `main.${this.imageFile.name.split('.')[1]}`;
+
+        try {
+          if (this.imageFile && this.imgTemp && resp.name)
+            await this.categoriesService.saveImage(
+              this.imageFile,
+              `${resp.name}/main/${name}`
+            );
+        } catch (error) {
+          alerts.basicAlert(
+            'Error',
+            'Ha ocurrido un error guardando la imagen de la categoria',
+            'error'
+          );
+          this.loadData = false;
+          return;
+        }
+
         this.loadData = false;
         this.dialogRef.close('save');
         alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');
       },
       (err) => {
         this.loadData = false;
-        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+        alerts.basicAlert(
+          'Error',
+          'Ha ocurrido un error guardando la categoria',
+          'error'
+        );
       }
     );
   }
@@ -110,9 +135,20 @@ export class NewCategoriesComponent implements OnInit {
 
   //Validacion de la imagen
   public validateImage(e: any): void {
-    functions.validateImage(e).then((resp: any) => {
-      this.imgTemp = resp;
-    });
+    functions
+      .validateImage(e)
+      .then((resp: any) => {
+        if (resp) {
+          this.imgTemp = resp;
+
+          this.imageFile = e.target.files[0];
+        } else {
+          this.imgTemp = '';
+        }
+      })
+      .catch((err) => {
+        alerts.basicAlert('Error', 'Imagen no valida', 'error');
+      });
   }
 
   //Validar que el nombre de categoria no se repita
@@ -120,7 +156,12 @@ export class NewCategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        this.categoriesService.getFilterData('url', name).subscribe((resp) => {
+        let params: IQueryParams = {
+          orderBy: '"url"',
+          equalTo: `"${name}"`,
+        };
+
+        this.categoriesService.getData(params).subscribe((resp) => {
           if (Object.keys(resp).length > 0) {
             resolve({ category: true });
           } else {

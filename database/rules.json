@@ -1,0 +1,102 @@
+{
+  "rules": {
+    "$uid": {
+      "categories": {
+        ".read": true,
+        "$custom": {
+          "view": {
+            ".write": true
+          },
+          "name": {
+            ".write": "auth != null && auth.email == 'mantillasanchezr@gmail.com'"
+          }
+        },
+        ".write": "auth != null && auth.email == 'mantillasanchezr@gmail.com'",
+        ".indexOn": ["url", "name", "state"]
+      },
+      "sub-categories": {
+        ".read": true,
+        "$custom": {
+          "view": {
+            ".write": true
+          },
+          "name": {
+            ".write": "auth != null && auth.email == 'mantillasanchezr@gmail.com'"
+          }
+        },
+        ".write": "auth != null && auth.email == 'mantillasanchezr@gmail.com'",
+        ".indexOn": ["title_list", "url", "category"]
+      },
+      "products": {
+        ".read": true,
+        "$custom": {
+          "views": {
+            ".write": true
+          },
+          "reviews": {
+            ".write": true
+          },
+          "sales": {
+            ".write": true
+          },
+          "stock": {
+            ".write": true
+          }
+        },
+        ".write": "auth != null",
+        ".indexOn": [
+          "category",
+          "name",
+          "store",
+          "sub_category",
+          "tags",
+          "title_list",
+          "url"
+        ]
+      },
+      "users": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": ["username", "email", "idToken"]
+      },
+      "stores": {
+        ".read": true,
+        ".write": "auth != null",
+        ".indexOn": ["store", "url", "username"]
+      },
+      "orders": {
+        ".read": true,
+        "$custom": {
+          "status": {
+            ".write": true
+          }
+        },
+        ".write": "auth != null",
+        ".indexOn": ["user", "store"]
+      },
+      "disputes": {
+        ".read": true,
+        ".write": "auth != null",
+        ".indexOn": ["receiver", "order"]
+      },
+      "messages": {
+        ".read": true,
+        ".write": "auth != null",
+        ".indexOn": ["url_product", "receiver"]
+      },
+      "sales": {
+        ".read": true,
+        "$custom": {
+          "status": {
+            ".write": true
+          },
+          "id_payment": {
+            ".write": true
+          }
+        },
+        ".write": "auth != null",
+        ".indexOn": ["id_order"]
+      }
+    }
+  }
+}
