@@ -310,12 +310,12 @@ export class NewProductComponent implements OnInit {
         newSpecifications.push(a);
       }
       specifications = JSON.stringify(newSpecifications);
-      specifications = specifications.replace(/["]/g, '');
-      specifications = specifications.replace(/[']/g, '');
+      //specifications = specifications.replace(/["]/g, '');
+      //specifications = specifications.replace(/[']/g, '');
 
-      if (specifications == '[{"":[]}]') {
+      /*if (specifications == '[{"":[]}]') {
         specifications = '';
-      }
+      }*/
     } else {
       specifications = '';
     }
@@ -365,6 +365,7 @@ export class NewProductComponent implements OnInit {
         ? JSON.stringify([this.type_video.value, this.id_video.value])
         : '',
       views: 0,
+      gallery: '',
     };
 
     //Guardar la informacion del producto en base de datos
@@ -395,8 +396,17 @@ export class NewProductComponent implements OnInit {
             this.imgDBFile,
             EnumProductImg.default_banner
           );
-        if (this.files && this.files.length > 0)
-          await this.saveProductGallery(res.name, this.files);
+        if (this.files && this.files.length > 0) {
+          let nombreGaleria: string[] = await this.saveProductGallery(
+            res.name,
+            this.files
+          );
+
+          dataProduct.gallery = JSON.stringify(nombreGaleria);
+          await this.productsService
+            .patchData(res.name, dataProduct)
+            .toPromise();
+        }
 
         this.loadData = false;
         alerts.basicAlert('Listo', 'El producto ha sido guardado', 'success');
@@ -668,21 +678,24 @@ export class NewProductComponent implements OnInit {
   public async saveProductGallery(
     idProduct: string,
     gallery: File[]
-  ): Promise<void> {
+  ): Promise<string[]> {
+    let nombres: string[] = [];
+
     for (let index = 0; index < gallery.length; index++) {
+      let nameSinTipo: string = `${new Date().getTime()}_${index}`;
       let name: string =
         idProduct && gallery[index]
-          ? `${new Date().getTime()}_${index}.${
-              gallery[index].name.split('.')[1]
-            }`
+          ? `${nameSinTipo}.${gallery[index].name.split('.')[1]}`
           : '';
 
       if (name && idProduct) {
         try {
           await this.productsService.saveImage(
             gallery[index],
-            `${idProduct}/${EnumProductImg.gallery}/${name}`
+            `${idProduct}/${EnumProductImg.gallery}/${nameSinTipo}/${name}`
           );
+
+          nombres.push(nameSinTipo);
         } catch (error) {
           alerts.basicAlert(
             'Error',
@@ -690,9 +703,10 @@ export class NewProductComponent implements OnInit {
             'error'
           );
           this.loadData = false;
-          return;
         }
       }
     }
+
+    return nombres;
   }
 }

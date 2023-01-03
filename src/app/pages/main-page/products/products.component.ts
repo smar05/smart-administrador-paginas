@@ -111,6 +111,7 @@ export class ProductsComponent implements OnInit {
             vertical_slider: resp[a].vertical_slider,
             video: JSON.parse(resp[a].video),
             views: resp[a].views,
+            gallery: resp[a].gallery,
           } as Iproducts)
       );
 

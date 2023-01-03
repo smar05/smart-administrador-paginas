@@ -27,6 +27,8 @@ import { alerts } from 'src/app/helpers/alerts';
 export class EditProductComponent implements OnInit {
   public id: string = '';
   public productEnDb!: Iproducts;
+  public galeriaValores: Map<string, string> = new Map(); // <url,nombre>
+  public imagenesABorrarGaleria: string[] = [];
 
   public f = this.form.group({
     name: [
@@ -381,9 +383,16 @@ export class EditProductComponent implements OnInit {
       this.imgTempTB = await this.productsService.getImage(
         `${this.id}/${EnumProductImg.top_banner}`
       );
-      this.allGallery = this.editGallery = await this.productsService.getImages(
-        `${this.id}/${EnumProductImg.gallery}`
-      );
+      if (resp.gallery) {
+        JSON.parse(resp.gallery).forEach(async (galleryItem: string) => {
+          let urlImage: string = await this.productsService.getImage(
+            `${this.id}/${EnumProductImg.gallery}/${galleryItem}`
+          );
+          this.allGallery.push(urlImage);
+          this.editGallery.push(urlImage);
+          this.galeriaValores.set(urlImage, galleryItem);
+        });
+      }
 
       let category: Icategories = this.categories.find(
         (category: Icategories) => {
@@ -502,9 +511,8 @@ export class EditProductComponent implements OnInit {
         ? JSON.stringify([this.type_video.value, this.id_video.value])
         : '',
       views: this.productEnDb.views,
+      gallery: this.productEnDb.gallery,
     };
-
-    console.log(dataProduct);
 
     //Guardar la informacion del producto en base de datos
     this.productsService.patchData(this.id, dataProduct).subscribe(
@@ -515,7 +523,7 @@ export class EditProductComponent implements OnInit {
             `${this.id}/${EnumProductImg.main}`
           );
           await this.saveProductImages(
-            res.name,
+            this.id,
             this.imgFile,
             EnumProductImg.main
           );
@@ -525,7 +533,7 @@ export class EditProductComponent implements OnInit {
             `${this.id}/${EnumProductImg.horizontal_slider}`
           );
           await this.saveProductImages(
-            res.name,
+            this.id,
             this.imgHSliderFile,
             EnumProductImg.horizontal_slider
           );
@@ -535,7 +543,7 @@ export class EditProductComponent implements OnInit {
             `${this.id}/${EnumProductImg.top_banner}`
           );
           await this.saveProductImages(
-            res.name,
+            this.id,
             this.imgTBFile,
             EnumProductImg.top_banner
           );
@@ -545,14 +553,52 @@ export class EditProductComponent implements OnInit {
             `${this.id}/${EnumProductImg.default_banner}`
           );
           await this.saveProductImages(
-            res.name,
+            this.id,
             this.imgDBFile,
             EnumProductImg.default_banner
           );
         }
+
+        let nombreGaleriaAGuardar: string[] = [];
+        // Se guardan las imagenes nuevas
         if (this.files && this.files.length > 0) {
-          await this.saveProductGallery(res.name, this.files);
+          let nombres: string[] = await this.saveProductGallery(
+            this.id,
+            this.files
+          );
+          nombreGaleriaAGuardar = nombreGaleriaAGuardar.concat(nombres);
         }
+        // Se eliminan las imagenes antiguas que el usuario quizo borrar
+        if (
+          this.imagenesABorrarGaleria &&
+          this.imagenesABorrarGaleria.length > 0 &&
+          dataProduct.gallery
+        ) {
+          this.imagenesABorrarGaleria.forEach(async (url: string) => {
+            let name: string | undefined = this.galeriaValores.get(url);
+
+            dataProduct.gallery = JSON.stringify(
+              JSON.parse(dataProduct.gallery).filter(
+                (nameEnDB: string) => nameEnDB != name
+              )
+            );
+
+            await this.productsService.deleteImages(
+              `${this.id}/${EnumProductImg.gallery}/${name}`
+            );
+          });
+
+          nombreGaleriaAGuardar = nombreGaleriaAGuardar.concat(
+            JSON.parse(dataProduct.gallery)
+          );
+        }
+
+        dataProduct.gallery = JSON.stringify(nombreGaleriaAGuardar);
+
+        if (dataProduct.gallery)
+          await this.productsService
+            .patchData(this.id, dataProduct)
+            .toPromise();
 
         this.loadData = false;
         alerts.basicAlert('Listo', 'El producto ha sido guardado', 'success');
@@ -824,21 +870,24 @@ export class EditProductComponent implements OnInit {
   public async saveProductGallery(
     idProduct: string,
     gallery: File[]
-  ): Promise<void> {
+  ): Promise<string[]> {
+    let nombres: string[] = [];
+
     for (let index = 0; index < gallery.length; index++) {
+      let nameSinTipo: string = `${new Date().getTime()}_${index}`;
       let name: string =
         idProduct && gallery[index]
-          ? `${new Date().getTime()}_${index}.${
-              gallery[index].name.split('.')[1]
-            }`
+          ? `${nameSinTipo}.${gallery[index].name.split('.')[1]}`
           : '';
 
       if (name && idProduct) {
         try {
           await this.productsService.saveImage(
             gallery[index],
-            `${idProduct}/${EnumProductImg.gallery}/${name}`
+            `${idProduct}/${EnumProductImg.gallery}/${nameSinTipo}/${name}`
           );
+
+          nombres.push(nameSinTipo);
         } catch (error) {
           alerts.basicAlert(
             'Error',
@@ -846,14 +895,17 @@ export class EditProductComponent implements OnInit {
             'error'
           );
           this.loadData = false;
-          return;
         }
       }
     }
+
+    return nombres;
   }
 
   //Remover fotos de la galeria
   public removeGallery(pic: string): void {
     this.editGallery.splice(this.editGallery.indexOf(pic), 1);
+    this.allGallery.splice(this.editGallery.indexOf(pic), 1);
+    this.imagenesABorrarGaleria.push(pic);
   }
 }

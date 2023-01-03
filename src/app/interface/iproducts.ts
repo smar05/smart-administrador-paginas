@@ -25,6 +25,7 @@ export interface Iproducts {
   vertical_slider: string;
   video: string;
   views: number;
+  gallery: string;
 }
 
 export enum EnumProductImg {
