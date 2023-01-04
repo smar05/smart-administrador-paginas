@@ -1,0 +1,10 @@
+<mat-dialog-content>
+  <div class="card card-warning">
+    <div class="card-header">
+      <h2 class="card-title mb-0">Edit order</h2>
+      <button class="close" type="button" mat-dialog-close>&times;</button>
+    </div>
+
+    <form autocomplete="off" [formGroup]="f" (ngSubmit)="editOrder()"></form>
+  </div>
+</mat-dialog-content>

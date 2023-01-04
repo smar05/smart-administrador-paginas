@@ -1,3 +1,5 @@
+import { EditOrdersComponent } from './edit-orders/edit-orders.component';
+import { MatDialog } from '@angular/material/dialog';
 import { OrdersService } from './../../../services/orders.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -54,7 +56,10 @@ export class OrdersComponent implements OnInit {
   //Orden
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private ordersService: OrdersService) {}
+  constructor(
+    private ordersService: OrdersService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getData();
@@ -106,5 +111,22 @@ export class OrdersComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  // Funcion para llamar el dialogo de edicion de order
+  public editOrder(id: string): void {
+    const dialogRef = this.dialog.open(EditOrdersComponent, {
+      width: '100%',
+      data: {
+        id: id,
+      },
+    });
+
+    // Actualizar el listado de las tablas
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getData();
+      }
+    });
   }
 }

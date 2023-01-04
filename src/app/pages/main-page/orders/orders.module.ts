@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
 
 import { OrdersComponent } from './orders.component';
 import { OrdersRoutingModule } from './orders-routing.module';
+import { EditOrdersComponent } from './edit-orders/edit-orders.component';
 
 @NgModule({
-  declarations: [OrdersComponent],
+  declarations: [OrdersComponent, EditOrdersComponent],
   imports: [
     CommonModule,
     OrdersRoutingModule,
