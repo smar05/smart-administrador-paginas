@@ -35,7 +35,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
   ],
 })
 export class OrdersComponent implements OnInit {
-  public displayedColumns: string[] = ['position', 'status', 'actions']; //Variable para nombrar las columnas de la tabla
+  public displayedColumns: string[] = [
+    'position',
+    'status',
+    'product',
+    'quantity',
+    'id',
+    'actions',
+  ]; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<Iorders>; //Instancia la data que aparecera en la tabla
   public orders: Iorders[] = [];
   public expandedElement!: Iorders | null;

@@ -1,3 +1,4 @@
+import { SharedModule } from 'src/app/shared/shared.module';
 import { PipesModule } from './../../../pipes/pipes/pipes.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
@@ -25,6 +26,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
     MatChipsModule,
     MatIconModule,
     PipesModule,
+    SharedModule,
   ],
 })
 export class OrdersModule {}
