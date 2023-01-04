@@ -1,3 +1,4 @@
+import { SharedModule } from './../../../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +17,11 @@ import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories
 import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 
 @NgModule({
-  declarations: [SubcategoriesComponent, NewSubcategoriesComponent, EditSubcategoriesComponent],
+  declarations: [
+    SubcategoriesComponent,
+    NewSubcategoriesComponent,
+    EditSubcategoriesComponent,
+  ],
   imports: [
     CommonModule,
     SubcategoriesRoutingModule,
@@ -27,6 +32,7 @@ import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategor
     MatChipsModule,
     MatIconModule,
     ReactiveFormsModule,
+    SharedModule,
   ],
 })
 export class SubcategoriesModule {}

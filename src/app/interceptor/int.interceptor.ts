@@ -8,9 +8,12 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class IntInterceptor implements HttpInterceptor {
+  token: any = '';
+
   constructor(private http: HttpClient) {}
 
   intercept(
@@ -24,10 +27,10 @@ export class IntInterceptor implements HttpInterceptor {
       request.url == environment.urlRefreshToken
     )
       return next.handle(request);
-    const token: any = localStorage.getItem('token');
+    this.token = localStorage.getItem('token');
     //Se captura la fecha de expiracion en
     //formato epoch
-    const payload: any = JSON.parse(atob(token.split('.')[1])).exp;
+    const payload: any = JSON.parse(atob(this.token.split('.')[1])).exp;
     //De epoch a formato tradicional de fecha
     const tokenExp: any = new Date(payload * 1000);
     //Tiempo actual
@@ -45,9 +48,26 @@ export class IntInterceptor implements HttpInterceptor {
           //Se captura el idToken y refreshToken
           localStorage.setItem('token', resp.id_token);
           localStorage.setItem('refreshToken', resp.refresh_token);
+          this.token = resp.id_token;
         });
     }
 
-    return next.handle(request);
+    return next.handle(this.cloneToken(request, this.token)).pipe(
+      map((resp: any) => {
+        return resp;
+      })
+    );
+  }
+
+  //Clonar el parametro token
+  private cloneToken(
+    request: HttpRequest<unknown>,
+    token: string
+  ): HttpRequest<any> {
+    return request.clone({
+      setParams: {
+        auth: token,
+      },
+    });
   }
 }

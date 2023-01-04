@@ -18,6 +18,9 @@ export class LoginService {
         //Se captura el idToken y refreshToken
         localStorage.setItem('token', resp.idToken);
         localStorage.setItem('refreshToken', resp.refreshToken);
+
+        //Se captura el localId
+        localStorage.setItem('localId', resp.localId);
       })
     );
   }

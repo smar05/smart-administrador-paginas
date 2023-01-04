@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../../interface/i-query-params';
 import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { Isubcategories } from './../../../../interface/isubcategories';
@@ -63,25 +64,27 @@ export class EditSubcategoriesComponent implements OnInit {
       this.view = resp.view;
 
       //Traer la informacion de la categoria seleccionada
-      this.categoriesService
-        .getFilterData('name', resp.category)
-        .subscribe((resp2: any) => {
-          this.titleListArray = Object.keys(resp2).map((a) =>
-            JSON.parse(resp2[a].title_list)
-          );
-          this.loadData = false;
-        });
+      let params: IQueryParams = {
+        orderBy: '"name"',
+        equalTo: `"${resp.category}"`,
+      };
+
+      this.categoriesService.getData(params).subscribe((resp2: any) => {
+        this.titleListArray = Object.keys(resp2).map((a) =>
+          JSON.parse(resp2[a].title_list)
+        );
+        this.loadData = false;
+      });
     });
   }
 
   //Guardar subcategoria
   public editSubcategory(): any {
-    this.loadData = true;
     this.formSubmitted = true;
     if (this.f.invalid) {
       return;
     }
-
+    this.loadData = true;
     const dataSubcategory: Isubcategories = {
       category: this.categoryView,
       name: this.nameView,
@@ -92,7 +95,7 @@ export class EditSubcategoriesComponent implements OnInit {
     };
 
     this.subcategoriesService
-      .patchData(this.data.id, dataSubcategory, localStorage.getItem('token'))
+      .patchData(this.data.id, dataSubcategory)
       .subscribe(
         (resp: any) => {
           this.dialogRef.close('save');

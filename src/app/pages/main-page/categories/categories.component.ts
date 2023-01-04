@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../interface/i-query-params';
 import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
@@ -6,7 +7,7 @@ import { Icategories } from './../../../interface/icategories';
 import { NewCategoriesComponent } from './new-categories/new-categories.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import '../../../shared/spinkit/sk-cube-grid.css';
@@ -46,6 +47,7 @@ export class CategoriesComponent implements OnInit {
   public categories: Icategories[] = [];
   public expandedElement!: Icategories | null;
   public loadData: boolean = false;
+  public categoriesImages: Map<string, string> = new Map();
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -96,6 +98,11 @@ export class CategoriesComponent implements OnInit {
       this.dataSource = new MatTableDataSource(this.categories);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.categories.forEach(async (categorie: Icategories) => {
+        await this.getCategorieImage(categorie);
+      });
+
       this.loadData = false;
     });
   }
@@ -132,7 +139,7 @@ export class CategoriesComponent implements OnInit {
           state: 'hidden',
         };
     this.categoriesService
-      .patchData(e.target.id.split('_')[1], data, localStorage.getItem('token'))
+      .patchData(e.target.id.split('_')[1], data)
       .subscribe(() => {
         this.getData();
       });
@@ -166,9 +173,14 @@ export class CategoriesComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           //Validar que la categoria no tenga una subcategoria
+          let params: IQueryParams = {
+            orderBy: '"category"',
+            equalTo: `"${name}"`,
+          };
+
           this.subcategoriesService
-            .getFilterData('category', name)
-            .subscribe((resp: any) => {
+            .getData(params)
+            .subscribe(async (resp: any) => {
               if (Object.keys(resp).length > 0) {
                 alerts.basicAlert(
                   'Error',
@@ -176,20 +188,52 @@ export class CategoriesComponent implements OnInit {
                   'error'
                 );
               } else {
+                //Eliminar imagen de categoria
+                try {
+                  if (name && id)
+                    await this.categoriesService.deleteImages(`${id}/main/`);
+                } catch (error) {
+                  alerts.basicAlert(
+                    'Error',
+                    'No se pudo eliminar la imagen de la categoria',
+                    'error'
+                  );
+                  return;
+                }
+
                 //Eliminar registro de la base de datos
-                this.categoriesService
-                  .deleteData(id, localStorage.getItem('token'))
-                  .subscribe((resp: any) => {
+                this.categoriesService.deleteData(id).subscribe(
+                  (resp: any) => {
                     alerts.basicAlert(
                       'Listo',
                       'La categoria ha sido eliminada',
                       'success'
                     );
                     this.getData();
-                  });
+                  },
+                  (err) => {
+                    alerts.basicAlert(
+                      'Error',
+                      'No se ha podido eliminar la categoria',
+                      'error'
+                    );
+                  }
+                );
               }
             });
         }
       });
+  }
+
+  public async getCategorieImage(categorie: Icategories): Promise<void> {
+    let urlImage: string = '';
+
+    if (categorie.id) {
+      urlImage = await this.categoriesService.getImage(`${categorie.id}/main`);
+    }
+
+    if (urlImage) {
+      this.categoriesImages.set(categorie.id!, urlImage);
+    }
   }
 }
