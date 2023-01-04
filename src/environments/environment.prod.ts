@@ -28,4 +28,6 @@ export const environment = {
     users: 'users',
     orders: 'orders',
   },
+  apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',
+  urlLocation: `https://api.countrystatecity.in/v1/`,
 };
