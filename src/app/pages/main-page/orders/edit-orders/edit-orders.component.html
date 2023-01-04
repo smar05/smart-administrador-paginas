@@ -5,6 +5,146 @@
       <button class="close" type="button" mat-dialog-close>&times;</button>
     </div>
 
-    <form autocomplete="off" [formGroup]="f" (ngSubmit)="editOrder()"></form>
+    <form autocomplete="off" [formGroup]="f" (ngSubmit)="editOrder()">
+      <div class="card-body">
+        <ng-container *ngIf="!loadData; else loading">
+          <div
+            class="card my-3"
+            *ngFor="let nextProcess of processOrder; let i = index"
+          >
+            <div class="card-header text-uppercase">
+              {{ i + 1 }}. {{ nextProcess.stage }}
+            </div>
+
+            <div class="card-body">
+              <!--fecha-->
+              <div class="form-row">
+                <div class="col-2 text-right">
+                  <label for="" class="p-3 lead small"> Date: </label>
+                </div>
+                <div class="col-10">
+                  <input
+                    type="date"
+                    class="form-control"
+                    name="date"
+                    [value]="nextProcess.date | date : 'yyyy-MM-dd'"
+                    readonly
+                    #date
+                    *ngIf="nextProcess.status == 'ok'"
+                  />
+                  <input
+                    type="date"
+                    class="form-control"
+                    name="date"
+                    [value]="nextProcess.date | date : 'yyyy-MM-dd'"
+                    #date
+                    *ngIf="nextProcess.status == 'pending'"
+                  />
+                </div>
+              </div>
+
+              <!--status-->
+              <div class="form-row">
+                <div class="col-2 text-right">
+                  <label class="p-3 lead small"> Status: </label>
+                </div>
+
+                <div
+                  class="col-10 mt-3"
+                  *ngIf="nextProcess.status == 'pending'"
+                >
+                  <div
+                    class="custom-control custom-radio custom-control-inline"
+                  >
+                    <input
+                      type="radio"
+                      class="custom-control-input"
+                      value="pending"
+                      checked
+                      id="status-pending{{ i }}"
+                      name="status{{ i }}"
+                      *ngIf="nextProcess.status == 'pending'"
+                    />
+                    <input
+                      type="radio"
+                      class="custom-control-input"
+                      value="pending"
+                      id="status-pending{{ i }}"
+                      name="status{{ i }}"
+                      *ngIf="nextProcess.status == 'ok'"
+                    />
+                    <label
+                      for="status-pending{{ i }}"
+                      class="custom-control-label"
+                      >Pending</label
+                    >
+                  </div>
+
+                  <div
+                    class="custom-control custom-radio custom-control-inline"
+                  >
+                    <input
+                      type="radio"
+                      class="custom-control-input"
+                      value="ok"
+                      id="status-ok{{ i }}"
+                      name="status{{ i }}"
+                      *ngIf="nextProcess.status == 'pending'"
+                    />
+                    <input
+                      type="radio"
+                      class="custom-control-input"
+                      value="pending"
+                      id="status-ok{{ i }}"
+                      name="status{{ i }}"
+                      *ngIf="nextProcess.status == 'ok'"
+                      checked
+                    />
+                    <label for="status-ok{{ i }}" class="custom-control-label"
+                      >Ok</label
+                    >
+                  </div>
+                </div>
+
+                <div class="col-10 mt-3" *ngIf="nextProcess.status == 'ok'">
+                  <div class="text-uppercase">
+                    {{ nextProcess.status }}
+                  </div>
+                </div>
+              </div>
+
+              <!--Comentarios-->
+              <div class="form-row">
+                <div class="col-2 text-right">
+                  <label class="p-1 lead small">Comment:</label>
+                </div>
+
+                <div class="col-10" *ngIf="nextProcess.status == 'ok'">
+                  <textarea
+                    class="form-control"
+                    [value]="nextProcess.comment"
+                    readonly
+                  ></textarea>
+                </div>
+
+                <div class="col-10" *ngIf="nextProcess.status == 'pending'">
+                  <textarea
+                    class="form-control"
+                    [value]="nextProcess.comment"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!--Spinner de carga-->
+        <ng-template #loading>
+          <app-spinners [type]="'sk-cube'"></app-spinners>
+        </ng-template>
+      </div>
+
+      <div class="card-footer"></div>
+    </form>
   </div>
 </mat-dialog-content>

@@ -16,6 +16,8 @@ export class EditOrdersComponent implements OnInit {
   // Grupo de controlers
   public f = this.form.group({});
   public processOrder: any[] = []; // VIsualizar el proceso de la orden
+  public loadData: boolean = false;
+  public formSubmitted: boolean = false; // Valida envio de formulario
 
   constructor(
     private form: FormBuilder,
@@ -30,5 +32,11 @@ export class EditOrdersComponent implements OnInit {
     });
   }
 
-  public editOrder(): void {}
+  public editOrder(): void {
+    this.formSubmitted = true;
+
+    if (this.f.invalid) return;
+
+    this.loadData = true;
+  }
 }
