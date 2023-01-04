@@ -25,6 +25,13 @@ export const environment = {
     appId: '1:474388620930:web:cefbaad0c4c544efe3769b',
     measurementId: 'G-Q0QR49CGXL',
   },
+  collections: {
+    categories: 'categories',
+    products: 'products',
+    subCategories: 'sub-categories',
+    users: 'users',
+    orders: 'orders',
+  },
 };
 
 /*

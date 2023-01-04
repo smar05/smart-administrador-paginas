@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Isubcategories } from './../interface/isubcategories';
@@ -8,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SubcategoriesService {
-  private urlSubCategories: string = 'sub-categories';
+  private urlSubCategories: string = environment.collections.subCategories;
 
   constructor(private httpService: HttpService) {}
 

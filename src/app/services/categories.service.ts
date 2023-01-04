@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class CategoriesService {
-  private urlCategories: string = 'categories';
+  private urlCategories: string = environment.collections.categories;
   private urlImage: string = `${environment.urlStorage.img}/categories`;
 
   constructor(
