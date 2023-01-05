@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
 
 import { MessagesComponent } from './messages.component';
 import { MessagesRoutingModule } from './messages-routing.module';
+import { EditMessagesComponent } from './edit-messages/edit-messages.component';
 
 @NgModule({
-  declarations: [MessagesComponent],
+  declarations: [MessagesComponent, EditMessagesComponent],
   imports: [
     CommonModule,
     MessagesRoutingModule,

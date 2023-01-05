@@ -1,3 +1,5 @@
+import { EditMessagesComponent } from './edit-messages/edit-messages.component';
+import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from './../../../services/message.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -53,7 +55,10 @@ export class MessagesComponent implements OnInit {
   //Orden
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getData();
@@ -98,5 +103,17 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  public editMessage(id: string): void {}
+  public editMessage(id: string): void {
+    const dialogRef = this.dialog.open(EditMessagesComponent, {
+      width: '100%',
+      data: {
+        id,
+      },
+    });
+
+    //Actualizar el listado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) this.getData();
+    });
+  }
 }
