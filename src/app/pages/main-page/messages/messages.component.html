@@ -60,13 +60,13 @@
                   *ngIf="element.answer == undefined"
                   class="badge badge-danger p-3"
                 >
-                  {{ element.url_product }}
+                  {{ element.url_product | substr }}
                 </span>
                 <span
                   *ngIf="element.answer != 'undefined'"
                   class="badge badge-success p-3"
                 >
-                  {{ element.url_product }}
+                  {{ element.url_product | substr }}
                 </span>
               </td>
             </ng-container>
