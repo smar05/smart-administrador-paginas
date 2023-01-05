@@ -32,6 +32,7 @@ export const environment = {
     users: 'users',
     orders: 'orders',
     disputes: 'disputes',
+    messages: 'messages',
   },
   apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',
   urlLocation: `https://api.countrystatecity.in/v1/`,
