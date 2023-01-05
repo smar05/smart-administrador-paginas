@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ProductsService {
-  private urlProducts: string = 'products';
+  private urlProducts: string = environment.collections.products;
   private urlImage: string = `${environment.urlStorage.img}/products`;
 
   constructor(

@@ -3,7 +3,11 @@ import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
+import {
+  Iproducts,
+  EnumProductImg,
+  EnumProductReviewType,
+} from './../../../interface/iproducts';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -229,7 +233,7 @@ export class ProductsComponent implements OnInit {
   //Cambia el estado del producto
   public cambiarEstado(producto: any, estado: string): void {
     let feedback = producto.feedback;
-    if (estado === 'approved') {
+    if (estado === EnumProductReviewType.approved) {
       //Desactivar el estado
       alerts
         .confirmAlert(
@@ -240,7 +244,7 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = 'review';
+            feedback.type = EnumProductReviewType.review;
             let data = {
               feedback: JSON.stringify(feedback),
             };
@@ -263,7 +267,7 @@ export class ProductsComponent implements OnInit {
             );
           }
         });
-    } else if (estado === 'review') {
+    } else if (estado === EnumProductReviewType.review) {
       //Activar el estado
       alerts
         .confirmAlert(
@@ -274,7 +278,7 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = 'approved';
+            feedback.type = EnumProductReviewType.approved;
             let data = {
               feedback: JSON.stringify(feedback),
             };

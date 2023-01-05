@@ -3,7 +3,10 @@ import { SubcategoriesService } from './../../../services/subcategories.service'
 import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 import { CategoriesService } from './../../../services/categories.service';
-import { Icategories } from './../../../interface/icategories';
+import {
+  EnumCategorieState,
+  Icategories,
+} from './../../../interface/icategories';
 import { NewCategoriesComponent } from './new-categories/new-categories.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -133,10 +136,10 @@ export class CategoriesComponent implements OnInit {
   public changeState(e: any): void {
     const data = e.target.checked
       ? {
-          state: 'show',
+          state: EnumCategorieState.show,
         }
       : {
-          state: 'hidden',
+          state: EnumCategorieState.hidden,
         };
     this.categoriesService
       .patchData(e.target.id.split('_')[1], data)
