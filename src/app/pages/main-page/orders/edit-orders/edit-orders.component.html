@@ -31,6 +31,7 @@
                     readonly
                     #date
                     *ngIf="nextProcess.status == 'ok'"
+                    (change)="changeProcess('date', date, i)"
                   />
                   <input
                     type="date"
@@ -39,6 +40,7 @@
                     [value]="nextProcess.date | date : 'yyyy-MM-dd'"
                     #date
                     *ngIf="nextProcess.status == 'pending'"
+                    (change)="changeProcess('date', date, i)"
                   />
                 </div>
               </div>
@@ -64,6 +66,8 @@
                       id="status-pending{{ i }}"
                       name="status{{ i }}"
                       *ngIf="nextProcess.status == 'pending'"
+                      #status
+                      (change)="changeProcess('status', status, i)"
                     />
                     <input
                       type="radio"
@@ -72,6 +76,8 @@
                       id="status-pending{{ i }}"
                       name="status{{ i }}"
                       *ngIf="nextProcess.status == 'ok'"
+                      #status
+                      (change)="changeProcess('status', status, i)"
                     />
                     <label
                       for="status-pending{{ i }}"
@@ -89,6 +95,8 @@
                       value="ok"
                       id="status-ok{{ i }}"
                       name="status{{ i }}"
+                      #status
+                      (change)="changeProcess('status', status, i)"
                       *ngIf="nextProcess.status == 'pending'"
                     />
                     <input
@@ -97,6 +105,8 @@
                       value="pending"
                       id="status-ok{{ i }}"
                       name="status{{ i }}"
+                      #status
+                      (change)="changeProcess('status', status, i)"
                       *ngIf="nextProcess.status == 'ok'"
                       checked
                     />
@@ -131,6 +141,8 @@
                   <textarea
                     class="form-control"
                     [value]="nextProcess.comment"
+                    #comment
+                    (change)="changeProcess('comment', comment, i)"
                   ></textarea>
                 </div>
               </div>
@@ -144,7 +156,12 @@
         </ng-template>
       </div>
 
-      <div class="card-footer"></div>
+      <div class="card-footer">
+        <button mat-dialog-close class="btn btn-secondary">Cerrar</button>
+        <button type="submit" class="btn btn-warning float-right">
+          Guardar
+        </button>
+      </div>
     </form>
   </div>
 </mat-dialog-content>
