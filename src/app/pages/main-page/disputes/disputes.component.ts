@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { DisputesService } from './../../../services/disputes.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -11,6 +12,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { EditDisputesComponent } from './edit-disputes/edit-disputes.component';
 
 @Component({
   selector: 'app-disputes',
@@ -54,7 +56,10 @@ export class DisputesComponent implements OnInit {
   //Orden
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private disputesService: DisputesService) {}
+  constructor(
+    private disputesService: DisputesService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getData();
@@ -99,5 +104,17 @@ export class DisputesComponent implements OnInit {
     }
   }
 
-  public editDispute(id: string): void {}
+  public editDispute(id: string): void {
+    const dialogRef = this.dialog.open(EditDisputesComponent, {
+      width: '100%',
+      data: {
+        id,
+      },
+    });
+
+    //Actualizar el listado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) this.getData();
+    });
+  }
 }

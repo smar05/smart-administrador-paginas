@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
 
 import { DisputesComponent } from './disputes.component';
 import { DisputesRoutingModule } from './disputes-routing.module';
+import { EditDisputesComponent } from './edit-disputes/edit-disputes.component';
 
 @NgModule({
-  declarations: [DisputesComponent],
+  declarations: [DisputesComponent, EditDisputesComponent],
   imports: [
     CommonModule,
     DisputesRoutingModule,
