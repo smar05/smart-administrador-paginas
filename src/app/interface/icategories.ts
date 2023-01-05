@@ -8,3 +8,8 @@ export interface Icategories {
   view?: number;
   state?: string;
 }
+
+export enum EnumCategorieState {
+  show = 'show',
+  hidden = 'hidden',
+}
