@@ -1,5 +1,5 @@
 import { alerts } from './alerts';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export class functions {
   /**
@@ -14,7 +14,7 @@ export class functions {
    */
   static invalidField(
     field: string,
-    f: FormGroup,
+    f: UntypedFormGroup,
     formSubmitted: boolean
   ): boolean {
     return formSubmitted && f.controls[field].invalid;

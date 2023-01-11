@@ -11,11 +11,11 @@ import { ProductsService } from './../../../../services/products.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  FormArray,
-  FormBuilder,
+  UntypedFormArray,
+  UntypedFormBuilder,
   Validators,
   AbstractControl,
-  FormGroup,
+  UntypedFormGroup,
 } from '@angular/forms';
 import { alerts } from 'src/app/helpers/alerts';
 
@@ -47,15 +47,15 @@ export class EditProductComponent implements OnInit {
     image: ['', []], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
-    details: new FormArray([]),
-    specifications: new FormArray([]),
+    details: new UntypedFormArray([]),
+    specifications: new UntypedFormArray([]),
     tags: [
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
-    top_banner: new FormArray([]),
+    top_banner: new UntypedFormArray([]),
     default_banner: ['', []], //No se guarda en base de datos
-    horizontal_slider: new FormArray([]),
+    horizontal_slider: new UntypedFormArray([]),
     type_video: [''],
     id_video: [''],
     price: [
@@ -241,7 +241,7 @@ export class EditProductComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private productsService: ProductsService,
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private categoriesService: CategoriesService,
     private subcategoriesService: SubcategoriesService,
     private router: Router
@@ -796,7 +796,7 @@ export class EditProductComponent implements OnInit {
   public add(event: MatChipInputEvent, index: number, type: string): void {
     const value = (event.value || '').trim();
     if (type == 'specifications') {
-      let controlSpec = this.specifications.controls[index] as FormGroup;
+      let controlSpec = this.specifications.controls[index] as UntypedFormGroup;
       // Add our specification
       if ((value || '').trim()) {
         if (controlSpec.controls.values.value.length < 10) {
@@ -816,7 +816,7 @@ export class EditProductComponent implements OnInit {
 
   public remove(value: any, index: number, type: string): void {
     if (type == 'specifications') {
-      let controlSpec = this.specifications.controls[index] as FormGroup;
+      let controlSpec = this.specifications.controls[index] as UntypedFormGroup;
       //const optIndex = controlSpec.controls.values.value.indexOf(value);
 
       if (index >= 0) {
