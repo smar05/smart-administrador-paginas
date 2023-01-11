@@ -5,7 +5,6 @@ import { functions } from '../../helpers/functions';
 import { Ilogin } from '../../interface/ilogin';
 import { alerts } from '../../helpers/alerts';
 import { Router } from '@angular/router';
-import '../../shared/spinkit/sk-cube-grid.css';
 
 @Component({
   selector: 'app-login',

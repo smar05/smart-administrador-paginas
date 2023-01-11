@@ -395,14 +395,13 @@
                 <div class="input-group-append">
                   <span class="input-group-text"> Valores: </span>
                 </div>
-                <mat-chip-list
+                <mat-chip-grid
                   #chipList
                   aria-label="Valores"
                   class="p-2 border"
                 >
-                  <mat-chip
+                  <mat-chip-row
                     *ngFor="let val of specification.value.values"
-                    [selectable]="selectable"
                     [removable]="removable"
                     (removed)="remove(val, i, 'specifications')"
                   >
@@ -410,7 +409,7 @@
                     <button matChipRemove *ngIf="removable">
                       <mat-icon>cancel</mat-icon>
                     </button>
-                  </mat-chip>
+                  </mat-chip-row>
                   <input
                     placeholder="Nuevo titulo..."
                     [matChipInputFor]="chipList"
@@ -418,7 +417,7 @@
                     [matChipInputAddOnBlur]="addOnBlur"
                     (matChipInputTokenEnd)="add($event, i, 'specifications')"
                   />
-                </mat-chip-list>
+                </mat-chip-grid>
               </div>
             </div>
             <button
@@ -441,10 +440,9 @@
                   invalidField('tags') || (tags.invalid && tags.errors?.pattern)
               }"
             >
-              <mat-chip-list #chipList aria-label="Palabras clave">
-                <mat-chip
+              <mat-chip-grid #chipList aria-label="Palabras clave">
+                <mat-chip-row
                   *ngFor="let tag of tags.value"
-                  [selectable]="selectable"
                   [removable]="removable"
                   (removed)="remove(tag, 0, 'tags')"
                 >
@@ -452,7 +450,7 @@
                   <button matChipRemove *ngIf="removable">
                     <mat-icon>cancel</mat-icon>
                   </button>
-                </mat-chip>
+                </mat-chip-row>
                 <input
                   placeholder="Nuevo titulo..."
                   [matChipInputFor]="chipList"
@@ -460,7 +458,7 @@
                   [matChipInputAddOnBlur]="addOnBlur"
                   (matChipInputTokenEnd)="add($event, 0, 'tags')"
                 />
-              </mat-chip-list>
+              </mat-chip-grid>
             </div>
             <span
               class="invalid-feedback"

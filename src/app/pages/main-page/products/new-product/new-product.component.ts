@@ -16,7 +16,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import '../../../../shared/spinkit/sk-cube-grid.css';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-new-product',

@@ -7,7 +7,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import '../../../../shared/spinkit/sk-cube-grid.css';
 
 export interface IDialogData {
   id: string;
