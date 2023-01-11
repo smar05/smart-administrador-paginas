@@ -1,3 +1,6 @@
+import { Isales } from './../../../../interface/isales';
+import { IQueryParams } from './../../../../interface/i-query-params';
+import { SalesService } from './../../../../services/sales.service';
 import { environment } from './../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { alerts } from './../../../../helpers/alerts';
@@ -7,6 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { EnumOrderProcessStatus } from 'src/app/interface/iorders';
+import { EnumSalesStatus } from 'src/app/interface/isales';
 
 export interface IDialogData {
   id: string;
@@ -40,7 +44,8 @@ export class EditOrdersComponent implements OnInit {
     private form: FormBuilder,
     public dialogRef: MatDialogRef<EditOrdersComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private salesService: SalesService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +92,22 @@ export class EditOrdersComponent implements OnInit {
 
     if (this.newNextProcess[2]['status'] == EnumOrderProcessStatus.ok) {
       status = EnumOrderStatus.delivered;
+
+      //Se trae la venta relacionada a la orden
+      let params: IQueryParams = {
+        orderBy: '"id_order"',
+        equalTo: `"${this.data.id}"`,
+      };
+      this.salesService.getData(params).subscribe((resp: any[]) => {
+        let idSale: string = Object.keys(resp)[0];
+
+        let body: Isales = {
+          status: EnumSalesStatus.success,
+        };
+
+        //Cambiar el estado de la venta
+        this.salesService.patchData(idSale, body).subscribe((resp2: any) => {});
+      });
     } else {
       status = EnumOrderStatus.pending;
     }
