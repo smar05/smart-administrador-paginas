@@ -14,3 +14,9 @@ export interface Isales {
   url?: string;
   paid_out?: string;
 }
+
+export enum EnumSalesStatus {
+  success = 'success',
+  test = 'test',
+  pending = 'pending',
+}
