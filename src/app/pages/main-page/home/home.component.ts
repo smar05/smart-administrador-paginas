@@ -19,6 +19,20 @@ export class HomeComponent implements OnInit {
     sales: false,
     users: false,
   };
+  //Angular Google charts
+  public chart: any = {
+    title: '',
+    type: 'AreaChart',
+    data: [
+      ['Bogota', 909],
+      ['Medellin', 804],
+      ['Cali', 405],
+    ],
+    columnNames: ['Fecha', 'Total'],
+    options: {
+      colors: ['#e0440e'],
+    },
+  };
 
   constructor(
     private productsService: ProductsService,

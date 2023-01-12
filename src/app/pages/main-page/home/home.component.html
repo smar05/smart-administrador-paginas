@@ -55,6 +55,27 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Reporte de ventas mensual</div>
+          </div>
+          <div class="card-body">
+            <google-chart
+              [title]="chart.title"
+              [type]="chart.type"
+              [data]="chart.data"
+              [columns]="chart.columnNames"
+              [options]="chart.options"
+              style="width: 100%"
+            >
+            </google-chart>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <ng-template #load>
