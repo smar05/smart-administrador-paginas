@@ -3,7 +3,7 @@ import { alerts } from './../../../../helpers/alerts';
 import { Idisputes } from './../../../../interface/idisputes';
 import { DisputesService } from './../../../../services/disputes.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 
 export interface IDialogData {
@@ -39,7 +39,7 @@ export class EditDisputesComponent implements OnInit {
   public formSubmitted: boolean = false; // Valida envio de formulario
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     public dialogRef: MatDialogRef<EditDisputesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
     private disputesService: DisputesService

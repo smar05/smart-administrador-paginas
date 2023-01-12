@@ -10,9 +10,9 @@ import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
 import {
   AbstractControl,
-  FormArray,
-  FormGroup,
-  FormBuilder,
+  UntypedFormArray,
+  UntypedFormGroup,
+  UntypedFormBuilder,
   Validators,
 } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -43,13 +43,13 @@ export class NewProductComponent implements OnInit {
     image: ['', [Validators.required]], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
-    details: new FormArray([
+    details: new UntypedFormArray([
       this.form.group({
         title: ['', [Validators.required]],
         value: ['', [Validators.required]],
       }),
     ]),
-    specifications: new FormArray([
+    specifications: new UntypedFormArray([
       this.form.group({
         type: [''],
         values: [[]],
@@ -59,7 +59,7 @@ export class NewProductComponent implements OnInit {
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
-    top_banner: new FormArray([
+    top_banner: new UntypedFormArray([
       this.form.group({
         H3_tag: ['', [Validators.required, Validators.maxLength(50)]],
         P1_tag: ['', [Validators.required, Validators.maxLength(50)]],
@@ -71,7 +71,7 @@ export class NewProductComponent implements OnInit {
       }),
     ]),
     default_banner: ['', [Validators.required]], //No se guarda en base de datos
-    horizontal_slider: new FormArray([
+    horizontal_slider: new UntypedFormArray([
       this.form.group({
         H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
         H3_1_tag: ['', [Validators.required, Validators.maxLength(50)]],
@@ -266,7 +266,7 @@ export class NewProductComponent implements OnInit {
   ];
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private productsService: ProductsService,
     private categoriesService: CategoriesService,
     private subcategoriesService: SubcategoriesService,
@@ -601,7 +601,7 @@ export class NewProductComponent implements OnInit {
   public add(event: MatChipInputEvent, index: number, type: string): void {
     const value = (event.value || '').trim();
     if (type == 'specifications') {
-      let controlSpec = this.specifications.controls[index] as FormGroup;
+      let controlSpec = this.specifications.controls[index] as UntypedFormGroup;
       // Add our specification
       if ((value || '').trim()) {
         if (controlSpec.controls.values.value.length < 10) {
@@ -621,7 +621,7 @@ export class NewProductComponent implements OnInit {
 
   public remove(value: any, index: number, type: string): void {
     if (type == 'specifications') {
-      let controlSpec = this.specifications.controls[index] as FormGroup;
+      let controlSpec = this.specifications.controls[index] as UntypedFormGroup;
       //const optIndex = controlSpec.controls.values.value.indexOf(value);
 
       if (index >= 0) {

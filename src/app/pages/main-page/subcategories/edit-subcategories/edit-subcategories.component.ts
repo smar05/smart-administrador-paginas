@@ -6,7 +6,7 @@ import { functions } from './../../../../helpers/functions';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import '../../../../shared/spinkit/sk-cube-grid.css';
 
 export interface IDialogData {
@@ -45,7 +45,7 @@ export class EditSubcategoriesComponent implements OnInit {
   public loadData: boolean = false;
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private subcategoriesService: SubcategoriesService,
     private categoriesService: CategoriesService,
     public dialogRef: MatDialogRef<EditSubcategoriesComponent>,

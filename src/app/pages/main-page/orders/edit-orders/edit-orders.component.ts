@@ -8,7 +8,7 @@ import { Iorders, EnumOrderStatus } from './../../../../interface/iorders';
 import { OrdersService } from './../../../../services/orders.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { EnumOrderProcessStatus } from 'src/app/interface/iorders';
 import { EnumSalesStatus } from 'src/app/interface/isales';
 
@@ -41,7 +41,7 @@ export class EditOrdersComponent implements OnInit {
   public formSubmitted: boolean = false; // Valida envio de formulario
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     public dialogRef: MatDialogRef<EditOrdersComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
     private ordersService: OrdersService,
