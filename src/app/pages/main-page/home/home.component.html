@@ -63,6 +63,12 @@
             <div class="card-title">Reporte de ventas mensual</div>
           </div>
           <div class="card-body">
+            <p>
+              <strong
+                >Ventas - {{ startDate | date : "fullDate" }} -
+                {{ endDate | date : "fullDate" }}</strong
+              >
+            </p>
             <google-chart
               [title]="chart.title"
               [type]="chart.type"

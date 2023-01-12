@@ -1,3 +1,5 @@
+import { functions } from 'src/app/helpers/functions';
+import { IQueryParams } from './../../../interface/i-query-params';
 import { UsersService } from './../../../services/users.service';
 import { SalesService } from './../../../services/sales.service';
 import { ProductsService } from './../../../services/products.service';
@@ -33,6 +35,9 @@ export class HomeComponent implements OnInit {
       colors: ['#e0440e'],
     },
   };
+  //Rangos de fechas
+  public startDate: Date = new Date(new Date().getFullYear(), 0, 1); // Se trae todo lo del año actual
+  public endDate: Date = new Date(); // Fecha de hoy
 
   constructor(
     private productsService: ProductsService,
@@ -59,6 +64,18 @@ export class HomeComponent implements OnInit {
     this.salesService.getData().subscribe((resp: any) => {
       this.itemsQuantity.sales = Object.keys(resp).length;
       this.loadItems.sales = false;
+    });
+
+    let params: IQueryParams = {
+      orderBy: '"date"',
+      startAt: `"${functions.formatDate(this.startDate)}"`,
+      endAt: `"${functions.formatDate(this.endDate)}"`,
+    };
+    this.salesService.getData(params).subscribe((resp: any) => {
+      console.log(
+        '🚀 ~ file: home.component.ts:75 ~ HomeComponent ~ this.salesService.getData ~ resp',
+        resp
+      );
     });
   }
 

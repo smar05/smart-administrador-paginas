@@ -115,4 +115,18 @@ export class functions {
       reader.onerror = (error) => reject(error);
     });
   }
+
+  /**
+   *Funcion para dar fortmato a las fechas
+   *
+   * @static
+   * @param {Date} date
+   * @return {*}  {string}
+   * @memberof functions
+   */
+  static formatDate(date: Date): string {
+    return `${date.getFullYear()}-${('0' + date.getMonth() + 1).slice(-2)}-${(
+      '0' + date.getDate()
+    ).slice(-2)}T00:00:00`;
+  }
 }
