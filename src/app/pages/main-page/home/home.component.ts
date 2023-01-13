@@ -1,3 +1,4 @@
+import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
 import { Iorders } from './../../../interface/iorders';
 import { OrdersService } from './../../../services/orders.service';
 import { alerts } from 'src/app/helpers/alerts';
@@ -47,6 +48,10 @@ export class HomeComponent implements OnInit {
   public totalSales: number = 0;
   // Ultimas ordenes
   public latestOrders: any[] = [];
+  // Ultimos productos
+  public latestProducts: Iproducts[] = [];
+  // Imagenes productos
+  public imagenesProductos: Map<string, string> = new Map();
 
   constructor(
     private productsService: ProductsService,
@@ -66,6 +71,28 @@ export class HomeComponent implements OnInit {
     this.loadItems.products = true;
     this.productsService.getData().subscribe((resp: any) => {
       this.itemsQuantity.products = Object.keys(resp).length;
+
+      let products: Iproducts[] = this.productsService.formatProducts(resp);
+
+      products.sort((a: Iproducts, b: Iproducts) => {
+        if (a.date_created > b.date_created) return 1;
+        if (a.date_created < b.date_created) return -1;
+
+        return 0;
+      });
+
+      this.latestProducts = products.slice(
+        this.itemsQuantity.products - 5,
+        this.itemsQuantity.products
+      );
+
+      this.latestProducts.forEach(async (product: Iproducts) => {
+        let urlImagen: string = await this.productsService.getImage(
+          `${product.id}/${EnumProductImg.main}`
+        );
+        if (product.id) this.imagenesProductos.set(product.id, urlImagen);
+      });
+
       this.loadItems.products = false;
     });
   }
