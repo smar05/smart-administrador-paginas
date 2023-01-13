@@ -1,3 +1,4 @@
+import { alerts } from 'src/app/helpers/alerts';
 import { EnumSalesStatus } from './../../../interface/isales';
 import { functions } from 'src/app/helpers/functions';
 import { IQueryParams } from './../../../interface/i-query-params';
@@ -25,15 +26,19 @@ export class HomeComponent implements OnInit {
   //Angular Google charts
   public chart: any = {
     title: '',
-    type: 'AreaChart',
+    type: 'ColumnChart',
     data: [],
     columnNames: ['Fecha', 'Total'],
     options: {
-      colors: ['#e0440e'],
+      colors: ['#379656'],
     },
   };
   //Rangos de fechas
-  public startDate: Date = new Date(new Date().getFullYear(), 0, 1); // Se trae todo lo del año actual
+  public startDate: Date = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  ); // Se trae todo lo del año actual
   public endDate: Date = new Date(); // Fecha de hoy
 
   public totalSales: number = 0;
@@ -59,11 +64,19 @@ export class HomeComponent implements OnInit {
   }
 
   public getSales(): void {
+    this.chart.data = [];
+    if (!(this.startDate && this.endDate && this.startDate < this.endDate)) {
+      if (!(this.startDate < this.endDate)) {
+        alerts.basicAlert(
+          'Fecha invalida',
+          'La fecha inicial debe ser menor a la fecha final',
+          'warning'
+        );
+      }
+      return;
+    }
+
     this.loadItems.sales = true;
-    this.salesService.getData().subscribe((resp: any) => {
-      this.itemsQuantity.sales = Object.keys(resp).length;
-      this.loadItems.sales = false;
-    });
 
     let params: IQueryParams = {
       orderBy: '"date"',
@@ -71,8 +84,10 @@ export class HomeComponent implements OnInit {
       endAt: `"${functions.formatDate(this.endDate)}"`,
     };
     this.salesService.getData(params).subscribe((resp: any) => {
+      this.itemsQuantity.sales = Object.keys(resp).length;
+
       //Separar mes y total
-      let sales: any = [];
+      let sales: any[] = [];
       Object.keys(resp).map((a: any) => {
         if (resp[a].status == EnumSalesStatus.success) {
           sales.push({
@@ -85,17 +100,26 @@ export class HomeComponent implements OnInit {
       // Sacar total en mes repetido
       let result: any[] = this.groupByDateAndSumTotals(sales);
 
+      // Ordenar de menor a mayor las fechas
+      result.sort(function (a, b) {
+        let fechaA: any = new Date(a.date);
+        let fechaB: any = new Date(b.date);
+        return fechaA - fechaB;
+      });
+
       //Agregar el arreglo a la data del grafico
-      Object.keys(result).map((a: any) => {
+      Object.keys(result).map((a: any, i: number) => {
         const data = [result[a].date, result[a].total];
 
-        this.chart.data.push(data);
+        this.chart.data[i] = data;
       });
 
       // Sumar el total de ventas
       this.chart.data.forEach((value: any) => {
         this.totalSales += value[1];
       });
+
+      this.loadItems.sales = false;
     });
   }
 
@@ -133,5 +157,33 @@ export class HomeComponent implements OnInit {
 
     // Devolver el arreglo resultante
     return result;
+  }
+
+  public changeStartDate(e: any): void {
+    let anio: number = e.target.value
+      .split('-')
+      .map((a: string) => Number(a))[0];
+    let mes: number =
+      e.target.value.split('-').map((a: string) => Number(a))[1] - 1;
+    let dia: number = e.target.value
+      .split('-')
+      .map((a: string) => Number(a))[2];
+
+    this.startDate = new Date(anio, mes, dia);
+    this.getSales();
+  }
+
+  public changeEndDate(e: any): void {
+    let anio: number = e.target.value
+      .split('-')
+      .map((a: string) => Number(a))[0];
+    let mes: number =
+      e.target.value.split('-').map((a: string) => Number(a))[1] - 1;
+    let dia: number = e.target.value
+      .split('-')
+      .map((a: string) => Number(a))[2];
+
+    this.endDate = new Date(anio, mes, dia);
+    this.getSales();
   }
 }

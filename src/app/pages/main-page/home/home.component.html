@@ -60,9 +60,28 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <div class="card-title">Reporte de ventas mensual</div>
+            <div class="card-title">Reporte de ventas</div>
+            <hr />
+            <label
+              >Fecha inicial:
+              <input
+                type="date"
+                class="form-control"
+                [ngModel]="startDate | date : 'yyyy-MM-dd'"
+                (change)="changeStartDate($event)"
+              />
+            </label>
+            <label class="ml-2"
+              >Fecha final:
+              <input
+                type="date"
+                class="form-control"
+                [ngModel]="endDate | date : 'yyyy-MM-dd'"
+                (change)="changeEndDate($event)"
+              />
+            </label>
           </div>
-          <div class="card-body">
+          <div class="card-body text-center">
             <p>
               <strong
                 >Ventas - {{ startDate | date : "fullDate" }} -
@@ -77,8 +96,17 @@
               [columns]="chart.columnNames"
               [options]="chart.options"
               style="width: 100%"
+              *ngIf="!this.loadItems.sales && chart.data.length > 0"
             >
             </google-chart>
+
+            <i
+              class="fas fa-2x fa-sync-alt fa-spin my-5"
+              *ngIf="this.loadItems.sales"
+            ></i>
+            <p class="text-center" *ngIf="chart.data.length == 0">
+              No hay información
+            </p>
           </div>
         </div>
       </div>

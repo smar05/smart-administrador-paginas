@@ -120,13 +120,19 @@ export class functions {
    *Funcion para dar fortmato a las fechas
    *
    * @static
-   * @param {Date} date
+   * @param {Date} fecha
    * @return {*}  {string}
    * @memberof functions
    */
-  static formatDate(date: Date): string {
-    return `${date.getFullYear()}-${('0' + date.getMonth() + 1).slice(-2)}-${(
-      '0' + date.getDate()
-    ).slice(-2)}T00:00:00`;
+  static formatDate(fecha: Date): string {
+    // Extrae el año, mes y día de la fecha
+    let dia = fecha.getDate().toString().padStart(2, '0');
+    let mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    let anio = fecha.getFullYear().toString();
+
+    // Concatena los valores para formar la fecha en el formato 'yyyy-mm-dd'
+    let fechaFormateada = anio + '-' + mes + '-' + dia + 'T00:00:00';
+
+    return fechaFormateada;
   }
 }
