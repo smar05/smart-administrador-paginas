@@ -1,3 +1,4 @@
+import { EnumSalesStatus } from './../../../interface/isales';
 import { functions } from 'src/app/helpers/functions';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { UsersService } from './../../../services/users.service';
@@ -25,11 +26,7 @@ export class HomeComponent implements OnInit {
   public chart: any = {
     title: '',
     type: 'AreaChart',
-    data: [
-      ['Bogota', 909],
-      ['Medellin', 804],
-      ['Cali', 405],
-    ],
+    data: [],
     columnNames: ['Fecha', 'Total'],
     options: {
       colors: ['#e0440e'],
@@ -38,6 +35,8 @@ export class HomeComponent implements OnInit {
   //Rangos de fechas
   public startDate: Date = new Date(new Date().getFullYear(), 0, 1); // Se trae todo lo del año actual
   public endDate: Date = new Date(); // Fecha de hoy
+
+  public totalSales: number = 0;
 
   constructor(
     private productsService: ProductsService,
@@ -72,10 +71,31 @@ export class HomeComponent implements OnInit {
       endAt: `"${functions.formatDate(this.endDate)}"`,
     };
     this.salesService.getData(params).subscribe((resp: any) => {
-      console.log(
-        '🚀 ~ file: home.component.ts:75 ~ HomeComponent ~ this.salesService.getData ~ resp',
-        resp
-      );
+      //Separar mes y total
+      let sales: any = [];
+      Object.keys(resp).map((a: any) => {
+        if (resp[a].status == EnumSalesStatus.success) {
+          sales.push({
+            date: resp[a].date.substring(0, 7),
+            total: Number(resp[a].total),
+          });
+        }
+      });
+
+      // Sacar total en mes repetido
+      let result: any[] = this.groupByDateAndSumTotals(sales);
+
+      //Agregar el arreglo a la data del grafico
+      Object.keys(result).map((a: any) => {
+        const data = [result[a].date, result[a].total];
+
+        this.chart.data.push(data);
+      });
+
+      // Sumar el total de ventas
+      this.chart.data.forEach((value: any) => {
+        this.totalSales += value[1];
+      });
     });
   }
 
@@ -85,5 +105,33 @@ export class HomeComponent implements OnInit {
       this.itemsQuantity.users = Object.keys(resp).length;
       this.loadItems.users = false;
     });
+  }
+
+  /**
+   * Agrupar por fecha y sumar totales
+   *
+   * @param {any[]} arr
+   * @return {*}  {any[]}
+   * @memberof HomeComponent
+   */
+  public groupByDateAndSumTotals(arr: any[]): any[] {
+    // Crear un objeto vacío para almacenar los datos agrupados
+    let groupedData: any = {};
+
+    // Iterar sobre cada objeto en el arreglo
+    for (let obj of arr) {
+      // Si la fecha no existe en el objeto agrupado, crear una nueva entrada con el total inicializado en 0
+      if (!groupedData[obj.date]) {
+        groupedData[obj.date] = { date: obj.date, total: 0 };
+      }
+      // Sumar el total del objeto actual al total para la fecha correspondiente en el objeto agrupado
+      groupedData[obj.date].total += obj.total;
+    }
+
+    // Convertir el objeto agrupado en un arreglo
+    let result = Object.values(groupedData);
+
+    // Devolver el arreglo resultante
+    return result;
   }
 }

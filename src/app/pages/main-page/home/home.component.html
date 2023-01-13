@@ -66,7 +66,8 @@
             <p>
               <strong
                 >Ventas - {{ startDate | date : "fullDate" }} -
-                {{ endDate | date : "fullDate" }}</strong
+                {{ endDate | date : "fullDate" }} | Total:
+                {{ totalSales | currency }}</strong
               >
             </p>
             <google-chart
