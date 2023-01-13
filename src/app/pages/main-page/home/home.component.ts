@@ -1,3 +1,5 @@
+import { Iorders } from './../../../interface/iorders';
+import { OrdersService } from './../../../services/orders.service';
 import { alerts } from 'src/app/helpers/alerts';
 import { EnumSalesStatus } from './../../../interface/isales';
 import { functions } from 'src/app/helpers/functions';
@@ -22,6 +24,7 @@ export class HomeComponent implements OnInit {
     products: false,
     sales: false,
     users: false,
+    loadOrders: false,
   };
   //Angular Google charts
   public chart: any = {
@@ -42,17 +45,21 @@ export class HomeComponent implements OnInit {
   public endDate: Date = new Date(); // Fecha de hoy
 
   public totalSales: number = 0;
+  // Ultimas ordenes
+  public latestOrders: any[] = [];
 
   constructor(
     private productsService: ProductsService,
     private salesService: SalesService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private ordersService: OrdersService
   ) {}
 
   ngOnInit(): void {
     this.getProducts();
     this.getSales();
     this.getUsers();
+    this.lastOrders();
   }
 
   public getProducts(): void {
@@ -65,6 +72,7 @@ export class HomeComponent implements OnInit {
 
   public getSales(): void {
     this.chart.data = [];
+    this.totalSales = 0;
     if (!(this.startDate && this.endDate && this.startDate < this.endDate)) {
       if (!(this.startDate < this.endDate)) {
         alerts.basicAlert(
@@ -185,5 +193,33 @@ export class HomeComponent implements OnInit {
 
     this.endDate = new Date(anio, mes, dia);
     this.getSales();
+  }
+
+  public lastOrders(): void {
+    this.loadItems.loadOrders = true;
+    // Se traen las ultimas 5 ventas
+    let params: IQueryParams = {
+      orderBy: '"date"',
+      limitToLast: 5,
+    };
+    this.salesService.getData(params).subscribe((resp: any) => {
+      Object.keys(resp).map((a: any, i: number) => {
+        this.latestOrders[i] = {};
+
+        // Se tran las ultimas 5 ordenes
+        this.ordersService
+          .getItem(resp[a].id_order)
+          .subscribe((resp2: Iorders) => {
+            this.latestOrders[i] = {
+              id: a,
+              product: resp2.product,
+              status: resp2.status,
+              date: resp[a].date,
+            };
+
+            this.loadItems.loadOrders = false;
+          });
+      });
+    });
   }
 }

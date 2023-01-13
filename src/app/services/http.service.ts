@@ -19,6 +19,7 @@ export class HttpService {
    * @memberof ApiService
    */
   public get(endPoint: string, params: any = {}): Observable<any> {
+    params.print = 'pretty';
     return this.http.get(`${this.urlApi}${endPoint}`, { params });
   }
 
