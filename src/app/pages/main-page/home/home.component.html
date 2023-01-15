@@ -2,47 +2,233 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Home</h1>
+      <!--Inventarios-->
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-info elevation-1">
+              <i class="fas fa-shopping-cart"> </i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">Productos</span>
+              <span class="info-box-number">
+                <ng-container *ngIf="!loadItems.products; else load">
+                  {{ itemsQuantity.products }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-success elevation-1">
+              <i class="fas fa-shipping-fast"> </i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">Ventas</span>
+              <span class="info-box-number">
+                <ng-container *ngIf="!loadItems.sales; else load">
+                  {{ itemsQuantity.sales }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="clearfix hidden-md-up"></div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-warning elevation-1">
+              <i class="fas fa-users"> </i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">Clientes</span>
+              <span class="info-box-number">
+                <ng-container *ngIf="!loadItems.users; else load">
+                  {{ itemsQuantity.users }}
+                </ng-container>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- /.container-fluid -->
-  </section>
 
-  <!-- Main content -->
-  <section class="content">
-    <!-- Default box -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Title</h3>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Reporte de ventas</div>
+            <hr />
+            <label
+              >Fecha inicial:
+              <input
+                type="date"
+                class="form-control"
+                [ngModel]="startDate | date : 'yyyy-MM-dd'"
+                (change)="changeStartDate($event)"
+              />
+            </label>
+            <label class="ml-2"
+              >Fecha final:
+              <input
+                type="date"
+                class="form-control"
+                [ngModel]="endDate | date : 'yyyy-MM-dd'"
+                (change)="changeEndDate($event)"
+              />
+            </label>
+          </div>
+          <div class="card-body text-center">
+            <p>
+              <strong
+                >Ventas - {{ startDate | date : "fullDate" }} -
+                {{ endDate | date : "fullDate" }} | Total:
+                {{ totalSales | currency }}</strong
+              >
+            </p>
+            <google-chart
+              [title]="chart.title"
+              [type]="chart.type"
+              [data]="chart.data"
+              [columns]="chart.columnNames"
+              [options]="chart.options"
+              style="width: 100%"
+              *ngIf="!this.loadItems.sales && chart.data.length > 0"
+            >
+            </google-chart>
 
-        <div class="card-tools">
-          <button
-            type="button"
-            class="btn btn-tool"
-            data-card-widget="collapse"
-            title="Collapse"
-          >
-            <i class="fas fa-minus"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-tool"
-            data-card-widget="remove"
-            title="Remove"
-          >
-            <i class="fas fa-times"></i>
-          </button>
+            <i
+              class="fas fa-2x fa-sync-alt fa-spin my-5"
+              *ngIf="this.loadItems.sales"
+            ></i>
+            <p class="text-center" *ngIf="chart.data.length == 0">
+              No hay información
+            </p>
+          </div>
         </div>
       </div>
-      <div class="card-body">Start creating your amazing application!</div>
-      <!-- /.card-body -->
-      <div class="card-footer">Footer</div>
-      <!-- /.card-footer-->
     </div>
-    <!-- /.card -->
+
+    <!--Reportes-->
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header border-transparent">
+            <h3 class="card-title">Ultimas ordenes</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table m-0">
+                <thead>
+                  <tr>
+                    <th>Id de la orden</th>
+                    <th>Item</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+
+                <tbody *ngIf="!loadItems.loadOrders; else loading">
+                  <tr *ngFor="let order of latestOrders.reverse()">
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.product }}</td>
+                    <td>
+                      <span
+                        [ngClass]="{
+                          'badge-success': order.status === 'delivered',
+                          'badge-warning': order.status === 'pending'
+                        }"
+                        class="badge"
+                      >
+                        {{ order.status }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="sparkbar">
+                        {{ order.date | date }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card-footer clearfix">
+            <a
+              [routerLink]="['/orders']"
+              class="btn btn-sm btn-secondary float-right"
+              >Ver todas las ordenes</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Productos añadidos recientemente</h3>
+          </div>
+          <div class="card-body p-0">
+            <ul
+              *ngIf="loadItems.products"
+              class="products-list product-list-in-card pl-2 pr-2"
+            >
+              <li class="item">
+                <div class="text-center py-5">
+                  <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                </div>
+              </li>
+            </ul>
+
+            <ul
+              *ngIf="!loadItems.products"
+              class="products-list product-list-in-card pl-2 pr-2"
+            >
+              <li class="item" *ngFor="let product of latestProducts.reverse()">
+                <div class="product-img">
+                  <img
+                    src="{{
+                      imagenesProductos.get(product.id || '') ||
+                        '../../../../assets/img/undraw_product_teardown_elol.svg'
+                    }}"
+                    alt=""
+                    width="100%"
+                    class="img-size-50"
+                  />
+                </div>
+                <div class="product-info">
+                  <p [routerLink]="['/products/edit-product/' + product.id]">
+                    {{ product.name }}
+                  </p>
+                  <span class="float-rigth pr-2">{{
+                    product.price | currency
+                  }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-footer clearfix">
+            <a
+              [routerLink]="['/products']"
+              class="btn btn-sm btn-secondary float-right"
+              >Ver todas los productos</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
-  <!-- /.content -->
+
+  <ng-template #load>
+    <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+  </ng-template>
+
+  <ng-template #loading>
+    <app-spinners [type]="'sk-cube'"></app-spinners>
+  </ng-template>
 </div>

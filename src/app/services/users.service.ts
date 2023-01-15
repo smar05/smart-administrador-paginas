@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Iusers } from './../interface/iusers';
 import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
@@ -8,7 +9,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class UsersService {
-  private urlUsers: string = 'users';
+  private urlUsers: string = environment.collections.users;
 
   constructor(private httpService: HttpService) {}
 

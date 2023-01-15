@@ -37,3 +37,8 @@ export enum EnumProductImg {
   vertical_slider = 'vertical_slider',
   gallery = 'gallery',
 }
+
+export enum EnumProductReviewType {
+  approved = 'approved',
+  review = 'review',
+}

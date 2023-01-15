@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ProductsService {
-  private urlProducts: string = 'products';
+  private urlProducts: string = environment.collections.products;
   private urlImage: string = `${environment.urlStorage.img}/products`;
 
   constructor(
@@ -173,5 +173,55 @@ export class ProductsService {
     }
 
     return complete;
+  }
+
+  /**
+   * Dar formato a la respusta de productos
+   *
+   * @param {*} array
+   * @return {*}  {Iproducts[]}
+   * @memberof ProductsService
+   */
+  public formatProducts(array: any): Iproducts[] {
+    let position: number = Object.keys(array).length;
+    let products: Iproducts[] = Object.keys(array).map(
+      (a) =>
+        ({
+          id: a,
+          position: position--,
+          category: array[a].category,
+          date_created: array[a].date_created,
+          default_banner: array[a].default_banner,
+          delivery_time: array[a].delivery_time,
+          description: array[a].description,
+          details: JSON.parse(array[a].details),
+          feedback: JSON.parse(array[a].feedback),
+          horizontal_slider: JSON.parse(array[a].horizontal_slider),
+          name: array[a].name,
+          offer: array[a].offer,
+          price: array[a].price,
+          reviews: JSON.parse(array[a].reviews),
+          sales: array[a].sales,
+          shipping: array[a].shipping,
+          specification: array[a].specification
+            ? JSON.parse(array[a].specification)
+            : [],
+          stock: array[a].stock,
+          store: array[a].store,
+          sub_category: array[a].sub_category,
+          summary: JSON.parse(array[a].summary),
+          tags: array[a].tags,
+          title_list: array[a].title_list,
+          top_banner: JSON.parse(array[a].top_banner),
+          url: array[a].url,
+          vertical_slider: array[a].vertical_slider,
+          video: JSON.parse(array[a].video),
+          views: array[a].views,
+          gallery: array[a].gallery,
+          delete: array[a].delete,
+        } as Iproducts)
+    );
+
+    return products;
   }
 }

@@ -3,7 +3,11 @@ import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
+import {
+  Iproducts,
+  EnumProductImg,
+  EnumProductReviewType,
+} from './../../../interface/iproducts';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -83,43 +87,7 @@ export class ProductsComponent implements OnInit {
     this.productsService.getData(params).subscribe((resp: any): any => {
       //Integrar la respuesta del servidor con la interfaz
       let position = Object.keys(resp).length;
-      this.products = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position--,
-            category: resp[a].category,
-            date_created: resp[a].date_created,
-            default_banner: resp[a].default_banner,
-            delivery_time: resp[a].delivery_time,
-            description: resp[a].description,
-            details: JSON.parse(resp[a].details),
-            feedback: JSON.parse(resp[a].feedback),
-            horizontal_slider: JSON.parse(resp[a].horizontal_slider),
-            name: resp[a].name,
-            offer: resp[a].offer,
-            price: resp[a].price,
-            reviews: JSON.parse(resp[a].reviews),
-            sales: resp[a].sales,
-            shipping: resp[a].shipping,
-            specification: resp[a].specification
-              ? JSON.parse(resp[a].specification)
-              : [],
-            stock: resp[a].stock,
-            store: resp[a].store,
-            sub_category: resp[a].sub_category,
-            summary: JSON.parse(resp[a].summary),
-            tags: resp[a].tags,
-            title_list: resp[a].title_list,
-            top_banner: JSON.parse(resp[a].top_banner),
-            url: resp[a].url,
-            vertical_slider: resp[a].vertical_slider,
-            video: JSON.parse(resp[a].video),
-            views: resp[a].views,
-            gallery: resp[a].gallery,
-            delete: resp[a].delete,
-          } as Iproducts)
-      );
+      this.products = this.productsService.formatProducts(resp);
 
       //Imagenes de los productos
       this.products.forEach(async (product: Iproducts) => {
@@ -229,7 +197,7 @@ export class ProductsComponent implements OnInit {
   //Cambia el estado del producto
   public cambiarEstado(producto: any, estado: string): void {
     let feedback = producto.feedback;
-    if (estado === 'approved') {
+    if (estado === EnumProductReviewType.approved) {
       //Desactivar el estado
       alerts
         .confirmAlert(
@@ -240,7 +208,7 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = 'review';
+            feedback.type = EnumProductReviewType.review;
             let data = {
               feedback: JSON.stringify(feedback),
             };
@@ -263,7 +231,7 @@ export class ProductsComponent implements OnInit {
             );
           }
         });
-    } else if (estado === 'review') {
+    } else if (estado === EnumProductReviewType.review) {
       //Activar el estado
       alerts
         .confirmAlert(
@@ -274,7 +242,7 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = 'approved';
+            feedback.type = EnumProductReviewType.approved;
             let data = {
               feedback: JSON.stringify(feedback),
             };

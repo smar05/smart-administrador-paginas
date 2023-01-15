@@ -5,7 +5,7 @@ import { functions } from 'src/app/helpers/functions';
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
-import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -54,7 +54,7 @@ export class NewSubcategoriesComponent implements OnInit {
   public loadData: boolean = false;
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private subcategoriesService: SubcategoriesService,
     private categoriesService: CategoriesService,
     public dialogRef: MatDialogRef<NewSubcategoriesComponent>

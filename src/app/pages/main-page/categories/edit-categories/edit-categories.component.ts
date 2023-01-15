@@ -3,7 +3,7 @@ import { alerts } from './../../../../helpers/alerts';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import '../../../../shared/spinkit/sk-cube-grid.css';
@@ -43,7 +43,7 @@ export class EditCategoriesComponent implements OnInit {
   public view: number = 0;
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private categoriesService: CategoriesService,
     public dialogRef: MatDialogRef<EditCategoriesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData
