@@ -1,9 +1,12 @@
 import { functions } from './../../../../helpers/functions';
 import { alerts } from './../../../../helpers/alerts';
-import { Imessages } from './../../../../interface/imessages';
+import {
+  Imessages,
+  EnumMessagesStatus,
+} from './../../../../interface/imessages';
 import { MessageService } from './../../../../services/message.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 
 export interface IDialogData {
@@ -38,7 +41,7 @@ export class EditMessagesComponent implements OnInit {
   public formSubmitted: boolean = false; // Valida envio de formulario
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     public dialogRef: MatDialogRef<EditMessagesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IDialogData,
     private messageService: MessageService
@@ -65,6 +68,7 @@ export class EditMessagesComponent implements OnInit {
     let dataMessage: Imessages = {
       answer: this.f.controls.answer.value,
       date_answer: new Date(),
+      status: EnumMessagesStatus.answered,
     };
 
     // Guardar en bd

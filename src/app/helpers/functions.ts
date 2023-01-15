@@ -1,5 +1,5 @@
 import { alerts } from './alerts';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 export class functions {
   /**
@@ -14,7 +14,7 @@ export class functions {
    */
   static invalidField(
     field: string,
-    f: FormGroup,
+    f: UntypedFormGroup,
     formSubmitted: boolean
   ): boolean {
     return formSubmitted && f.controls[field].invalid;
@@ -114,5 +114,25 @@ export class functions {
         resolve(reader.result != null ? reader.result.toString() : '');
       reader.onerror = (error) => reject(error);
     });
+  }
+
+  /**
+   *Funcion para dar fortmato a las fechas
+   *
+   * @static
+   * @param {Date} fecha
+   * @return {*}  {string}
+   * @memberof functions
+   */
+  static formatDate(fecha: Date): string {
+    // Extrae el año, mes y día de la fecha
+    let dia = fecha.getDate().toString().padStart(2, '0');
+    let mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    let anio = fecha.getFullYear().toString();
+
+    // Concatena los valores para formar la fecha en el formato 'yyyy-mm-dd'
+    let fechaFormateada = anio + '-' + mes + '-' + dia + 'T00:00:00';
+
+    return fechaFormateada;
   }
 }

@@ -1,3 +1,4 @@
+import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DisputesService } from './../../../services/disputes.service';
 import { MatSort } from '@angular/material/sort';
@@ -15,6 +16,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EditDisputesComponent } from './edit-disputes/edit-disputes.component';
 
 @Component({
+  providers: [NavbarComponent],
   selector: 'app-disputes',
   templateUrl: './disputes.component.html',
   styleUrls: ['./disputes.component.css'],
@@ -46,7 +48,7 @@ export class DisputesComponent implements OnInit {
     'actions',
   ]; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<Idisputes>; //Instancia la data que aparecera en la tabla
-  public orders: Idisputes[] = [];
+  public disputes: Idisputes[] = [];
   public expandedElement!: Idisputes | null;
   public loadData: boolean = false;
 
@@ -58,7 +60,8 @@ export class DisputesComponent implements OnInit {
 
   constructor(
     private disputesService: DisputesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbarComponent: NavbarComponent
   ) {}
 
   ngOnInit(): void {
@@ -72,22 +75,9 @@ export class DisputesComponent implements OnInit {
       // Se ajusta la respuesta de la bd a la interfaz
       let position: number = 1;
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            answer: resp[a].answer,
-            date_answer: resp[a].date_answer,
-            date_dispute: resp[a].date_dispute,
-            message: resp[a].message,
-            order: resp[a].order,
-            receiver: resp[a].receiver,
-            transmitter: resp[a].transmitter,
-          } as Idisputes)
-      );
+      this.disputes = this.disputesService.formatDisputes(resp);
 
-      this.dataSource = new MatTableDataSource(this.orders);
+      this.dataSource = new MatTableDataSource(this.disputes);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
@@ -114,7 +104,11 @@ export class DisputesComponent implements OnInit {
 
     //Actualizar el listado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.getData();
+      if (result) {
+        this.getData();
+        //Se actualiza el icono del navbar
+        this.navbarComponent.getDisputes();
+      }
     });
   }
 }

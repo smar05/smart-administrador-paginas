@@ -1,3 +1,4 @@
+import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { EditMessagesComponent } from './edit-messages/edit-messages.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from './../../../services/message.service';
@@ -15,6 +16,7 @@ import {
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
+  providers: [NavbarComponent],
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.css'],
@@ -45,7 +47,7 @@ export class MessagesComponent implements OnInit {
     'actions',
   ]; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<Imessages>; //Instancia la data que aparecera en la tabla
-  public orders: Imessages[] = [];
+  public messages: Imessages[] = [];
   public expandedElement!: Imessages | null;
   public loadData: boolean = false;
 
@@ -57,7 +59,8 @@ export class MessagesComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbarComponent: NavbarComponent
   ) {}
 
   ngOnInit(): void {
@@ -69,24 +72,9 @@ export class MessagesComponent implements OnInit {
 
     this.messageService.getData().subscribe((resp: any) => {
       // Se ajusta la respuesta de la bd a la interfaz
-      let position: number = 1;
+      this.messages = this.messageService.formatMessages(resp);
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            answer: resp[a].answer,
-            date_answer: resp[a].date_answer,
-            date_message: resp[a].date_message,
-            message: resp[a].message,
-            url_product: resp[a].url_product,
-            receiver: resp[a].receiver,
-            transmitter: resp[a].transmitter,
-          } as Imessages)
-      );
-
-      this.dataSource = new MatTableDataSource(this.orders);
+      this.dataSource = new MatTableDataSource(this.messages);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
@@ -113,7 +101,10 @@ export class MessagesComponent implements OnInit {
 
     //Actualizar el listado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.getData();
+      if (result) {
+        this.getData();
+        this.navbarComponent.getMessages();
+      }
     });
   }
 }

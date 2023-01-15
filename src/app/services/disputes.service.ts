@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { Idisputes } from './../interface/idisputes';
 import { environment } from 'src/environments/environment';
 import { IQueryParams } from './../interface/i-query-params';
@@ -10,6 +11,7 @@ import { Injectable } from '@angular/core';
 })
 export class DisputesService {
   private urlDisputes: string = environment.collections.disputes;
+  public disputes: number = 0; // Variable para la cantidad de disputas en el navbar
 
   constructor(private httpService: HttpService) {}
 
@@ -21,7 +23,20 @@ export class DisputesService {
    * @memberof DisputesService
    */
   public getData(queryParams: IQueryParams = {}): Observable<any> {
-    return this.httpService.get(`${this.urlDisputes}.json`, queryParams);
+    return this.httpService.get(`${this.urlDisputes}.json`, queryParams).pipe(
+      map((resp: any) => {
+        // Contamos solo las que no tienen respuesta para el icono en el navbar
+        this.disputes = Object.keys(resp)
+          .map((a: any) => {
+            return { answer: resp[a].answer };
+          })
+          .filter(
+            (a: Idisputes) => a.answer == undefined || a.answer == null
+          ).length;
+
+        return resp;
+      })
+    );
   }
 
   /**
@@ -68,5 +83,36 @@ export class DisputesService {
    */
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlDisputes}/${id}.json`);
+  }
+
+  // Metodos propios
+
+  /**
+   * Dar formato a la respuesta de la bd
+   *
+   * @param {*} resp
+   * @return {*}  {Idisputes[]}
+   * @memberof DisputesService
+   */
+  public formatDisputes(resp: any): Idisputes[] {
+    let position: number = 1;
+
+    let disputes: Idisputes[] = Object.keys(resp).map(
+      (a) =>
+        ({
+          id: a,
+          position: position++,
+          answer: resp[a].answer,
+          date_answer: resp[a].date_answer,
+          date_dispute: resp[a].date_dispute,
+          message: resp[a].message,
+          order: resp[a].order,
+          receiver: resp[a].receiver,
+          transmitter: resp[a].transmitter,
+          status: resp[a].status,
+        } as Idisputes)
+    );
+
+    return disputes;
   }
 }

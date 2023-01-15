@@ -1,6 +1,6 @@
 import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { functions } from '../../helpers/functions';
 import { Ilogin } from '../../interface/ilogin';
 import { alerts } from '../../helpers/alerts';
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   formSubmitted: boolean = false; //Valida el formulario
 
   constructor(
-    private form: FormBuilder,
+    private form: UntypedFormBuilder,
     private loginService: LoginService,
     private router: Router
   ) {}
