@@ -12,15 +12,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  // Mensajes sin responder
-  public messages: number = 0;
-  // Disputas sin responder
-  public disputes: number = 0;
-
   constructor(
     private router: Router,
-    private messageService: MessageService,
-    private disputesService: DisputesService
+    public messageService: MessageService,
+    public disputesService: DisputesService
   ) {}
 
   ngOnInit(): void {
@@ -39,16 +34,7 @@ export class NavbarComponent implements OnInit {
       orderBy: '"status"',
       equalTo: `"${EnumMessagesStatus.not_answered}"`,
     };
-    this.messageService.getData(params).subscribe((resp: any) => {
-      // Contamos solo las que no tienen respuesta
-      this.messages = Object.keys(resp)
-        .map((a: any) => {
-          return { answer: resp[a].answer };
-        })
-        .filter(
-          (a: Imessages) => a.answer == undefined || a.answer == null
-        ).length;
-    });
+    this.messageService.getData(params).subscribe((resp: any) => {});
   }
 
   public getDisputes(): void {
@@ -57,15 +43,7 @@ export class NavbarComponent implements OnInit {
       equalTo: `"${EnumDisputesStatus.not_answered}"`,
     };
 
-    this.disputesService.getData(params).subscribe((resp: any) => {
-      // Contamos solo las que no tienen respuesta
-      this.disputes = Object.keys(resp)
-        .map((a: any) => {
-          return { answer: resp[a].answer };
-        })
-        .filter(
-          (a: Idisputes) => a.answer == undefined || a.answer == null
-        ).length;
-    });
+    // EL conteo de disputas se hace desde el servicio
+    this.disputesService.getData(params).subscribe((resp: any) => {});
   }
 }

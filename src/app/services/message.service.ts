@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { Imessages } from './../interface/imessages';
 import { environment } from 'src/environments/environment';
 import { IQueryParams } from './../interface/i-query-params';
@@ -10,6 +11,7 @@ import { Injectable } from '@angular/core';
 })
 export class MessageService {
   private urlMessage: string = environment.collections.messages;
+  public messages: number = 0;
 
   constructor(private httpService: HttpService) {}
 
@@ -21,7 +23,20 @@ export class MessageService {
    * @memberof MessageService
    */
   public getData(queryParams: IQueryParams = {}): Observable<any> {
-    return this.httpService.get(`${this.urlMessage}.json`, queryParams);
+    return this.httpService.get(`${this.urlMessage}.json`, queryParams).pipe(
+      map((resp: any) => {
+        // Contamos solo las que no tienen respuesta
+        this.messages = Object.keys(resp)
+          .map((a: any) => {
+            return { answer: resp[a].answer };
+          })
+          .filter(
+            (a: Imessages) => a.answer == undefined || a.answer == null
+          ).length;
+
+        return resp;
+      })
+    );
   }
 
   /**

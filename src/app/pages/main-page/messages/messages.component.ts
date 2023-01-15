@@ -1,3 +1,4 @@
+import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { EditMessagesComponent } from './edit-messages/edit-messages.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageService } from './../../../services/message.service';
@@ -15,6 +16,7 @@ import {
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
+  providers: [NavbarComponent],
   selector: 'app-messages',
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.css'],
@@ -57,7 +59,8 @@ export class MessagesComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbarComponent: NavbarComponent
   ) {}
 
   ngOnInit(): void {
@@ -98,7 +101,10 @@ export class MessagesComponent implements OnInit {
 
     //Actualizar el listado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.getData();
+      if (result) {
+        this.getData();
+        this.navbarComponent.getMessages();
+      }
     });
   }
 }

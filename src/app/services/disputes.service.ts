@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { Idisputes } from './../interface/idisputes';
 import { environment } from 'src/environments/environment';
 import { IQueryParams } from './../interface/i-query-params';
@@ -10,6 +11,7 @@ import { Injectable } from '@angular/core';
 })
 export class DisputesService {
   private urlDisputes: string = environment.collections.disputes;
+  public disputes: number = 0; // Variable para la cantidad de disputas en el navbar
 
   constructor(private httpService: HttpService) {}
 
@@ -21,7 +23,20 @@ export class DisputesService {
    * @memberof DisputesService
    */
   public getData(queryParams: IQueryParams = {}): Observable<any> {
-    return this.httpService.get(`${this.urlDisputes}.json`, queryParams);
+    return this.httpService.get(`${this.urlDisputes}.json`, queryParams).pipe(
+      map((resp: any) => {
+        // Contamos solo las que no tienen respuesta para el icono en el navbar
+        this.disputes = Object.keys(resp)
+          .map((a: any) => {
+            return { answer: resp[a].answer };
+          })
+          .filter(
+            (a: Idisputes) => a.answer == undefined || a.answer == null
+          ).length;
+
+        return resp;
+      })
+    );
   }
 
   /**

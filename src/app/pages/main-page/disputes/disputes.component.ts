@@ -1,3 +1,4 @@
+import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DisputesService } from './../../../services/disputes.service';
 import { MatSort } from '@angular/material/sort';
@@ -15,6 +16,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EditDisputesComponent } from './edit-disputes/edit-disputes.component';
 
 @Component({
+  providers: [NavbarComponent],
   selector: 'app-disputes',
   templateUrl: './disputes.component.html',
   styleUrls: ['./disputes.component.css'],
@@ -58,7 +60,8 @@ export class DisputesComponent implements OnInit {
 
   constructor(
     private disputesService: DisputesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private navbarComponent: NavbarComponent
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +104,11 @@ export class DisputesComponent implements OnInit {
 
     //Actualizar el listado de la tabla
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.getData();
+      if (result) {
+        this.getData();
+        //Se actualiza el icono del navbar
+        this.navbarComponent.getDisputes();
+      }
     });
   }
 }
