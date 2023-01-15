@@ -1,6 +1,9 @@
 import { functions } from './../../../../helpers/functions';
 import { alerts } from './../../../../helpers/alerts';
-import { Idisputes } from './../../../../interface/idisputes';
+import {
+  EnumDisputesStatus,
+  Idisputes,
+} from './../../../../interface/idisputes';
 import { DisputesService } from './../../../../services/disputes.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, UntypedFormBuilder } from '@angular/forms';
@@ -67,6 +70,7 @@ export class EditDisputesComponent implements OnInit {
     let dataDispute: Idisputes = {
       answer: this.f.controls.answer.value,
       date_answer: new Date(),
+      status: EnumDisputesStatus.answered,
     };
 
     // Guardar en bd

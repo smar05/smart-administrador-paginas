@@ -57,13 +57,13 @@
               </th>
               <td mat-cell *matCellDef="let element">
                 <span
-                  *ngIf="element.answer == undefined"
+                  *ngIf="element.status == 'not_answered'"
                   class="badge badge-danger p-3"
                 >
                   {{ element.url_product | substr }}
                 </span>
                 <span
-                  *ngIf="element.answer != 'undefined'"
+                  *ngIf="element.status == 'answered'"
                   class="badge badge-success p-3"
                 >
                   {{ element.url_product | substr }}

@@ -46,7 +46,7 @@ export class DisputesComponent implements OnInit {
     'actions',
   ]; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<Idisputes>; //Instancia la data que aparecera en la tabla
-  public orders: Idisputes[] = [];
+  public disputes: Idisputes[] = [];
   public expandedElement!: Idisputes | null;
   public loadData: boolean = false;
 
@@ -72,22 +72,9 @@ export class DisputesComponent implements OnInit {
       // Se ajusta la respuesta de la bd a la interfaz
       let position: number = 1;
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            answer: resp[a].answer,
-            date_answer: resp[a].date_answer,
-            date_dispute: resp[a].date_dispute,
-            message: resp[a].message,
-            order: resp[a].order,
-            receiver: resp[a].receiver,
-            transmitter: resp[a].transmitter,
-          } as Idisputes)
-      );
+      this.disputes = this.disputesService.formatDisputes(resp);
 
-      this.dataSource = new MatTableDataSource(this.orders);
+      this.dataSource = new MatTableDataSource(this.disputes);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 

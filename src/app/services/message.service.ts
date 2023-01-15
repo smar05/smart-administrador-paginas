@@ -69,4 +69,35 @@ export class MessageService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlMessage}/${id}.json`);
   }
+
+  // Metodos propios
+
+  /**
+   * Se da formato a la respuesta de la bd
+   *
+   * @param {*} resp
+   * @return {*}  {Imessages[]}
+   * @memberof MessageService
+   */
+  public formatMessages(resp: any): Imessages[] {
+    let position: number = 1;
+
+    let messages: Imessages[] = Object.keys(resp).map(
+      (a) =>
+        ({
+          id: a,
+          position: position++,
+          answer: resp[a].answer,
+          date_answer: resp[a].date_answer,
+          date_message: resp[a].date_message,
+          message: resp[a].message,
+          url_product: resp[a].url_product,
+          receiver: resp[a].receiver,
+          transmitter: resp[a].transmitter,
+          status: resp[a].status,
+        } as Imessages)
+    );
+
+    return messages;
+  }
 }

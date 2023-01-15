@@ -69,4 +69,35 @@ export class DisputesService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlDisputes}/${id}.json`);
   }
+
+  // Metodos propios
+
+  /**
+   * Dar formato a la respuesta de la bd
+   *
+   * @param {*} resp
+   * @return {*}  {Idisputes[]}
+   * @memberof DisputesService
+   */
+  public formatDisputes(resp: any): Idisputes[] {
+    let position: number = 1;
+
+    let disputes: Idisputes[] = Object.keys(resp).map(
+      (a) =>
+        ({
+          id: a,
+          position: position++,
+          answer: resp[a].answer,
+          date_answer: resp[a].date_answer,
+          date_dispute: resp[a].date_dispute,
+          message: resp[a].message,
+          order: resp[a].order,
+          receiver: resp[a].receiver,
+          transmitter: resp[a].transmitter,
+          status: resp[a].status,
+        } as Idisputes)
+    );
+
+    return disputes;
+  }
 }

@@ -45,7 +45,7 @@ export class MessagesComponent implements OnInit {
     'actions',
   ]; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<Imessages>; //Instancia la data que aparecera en la tabla
-  public orders: Imessages[] = [];
+  public messages: Imessages[] = [];
   public expandedElement!: Imessages | null;
   public loadData: boolean = false;
 
@@ -69,24 +69,9 @@ export class MessagesComponent implements OnInit {
 
     this.messageService.getData().subscribe((resp: any) => {
       // Se ajusta la respuesta de la bd a la interfaz
-      let position: number = 1;
+      this.messages = this.messageService.formatMessages(resp);
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            answer: resp[a].answer,
-            date_answer: resp[a].date_answer,
-            date_message: resp[a].date_message,
-            message: resp[a].message,
-            url_product: resp[a].url_product,
-            receiver: resp[a].receiver,
-            transmitter: resp[a].transmitter,
-          } as Imessages)
-      );
-
-      this.dataSource = new MatTableDataSource(this.orders);
+      this.dataSource = new MatTableDataSource(this.messages);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 

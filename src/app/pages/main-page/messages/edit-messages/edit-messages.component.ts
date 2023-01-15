@@ -1,6 +1,9 @@
 import { functions } from './../../../../helpers/functions';
 import { alerts } from './../../../../helpers/alerts';
-import { Imessages } from './../../../../interface/imessages';
+import {
+  Imessages,
+  EnumMessagesStatus,
+} from './../../../../interface/imessages';
 import { MessageService } from './../../../../services/message.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
@@ -65,6 +68,7 @@ export class EditMessagesComponent implements OnInit {
     let dataMessage: Imessages = {
       answer: this.f.controls.answer.value,
       date_answer: new Date(),
+      status: EnumMessagesStatus.answered,
     };
 
     // Guardar en bd

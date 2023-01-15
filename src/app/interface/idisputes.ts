@@ -7,4 +7,10 @@ export interface Idisputes {
   order?: string;
   receiver?: string;
   transmitter?: string;
+  status?: string;
+}
+
+export enum EnumDisputesStatus {
+  answered = 'answered',
+  not_answered = 'not_answered',
 }

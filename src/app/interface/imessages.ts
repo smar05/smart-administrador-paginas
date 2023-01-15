@@ -7,4 +7,10 @@ export interface Imessages {
   url_product?: string;
   receiver?: string;
   transmitter?: string;
+  status?: string;
+}
+
+export enum EnumMessagesStatus {
+  answered = 'answered',
+  not_answered = 'not_answered',
 }
