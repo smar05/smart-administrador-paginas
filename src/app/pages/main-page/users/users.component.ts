@@ -1,3 +1,7 @@
+import { ICities } from './../../../interface/icities';
+import { IState } from './../../../interface/istate';
+import { ICountries } from './../../../interface/icountries';
+import { LocationService } from './../../../services/location.service';
 import { UsersService } from './../../../services/users.service';
 import { Iusers } from './../../../interface/iusers';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -41,6 +45,9 @@ export class UsersComponent implements OnInit {
   public users: Iusers[] = [];
   public expandedElement!: Iusers | null;
   public loadData: boolean = false;
+  public countries: ICountries[] = [];
+  public statesByCountry: Map<string, IState[]> = new Map(); // <iso country, estados>
+  public citiesByCountryAndStates: Map<string, ICities[]> = new Map(); // <iso country|iso state, ciudades>
   //public screenSizeSM: boolean = false;
 
   //Paginador
@@ -49,10 +56,14 @@ export class UsersComponent implements OnInit {
   //Orden
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private locationService: LocationService
+  ) {}
 
-  ngOnInit(): void {
-    this.getData();
+  async ngOnInit(): Promise<void> {
+    this.getAllCountries();
+    await this.getData();
 
     //Tamaño de la pantalla
     //Pantalla pequeña si es <767
@@ -66,34 +77,44 @@ export class UsersComponent implements OnInit {
   }
 
   //Tomar la data de usuarios
-  public getData(): void {
+  public async getData(): Promise<void> {
     this.loadData = true;
-    this.userService.getData().subscribe((resp: any): any => {
-      let position = 1;
-      this.users = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            address: resp[a].address,
-            city: resp[a].city,
-            country: resp[a].country,
-            country_code: resp[a].country_code,
-            displayName: resp[a].displayName,
-            email: resp[a].email,
-            idToken: resp[a].idToken,
-            method: resp[a].method,
-            phone: resp[a].phone,
-            picture: resp[a].picture,
-            username: resp[a].username,
-            wishlist: resp[a].wishlist,
-          } as Iusers)
+    let resp: any = await this.userService.getData().toPromise();
+    let position = 1;
+    this.users = Object.keys(resp).map(
+      (a) =>
+        ({
+          id: a,
+          position: position++,
+          address: resp[a].address,
+          city: resp[a].city,
+          country: resp[a].country,
+          country_code: resp[a].country_code,
+          displayName: resp[a].displayName,
+          email: resp[a].email,
+          idToken: resp[a].idToken,
+          method: resp[a].method,
+          phone: resp[a].phone,
+          picture: resp[a].picture,
+          username: resp[a].username,
+          wishlist: resp[a].wishlist,
+          state: resp[a].state,
+        } as Iusers)
+    );
+    this.dataSource = new MatTableDataSource(this.users);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.users.forEach(async (user: Iusers) => {
+      await this.getStatesByCountry(user.country, user.state);
+      await this.getCitiesByCountryAndState(
+        user.country,
+        user.state,
+        user.city
       );
-      this.dataSource = new MatTableDataSource(this.users);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.loadData = false;
     });
+
+    this.loadData = false;
   }
 
   //FIltro de busqueda
@@ -102,6 +123,90 @@ export class UsersComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public getAllCountries(): void {
+    this.locationService.getAllContries().then((resp: ICountries[]) => {
+      this.countries = resp;
+    });
+  }
+
+  public getCountryNameByIso(iso: string): string | undefined {
+    return this.countries.find((country: ICountries) => country.iso2 == iso)
+      ?.name;
+  }
+
+  public getStatesByCountryName(
+    isoCountry: string,
+    isoState: string
+  ): string | undefined {
+    if (!isoState) return '';
+
+    if (this.statesByCountry.has(isoCountry)) {
+      let states: IState[] | undefined = this.statesByCountry.get(isoCountry);
+
+      return states?.find((state: IState) => state.iso2 == isoState)?.name;
+    } else {
+      return '';
+    }
+  }
+
+  public getCitiesByCountryAndStateName(
+    isoCountry: string,
+    isoState: string,
+    idCity: number
+  ): string | undefined {
+    if (!(isoCountry && isoState && idCity)) return '';
+
+    let key: string = `${isoCountry}|${isoState}`;
+
+    if (this.citiesByCountryAndStates.has(key)) {
+      let cities: ICities[] | undefined =
+        this.citiesByCountryAndStates.get(key);
+
+      return cities?.find((city: ICities) => city.id == idCity)?.name;
+    } else {
+      return '';
+    }
+  }
+
+  public async getStatesByCountry(
+    isoCountry: string,
+    isoState: string
+  ): Promise<void> {
+    if (!isoState) return;
+
+    if (!this.statesByCountry.has(isoCountry)) {
+      let resp: IState[] = await this.locationService.getAllStatesByCountry(
+        isoCountry
+      );
+
+      if (resp) {
+        this.statesByCountry.set(isoCountry, resp);
+      }
+    }
+  }
+
+  public async getCitiesByCountryAndState(
+    isoCountry: string,
+    isoState: string,
+    idCity: number
+  ): Promise<void> {
+    if (!(isoCountry && isoState && idCity)) return;
+
+    let key: string = `${isoCountry}|${isoState}`;
+
+    if (!this.citiesByCountryAndStates.has(key)) {
+      let resp: ICities[] =
+        await this.locationService.getAllCitiesByCountryAndState(
+          isoCountry,
+          isoState
+        );
+
+      if (resp) {
+        this.citiesByCountryAndStates.set(key, resp);
+      }
     }
   }
 }

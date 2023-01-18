@@ -1,7 +1,8 @@
 export interface Iusers {
   address: string;
-  city: string;
+  city: number;
   country: string;
+  state: string;
   country_code: string;
   displayName: string;
   email: string;

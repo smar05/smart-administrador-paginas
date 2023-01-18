@@ -125,12 +125,25 @@
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Pais:</strong>
-                      {{ element.country }}
+                      {{ getCountryNameByIso(element.country) }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell">Estado:</strong>
+                      {{
+                        getStatesByCountryName(element.country, element.state)
+                      }}
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Ciudad:</strong>
-                      {{ element.city }}
+                      {{
+                        getCitiesByCountryAndStateName(
+                          element.country,
+                          element.state,
+                          element.city
+                        )
+                      }}
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
