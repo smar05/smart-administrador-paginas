@@ -1,3 +1,4 @@
+import { EnumPages } from './../../enums/enum-pages';
 import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
@@ -49,7 +50,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(data).subscribe(
       (resp: any) => {
         //Entramos al sistema
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/' + EnumPages.home);
         this.loading = false;
       },
       (err: any) => {

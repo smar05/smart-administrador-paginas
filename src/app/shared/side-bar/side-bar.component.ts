@@ -1,3 +1,4 @@
+import { EnumPages } from './../../enums/enum-pages';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
@@ -17,6 +18,6 @@ export class SideBarComponent implements OnInit {
     localStorage.removeItem(EnumLocalStorage.token);
     localStorage.removeItem(EnumLocalStorage.refreshToken);
     localStorage.removeItem(EnumLocalStorage.localId);
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/' + EnumPages.login);
   }
 }

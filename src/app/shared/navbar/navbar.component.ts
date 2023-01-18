@@ -1,3 +1,4 @@
+import { EnumPages } from './../../enums/enum-pages';
 import { EnumDisputesStatus, Idisputes } from './../../interface/idisputes';
 import { EnumMessagesStatus, Imessages } from './../../interface/imessages';
 import { IQueryParams } from './../../interface/i-query-params';
@@ -28,7 +29,7 @@ export class NavbarComponent implements OnInit {
     localStorage.removeItem(EnumLocalStorage.token);
     localStorage.removeItem(EnumLocalStorage.refreshToken);
     localStorage.removeItem(EnumLocalStorage.localId);
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/' + EnumPages.login);
   }
 
   public getMessages(): void {
