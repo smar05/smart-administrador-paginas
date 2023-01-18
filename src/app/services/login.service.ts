@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { EnumLocalStorage } from '../enums/enum-local-storage';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +17,11 @@ export class LoginService {
     return this.http.post(environment.urlLogin, data).pipe(
       map((resp: any) => {
         //Se captura el idToken y refreshToken
-        localStorage.setItem('token', resp.idToken);
-        localStorage.setItem('refreshToken', resp.refreshToken);
+        localStorage.setItem(EnumLocalStorage.token, resp.idToken);
+        localStorage.setItem(EnumLocalStorage.refreshToken, resp.refreshToken);
 
         //Se captura el localId
-        localStorage.setItem('localId', resp.localId);
+        localStorage.setItem(EnumLocalStorage.localId, resp.localId);
       })
     );
   }

@@ -5,6 +5,7 @@ import { DisputesService } from './../../services/disputes.service';
 import { MessageService } from './../../services/message.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 @Component({
   selector: 'app-navbar',
@@ -24,8 +25,9 @@ export class NavbarComponent implements OnInit {
   }
 
   public logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(EnumLocalStorage.token);
+    localStorage.removeItem(EnumLocalStorage.refreshToken);
+    localStorage.removeItem(EnumLocalStorage.localId);
     this.router.navigateByUrl('/login');
   }
 

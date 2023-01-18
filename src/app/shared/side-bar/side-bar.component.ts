@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 @Component({
   selector: 'app-side-bar',
@@ -13,8 +14,9 @@ export class SideBarComponent implements OnInit {
 
   //FUncion de salida del sistema
   public logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(EnumLocalStorage.token);
+    localStorage.removeItem(EnumLocalStorage.refreshToken);
+    localStorage.removeItem(EnumLocalStorage.localId);
     this.router.navigateByUrl('/login');
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { EnumLocalStorage } from '../enums/enum-local-storage';
 
 @Injectable()
 export class IntInterceptor implements HttpInterceptor {
@@ -27,7 +28,7 @@ export class IntInterceptor implements HttpInterceptor {
       request.url == environment.urlRefreshToken
     )
       return next.handle(request);
-    this.token = localStorage.getItem('token');
+    this.token = localStorage.getItem(EnumLocalStorage.token);
     //Se captura la fecha de expiracion en
     //formato epoch
     const payload: any = JSON.parse(atob(this.token.split('.')[1])).exp;
@@ -40,14 +41,17 @@ export class IntInterceptor implements HttpInterceptor {
     if (tokenExp.getTime() < now.getTime()) {
       const body = {
         grant_type: 'refresh_token',
-        refresh_token: localStorage.getItem('refreshToken'),
+        refresh_token: localStorage.getItem(EnumLocalStorage.refreshToken),
       };
       this.http
         .post(environment.urlRefreshToken, body)
         .subscribe((resp: any) => {
           //Se captura el idToken y refreshToken
-          localStorage.setItem('token', resp.id_token);
-          localStorage.setItem('refreshToken', resp.refresh_token);
+          localStorage.setItem(EnumLocalStorage.token, resp.id_token);
+          localStorage.setItem(
+            EnumLocalStorage.refreshToken,
+            resp.refresh_token
+          );
           this.token = resp.id_token;
         });
     }
