@@ -49,4 +49,14 @@ export class NavbarComponent implements OnInit {
     // EL conteo de disputas se hace desde el servicio
     this.disputesService.getData(params).subscribe((resp: any) => {});
   }
+
+  public darkMode(e: any): void {
+    let body: HTMLBodyElement | null = document.querySelector('body');
+
+    if (e.target.checked) {
+      body?.classList.add('dark-mode');
+    } else {
+      body?.classList.remove('dark-mode');
+    }
+  }
 }
