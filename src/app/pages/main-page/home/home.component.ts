@@ -1,3 +1,5 @@
+import { environment } from './../../../../environments/environment';
+import { Observable } from 'rxjs';
 import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
 import { Iorders } from './../../../interface/iorders';
 import { OrdersService } from './../../../services/orders.service';
@@ -9,6 +11,7 @@ import { UsersService } from './../../../services/users.service';
 import { SalesService } from './../../../services/sales.service';
 import { ProductsService } from './../../../services/products.service';
 import { Component, OnInit } from '@angular/core';
+import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-home',
@@ -53,14 +56,30 @@ export class HomeComponent implements OnInit {
   // Imagenes productos
   public imagenesProductos: Map<string, string> = new Map();
 
+  items!: Observable<any[]>;
+
   constructor(
     private productsService: ProductsService,
     private salesService: SalesService,
     private usersService: UsersService,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private firestore: Firestore
   ) {}
 
   ngOnInit(): void {
+    const collection2 = collection(
+      this.firestore,
+      environment.collections.users
+    );
+    this.items = collectionData(collection2);
+
+    this.items.subscribe((resp: any) => {
+      console.log(
+        '🚀 ~ file: home.component.ts:77 ~ HomeComponent ~ this.items.subscribe ~ resp',
+        resp
+      );
+    });
+
     this.getProducts();
     this.getSales();
     this.getUsers();

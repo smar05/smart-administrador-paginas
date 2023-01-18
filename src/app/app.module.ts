@@ -13,6 +13,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
     HttpClientModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideStorage(() => getStorage()),
+    provideFirestore(() => getFirestore()),
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
