@@ -88,39 +88,11 @@
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Nombre:</strong>
-                      {{ element.displayName }}
-                    </li>
-                    <li class="py-2">
-                      <div
-                        *ngIf="
-                          element.method == 'google' ||
-                          element.method == 'facebook'
-                        "
-                      >
-                        <img
-                          src="{{ element.picture }}"
-                          class="rounded-circle"
-                          width="100px"
-                          alt="{{ element.username }}"
-                        />
-                      </div>
-                      <div
-                        *ngIf="
-                          element.picture == '' || element.picture == undefined
-                        "
-                      >
-                        <img
-                          src="../../../../assets/img/user_male_avatar_default.svg"
-                          class="rounded-circle"
-                          width="100px"
-                          alt="{{ element.username }}"
-                        />
-                      </div>
-                    </li>
-                    <li class="py-2">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Usuario:</strong>
-                      {{ element.username }}
+                      {{
+                        element.name +
+                          " " +
+                          (element.lastName ? element.lastName : "")
+                      }}
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
@@ -147,6 +119,27 @@
                     </li>
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Tipo de identificación:</strong
+                      >
+                      <div [ngSwitch]="element.idType">
+                        <p *ngSwitchCase="'C.C'">C.C (Cédula de Ciudadania)</p>
+                        <p *ngSwitchCase="'C.E'">C.E (Cédula Extranjería)</p>
+                        <p *ngSwitchCase="'P.A'">P.A (Pasaporte)</p>
+                        <p *ngSwitchCase="'NIT'">
+                          NIT (Número de Identificación Tributaria)
+                        </p>
+                      </div>
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
+                      <strong class="mat-header-cell"
+                        >Número de identificación:</strong
+                      >
+                      {{ element.idValue }}
+                    </li>
+                    <li class="py-2">
+                      <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Direccion:</strong>
                       {{ element.address }}
                     </li>
@@ -154,18 +147,6 @@
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Telefono:</strong>
                       {{ element.phone }}
-                    </li>
-                    <li class="py-2">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Lista de deseos:</strong>
-                      {{ element.wishlist | jsonToString }}
-                    </li>
-                    <li class="py-2">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell"
-                        >Metodo de registro:</strong
-                      >
-                      {{ element.method }}
                     </li>
                   </ul>
                 </div>

@@ -89,16 +89,13 @@ export class UsersComponent implements OnInit {
           address: resp[a].address,
           city: resp[a].city,
           country: resp[a].country,
-          country_code: resp[a].country_code,
-          displayName: resp[a].displayName,
+          name: resp[a].name,
+          lastName: resp[a].lastName,
           email: resp[a].email,
-          idToken: resp[a].idToken,
-          method: resp[a].method,
           phone: resp[a].phone,
-          picture: resp[a].picture,
-          username: resp[a].username,
-          wishlist: resp[a].wishlist,
           state: resp[a].state,
+          idType: resp[a].idType,
+          idValue: resp[a].idValue,
         } as Iusers)
     );
     this.dataSource = new MatTableDataSource(this.users);
