@@ -1,5 +1,6 @@
 export enum EnumPages {
   login = 'login',
+  register = 'register',
   categories = 'categories',
   disputes = 'disputes',
   users = 'users',

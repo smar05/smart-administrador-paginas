@@ -9,6 +9,7 @@ export const environment = {
   urlFirebase: `https://smar-software-default-rtdb.firebaseio.com/${localStorage.getItem(
     'localId'
   )}/`,
+  urlFirebaseSinLocalId: `https://smar-software-default-rtdb.firebaseio.com/`,
   urlLogin: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
   urlGetUser: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
   urlRefreshToken: `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
@@ -30,6 +31,7 @@ export const environment = {
     products: 'products',
     subCategories: 'sub-categories',
     users: 'users',
+    count: 'count',
     orders: 'orders',
     disputes: 'disputes',
     messages: 'messages',

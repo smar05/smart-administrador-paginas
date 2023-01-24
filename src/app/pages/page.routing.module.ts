@@ -12,6 +12,11 @@ const routes: Routes = [
       import('./login/login.module').then((m) => m.LoginModule),
   },
   {
+    path: EnumPages.register,
+    loadChildren: () =>
+      import('./register/register.module').then((m) => m.RegisterModule),
+  },
+  {
     path: '',
     component: MainPageComponent,
     canActivate: [AuthGuard],
