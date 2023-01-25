@@ -1,3 +1,4 @@
+import { PipesModule } from './../pipes/pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -20,6 +21,6 @@ import { SpinnersComponent } from './spinners/spinners.component';
     SideBarComponent,
     SpinnersComponent,
   ],
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PipesModule],
 })
 export class SharedModule {}

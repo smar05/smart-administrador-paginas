@@ -81,6 +81,12 @@ export class LoginComponent implements OnInit {
           res.user.multiFactor.user.uid
         );
 
+        //Se captura el email
+        localStorage.setItem(
+          EnumLocalStorage.email,
+          this.f.controls.email.value
+        );
+
         this.validarUsuarioActivo(this.f.controls.email.value);
 
         //Entramos al sistema
