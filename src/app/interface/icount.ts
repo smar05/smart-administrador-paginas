@@ -1,16 +1,16 @@
 export interface ICount {
-  id: string;
-  name: string;
-  email: string;
-  celphone: string;
-  sex: string;
-  active: boolean;
-  country: string;
-  state: string;
-  city: string;
-  permission: string;
-  idType: string; // Tipo de identificacion
-  idValue: string;
+  id?: string;
+  name?: string;
+  email?: string;
+  celphone?: string;
+  sex?: string;
+  active?: boolean;
+  country?: string;
+  state?: string;
+  city?: string;
+  permission?: string;
+  idType?: string; // Tipo de identificacion
+  idValue?: string;
 }
 
 export enum EnumCountPermission {

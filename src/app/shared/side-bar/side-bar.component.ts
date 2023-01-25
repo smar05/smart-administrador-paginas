@@ -1,7 +1,5 @@
-import { EnumPages } from './../../enums/enum-pages';
+import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 @Component({
   selector: 'app-side-bar',
@@ -9,15 +7,12 @@ import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
   styleUrls: ['./side-bar.component.css'],
 })
 export class SideBarComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private loginService: LoginService) {}
 
   ngOnInit(): void {}
 
   //FUncion de salida del sistema
   public logout(): void {
-    localStorage.removeItem(EnumLocalStorage.token);
-    localStorage.removeItem(EnumLocalStorage.refreshToken);
-    localStorage.removeItem(EnumLocalStorage.localId);
-    this.router.navigateByUrl('/' + EnumPages.login);
+    this.loginService.logout();
   }
 }

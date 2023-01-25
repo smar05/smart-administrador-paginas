@@ -1,3 +1,5 @@
+import { EnumPages } from './../enums/enum-pages';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Ilogin } from '../interface/ilogin';
 import { HttpClient } from '@angular/common/http';
@@ -5,12 +7,17 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EnumLocalStorage } from '../enums/enum-local-storage';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private afAuth: AngularFireAuth,
+    private router: Router
+  ) {}
 
   //Autenticacion de firebase
   public login(data: Ilogin): Observable<any> {
@@ -24,5 +31,28 @@ export class LoginService {
         localStorage.setItem(EnumLocalStorage.localId, resp.localId);
       })
     );
+  }
+
+  /**
+   *
+   *
+   * @param {Ilogin} data
+   * @return {*}  {Promise<any>}
+   * @memberof LoginService
+   */
+  public loginWithAuthFire(data: Ilogin): Promise<any> {
+    return this.afAuth.signInWithEmailAndPassword(data.email, data.password);
+  }
+
+  /**
+   *
+   *
+   * @memberof LoginService
+   */
+  public logout(): void {
+    localStorage.removeItem(EnumLocalStorage.token);
+    localStorage.removeItem(EnumLocalStorage.refreshToken);
+    localStorage.removeItem(EnumLocalStorage.localId);
+    this.router.navigateByUrl('/' + EnumPages.login);
   }
 }

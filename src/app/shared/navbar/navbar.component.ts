@@ -1,12 +1,10 @@
-import { EnumPages } from './../../enums/enum-pages';
-import { EnumDisputesStatus, Idisputes } from './../../interface/idisputes';
-import { EnumMessagesStatus, Imessages } from './../../interface/imessages';
+import { LoginService } from './../../services/login.service';
+import { EnumDisputesStatus } from './../../interface/idisputes';
+import { EnumMessagesStatus } from './../../interface/imessages';
 import { IQueryParams } from './../../interface/i-query-params';
 import { DisputesService } from './../../services/disputes.service';
 import { MessageService } from './../../services/message.service';
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 @Component({
   selector: 'app-navbar',
@@ -15,9 +13,9 @@ import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 })
 export class NavbarComponent implements OnInit {
   constructor(
-    private router: Router,
     public messageService: MessageService,
-    public disputesService: DisputesService
+    public disputesService: DisputesService,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
@@ -26,10 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   public logout(): void {
-    localStorage.removeItem(EnumLocalStorage.token);
-    localStorage.removeItem(EnumLocalStorage.refreshToken);
-    localStorage.removeItem(EnumLocalStorage.localId);
-    this.router.navigateByUrl('/' + EnumPages.login);
+    this.loginService.logout();
   }
 
   public getMessages(): void {
