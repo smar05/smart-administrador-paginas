@@ -89,17 +89,20 @@ export class LoginComponent implements OnInit {
       })
       .catch((err: any) => {
         console.error(err);
-        //Errores al ingresar
-        let error: any = err.error.errors[0];
 
-        if (error.message == 'EMAIL_NOT_FOUND') {
-          alerts.basicAlert('Error', 'Correo no encontrado', 'error');
-        } else if (error.message == 'INVALID_PASSWORD') {
-          alerts.basicAlert('Error', 'Contraseña invalida', 'error');
-        } else if (error.message == 'INVALID_EMAIL') {
-          alerts.basicAlert('Error', 'Correo invalido', 'error');
-        } else {
-          alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+        //Errores al ingresar
+        let error: any = err.error?.errors[0];
+
+        if (error) {
+          if (error.message == 'EMAIL_NOT_FOUND') {
+            alerts.basicAlert('Error', 'Correo no encontrado', 'error');
+          } else if (error.message == 'INVALID_PASSWORD') {
+            alerts.basicAlert('Error', 'Contraseña invalida', 'error');
+          } else if (error.message == 'INVALID_EMAIL') {
+            alerts.basicAlert('Error', 'Correo invalido', 'error');
+          } else {
+            alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+          }
         }
         this.loading = false;
       });

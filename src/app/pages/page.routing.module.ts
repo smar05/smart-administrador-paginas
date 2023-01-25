@@ -17,6 +17,13 @@ const routes: Routes = [
       import('./register/register.module').then((m) => m.RegisterModule),
   },
   {
+    path: EnumPages.forgot_password,
+    loadChildren: () =>
+      import('./forgot-password/forgot-password.module').then(
+        (m) => m.ForgotPasswordModule
+      ),
+  },
+  {
     path: '',
     component: MainPageComponent,
     canActivate: [AuthGuard],
