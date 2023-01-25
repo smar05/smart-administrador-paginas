@@ -52,7 +52,7 @@
             <div class="row">
               <!-- /.col -->
               <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-primary btn-block bg-main">
                   Iniciar sesion
                 </button>
               </div>
@@ -70,17 +70,18 @@
             <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
           </a>
         </div>
+        -->
 
-
-        <p class="mb-1">
-          <a href="forgot-password.html">I forgot my password</a>
-        </p>
-        <p class="mb-0">
-          <a href="register.html" class="text-center"
-            >Register a new membership</a
+        <p class="mb-0 mt-2 text-center">
+          <a
+            [routerLink]="['/register']"
+            class="btn btn-primary btn-block bg-secundary"
+            >Crear cuenta nueva</a
           >
         </p>
-        -->
+        <p class="mb-1 mt-2">
+          <a [routerLink]="['/forgot-password']">Olvide mi contraseña</a>
+        </p>
       </div>
       <!-- /.card-body -->
     </div>

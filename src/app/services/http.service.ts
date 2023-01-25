@@ -1,3 +1,4 @@
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HttpService {
-  private urlApi: string = environment.urlFirebase;
+  private urlApi: string = environment.urlFirebaseSinLocalId;
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +21,12 @@ export class HttpService {
    */
   public get(endPoint: string, params: any = {}): Observable<any> {
     params.print = 'pretty';
-    return this.http.get(`${this.urlApi}${endPoint}`, { params });
+    return this.http.get(
+      `${this.urlApi}${localStorage.getItem(
+        EnumLocalStorage.localId
+      )}/${endPoint}`,
+      { params }
+    );
   }
 
   /**
@@ -32,7 +38,12 @@ export class HttpService {
    * @memberof ApiService
    */
   public post(endPoint: string, data: object): Observable<any> {
-    return this.http.post(`${this.urlApi}${endPoint}`, data);
+    return this.http.post(
+      `${this.urlApi}${localStorage.getItem(
+        EnumLocalStorage.localId
+      )}/${endPoint}`,
+      data
+    );
   }
 
   /**
@@ -43,7 +54,11 @@ export class HttpService {
    * @memberof ApiService
    */
   public delete(endPoint: string): Observable<any> {
-    return this.http.delete(`${this.urlApi}${endPoint}`);
+    return this.http.delete(
+      `${this.urlApi}${localStorage.getItem(
+        EnumLocalStorage.localId
+      )}/${endPoint}`
+    );
   }
 
   /**
@@ -55,6 +70,11 @@ export class HttpService {
    * @memberof ApiService
    */
   public patch(endPoint: string, data: object): Observable<any> {
-    return this.http.patch(`${this.urlApi}${endPoint}`, data);
+    return this.http.patch(
+      `${this.urlApi}${localStorage.getItem(
+        EnumLocalStorage.localId
+      )}/${endPoint}`,
+      data
+    );
   }
 }

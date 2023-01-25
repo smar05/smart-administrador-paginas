@@ -2,6 +2,17 @@
 
 :root {
   --color-main: #379656;
+  --color-secundary: #5ccb5f;
+}
+
+.bg-main {
+  background-color: var(--color-main);
+  border: var(--color-main);
+}
+
+.bg-secundary {
+  background-color: var(--color-secundary);
+  border: var(--color-secundary);
 }
 
 html,
