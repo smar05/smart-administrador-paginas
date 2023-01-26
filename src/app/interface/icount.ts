@@ -7,7 +7,7 @@ export interface ICount {
   active?: boolean;
   country?: string;
   state?: string;
-  city?: string;
+  city?: number;
   permission?: string;
   idType?: string; // Tipo de identificacion
   idValue?: string;

@@ -1,0 +1,151 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Cuentas</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+            <li class="breadcrumb-item active">counts</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <!-- Default box -->
+    <ng-container *ngIf="!loading; else loadData">
+      <div class="card card-solid">
+        <div class="card-body pb-0">
+          <div class="row">
+            <div
+              class="col-12 col-sm-6 col-md-6 d-flex align-items-stretch flex-column"
+            >
+              <div class="card bg-light d-flex flex-fill">
+                <div class="card-header text-muted border-bottom-0">
+                  <h2 class="card-title mb-0"><strong>Mi cuenta</strong></h2>
+                  <br />
+                  <br />
+                  <strong>Permisos: </strong>
+                  <span>
+                    <div [ngSwitch]="myCount.permission">
+                      <p *ngSwitchCase="'admin'">Administrador</p>
+                    </div>
+                  </span>
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <h2 class="lead">
+                        <b>{{ myCount.name }}</b>
+                      </h2>
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small">
+                          <span class="fa-li">
+                            <i class="fas fa-lg fa-envelope"></i
+                          ></span>
+                          <strong>Correo:</strong> {{ myCount.email }}
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-id-card"></i
+                          ></span>
+                          <div [ngSwitch]="myCount.idType">
+                            <p *ngSwitchCase="'C.C'">
+                              <strong>C.C (Cédula de Ciudadania): # </strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'C.E'">
+                              <strong>C.E (Cédula Extranjería): #</strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'P.A'">
+                              <strong>P.A (Pasaporte): #</strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'NIT'">
+                              <strong
+                                >NIT (Número de Identificación Tributaria):
+                                #</strong
+                              >
+                              {{ myCount.idValue }}
+                            </p>
+                          </div>
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-globe"></i
+                          ></span>
+                          <ul>
+                            <li>
+                              <strong>Pais:</strong>
+                              {{ getCountryNameByIso(myCount.country || "") }}
+                            </li>
+                            <li>
+                              <strong>Estado:</strong>
+                              {{
+                                getStatesByCountryName(
+                                  myCount.country || "",
+                                  myCount.state || ""
+                                )
+                              }}
+                            </li>
+                            <li>
+                              <strong>Ciudad:</strong>
+                              {{
+                                getCitiesByCountryAndStateName(
+                                  myCount.country || "",
+                                  myCount.state || "",
+                                  myCount.city || 0
+                                )
+                              }}
+                            </li>
+                          </ul>
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-genderless"></i
+                          ></span>
+                          <strong>Genero:</strong> {{ myCount.sex }}
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-phone"></i
+                          ></span>
+                          <strong>Celular:</strong> {{ myCount.celphone }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <button class="btn btn-sm btn-dark">
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </ng-container>
+
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+</div>
+
+<ng-template #loadData>
+  <app-spinners [type]="'sk-cube'"></app-spinners>
+</ng-template>
+<!-- /.content-wrapper -->

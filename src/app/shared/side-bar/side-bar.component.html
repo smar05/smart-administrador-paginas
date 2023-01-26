@@ -22,7 +22,9 @@
         />
       </div>
       <div class="info">
-        <a href="#" class="d-block">{{ myCount.name || "" | substr }}</a>
+        <a [routerLink]="['/counts']" class="d-block">{{
+          myCount.name || "" | substr
+        }}</a>
       </div>
     </div>
 

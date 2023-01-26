@@ -92,6 +92,13 @@ const routes: Routes = [
             (m) => m.MessagesModule
           ),
       },
+      {
+        path: EnumPages.counts,
+        loadChildren: () =>
+          import('./main-page/counts/counts.module').then(
+            (m) => m.CountsModule
+          ),
+      },
       { path: EnumPages.error, component: Error404Component },
     ],
   },
