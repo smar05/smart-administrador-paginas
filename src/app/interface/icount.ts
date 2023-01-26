@@ -11,6 +11,7 @@ export interface ICount {
   permission?: string;
   idType?: string; // Tipo de identificacion
   idValue?: string;
+  activeCount?: boolean; // Para que el usuario admin habilite o desahibilite otras cuentas
 }
 
 export enum EnumCountPermission {

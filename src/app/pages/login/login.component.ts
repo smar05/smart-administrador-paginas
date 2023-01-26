@@ -153,6 +153,15 @@ export class LoginComponent implements OnInit {
         this.logout();
         return false;
       }
+      if (!count.activeCount) {
+        alerts.basicAlert(
+          'Usuario inactivo',
+          'Su cuenta se encuentra inactiva, contacte a un usuario administrador',
+          'error'
+        );
+        this.logout();
+        return false;
+      }
     } else {
       alerts.basicAlert(
         'Usuario inactivo',

@@ -147,7 +147,6 @@ export class RegisterComponent implements OnInit {
       });
 
       const count: ICount = {
-        id: uid,
         name: this.name.value,
         email: this.email.value,
         celphone: this.celphone.value,
@@ -159,6 +158,7 @@ export class RegisterComponent implements OnInit {
         permission: EnumCountPermission.admin,
         idType: this.idType.value,
         idValue: this.idValue.value,
+        activeCount: true,
       };
 
       await this.countService.postData(uid, count).toPromise();

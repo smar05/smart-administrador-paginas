@@ -1,3 +1,5 @@
+import { alerts } from 'src/app/helpers/alerts';
+import { MatTableDataSource } from '@angular/material/table';
 import { ICountries } from './../../../interface/icountries';
 import { ICities } from './../../../interface/icities';
 import { IState } from './../../../interface/istate';
@@ -5,12 +7,39 @@ import { LocationService } from './../../../services/location.service';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { ICount } from 'src/app/interface/icount';
 import { CountService } from './../../../services/count.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-counts',
   templateUrl: './counts.component.html',
   styleUrls: ['./counts.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state(
+        'collapsed,void',
+        style({ height: '0px', minHeight: '0', display: 'none' })
+      ),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+      transition(
+        'expanded <=> void',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
+  ],
 })
 export class CountsComponent implements OnInit {
   public counts: ICount[] = [];
@@ -19,10 +48,26 @@ export class CountsComponent implements OnInit {
   public countries: ICountries[] = [];
   public statesByCountry: Map<string, IState[]> = new Map(); // <iso country, estados>
   public citiesByCountryAndStates: Map<string, ICities[]> = new Map(); // <iso country|iso state, ciudades>
+  public displayedColumns: string[] = [
+    'position',
+    'name',
+    'email',
+    'activeCount',
+    'actions',
+  ]; //Variable para nombrar las columnas de la tabla
+  public dataSource!: MatTableDataSource<ICount>; //Instancia la data que aparecera en la tabla
+  public expandedElement!: ICount | null;
+
+  //Paginador
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  //Orden
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private countService: CountService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -34,10 +79,12 @@ export class CountsComponent implements OnInit {
     this.loading = true;
 
     this.countService.getData().subscribe((res: any) => {
+      let position = Object.keys(res).length;
       this.counts = Object.keys(res).map(
         (a: any) =>
           ({
             id: a,
+            position: position--,
             name: res[a].name,
             email: res[a].email,
             celphone: res[a].celphone,
@@ -49,6 +96,7 @@ export class CountsComponent implements OnInit {
             permission: res[a].permission,
             idType: res[a].idType,
             idValue: res[a].idValue,
+            activeCount: res[a].activeCount,
           } as ICount)
       );
 
@@ -68,6 +116,14 @@ export class CountsComponent implements OnInit {
           );
         }
       });
+
+      this.counts = this.counts.filter(
+        (count: ICount) => count.id != this.myCount.id
+      );
+
+      this.dataSource = new MatTableDataSource(this.counts);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
 
       this.loading = false;
     });
@@ -155,5 +211,91 @@ export class CountsComponent implements OnInit {
     this.locationService.getAllContries().then((resp: ICountries[]) => {
       this.countries = resp;
     });
+  }
+
+  //FIltro de busqueda
+  public applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  public newCount(): void {}
+
+  public editCount(id: string): void {}
+
+  public deleteCount(id: string, name: string): void {}
+
+  //Cambia el estado del producto
+  public cambiarEstado(count: any, estado: boolean): void {
+    if (estado) {
+      //Desactivar el estado
+      alerts
+        .confirmAlert(
+          '¿Esta seguro de cambiar el estado de la cuenta?',
+          'Desea desactivar la cuenta',
+          'question',
+          'Si'
+        )
+        .then((result: any) => {
+          if (result.isConfirmed) {
+            let data: ICount = {
+              activeCount: false,
+            };
+            this.countService.patchData(count.id, data).subscribe(
+              (resp) => {
+                this.getCounts();
+                alerts.basicAlert(
+                  'Listo',
+                  'Se ha cambiado el estado de la cuenta',
+                  'success'
+                );
+              },
+              (error) => {
+                alerts.basicAlert(
+                  'Error',
+                  'No se ha podido cambiar el estado de la cuenta',
+                  'error'
+                );
+              }
+            );
+          }
+        });
+    } else if (!estado) {
+      //Activar el estado
+      alerts
+        .confirmAlert(
+          '¿Esta seguro de cambiar el estado de la cuenta?',
+          'Desea activar la cuenta',
+          'question',
+          'Si'
+        )
+        .then((result: any) => {
+          if (result.isConfirmed) {
+            let data: ICount = {
+              activeCount: true,
+            };
+            this.countService.patchData(count.id, data).subscribe(
+              (resp) => {
+                this.getCounts();
+                alerts.basicAlert(
+                  'Listo',
+                  'Se ha cambiado el estado de la cuenta',
+                  'success'
+                );
+              },
+              (err) => {
+                alerts.basicAlert(
+                  'Error',
+                  'No se ha podido cambiar el estado de la cuenta',
+                  'error'
+                );
+              }
+            );
+          }
+        });
+    }
   }
 }

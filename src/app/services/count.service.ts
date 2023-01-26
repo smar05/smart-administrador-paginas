@@ -44,12 +44,13 @@ export class CountService {
   /**
    * Actualizar cuenta
    *
+   * @param {string} id
    * @param {ICount} data
    * @return {*}  {Observable<any>}
    * @memberof CountService
    */
-  public patchData(data: ICount): Observable<any> {
-    return this.httpService.patch(`${this.urlCount}.json`, data);
+  public patchData(id: string, data: ICount): Observable<any> {
+    return this.httpService.patch(`${this.urlCount}/${id}.json`, data);
   }
 
   /**
