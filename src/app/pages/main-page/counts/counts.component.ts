@@ -226,7 +226,37 @@ export class CountsComponent implements OnInit {
 
   public editCount(id: string): void {}
 
-  public deleteCount(id: string, name: string): void {}
+  public deleteCount(id: string, name: string): void {
+    alerts
+      .confirmAlert(
+        '¿Esta seguro?',
+        'La información no podra recuperarse',
+        'warning',
+        'Si, eliminar'
+      )
+      .then((result: any) => {
+        if (result.isConfirmed) {
+          //Eliminar registro de la base de datos
+          this.countService.deleteData(id).subscribe(
+            (resp: any) => {
+              alerts.basicAlert(
+                'Listo',
+                'El usuario ha sido eliminado',
+                'success'
+              );
+              this.getCounts();
+            },
+            (err) => {
+              alerts.basicAlert(
+                'Error',
+                'No se ha podido eliminar el usuario',
+                'error'
+              );
+            }
+          );
+        }
+      });
+  }
 
   //Cambia el estado del producto
   public cambiarEstado(count: any, estado: boolean): void {

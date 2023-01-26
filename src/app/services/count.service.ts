@@ -60,7 +60,7 @@ export class CountService {
    * @return {*}  {Observable<any>}
    * @memberof CountService
    */
-  public deleteData(): Observable<any> {
-    return this.httpService.delete(`${this.urlCount}.json`);
+  public deleteData(id: string): Observable<any> {
+    return this.httpService.delete(`${this.urlCount}/${id}.json`);
   }
 }
