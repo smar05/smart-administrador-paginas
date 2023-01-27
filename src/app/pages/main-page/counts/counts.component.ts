@@ -1,3 +1,4 @@
+import { IQueryParams } from './../../../interface/i-query-params';
 import { NewCountsComponent } from './new-counts/new-counts.component';
 import { alerts } from 'src/app/helpers/alerts';
 import { MatTableDataSource } from '@angular/material/table';
@@ -73,7 +74,12 @@ export class CountsComponent implements OnInit {
   public getCounts(): void {
     this.loading = true;
 
-    this.countService.getData().subscribe((res: any) => {
+    let params: IQueryParams = {
+      orderBy: '"keyCount"',
+      equalTo: `"${localStorage.getItem(EnumLocalStorage.localId)}"`,
+    };
+
+    this.countService.getData(params).subscribe((res: any) => {
       let position = Object.keys(res).length;
       this.counts = Object.keys(res).map(
         (a: any) =>
@@ -92,6 +98,7 @@ export class CountsComponent implements OnInit {
             idType: res[a].idType,
             idValue: res[a].idValue,
             activeCount: res[a].activeCount,
+            keyCount: res[a].keyCount,
           } as ICount)
       );
 

@@ -14,6 +14,7 @@ export interface ICount {
   idType?: string; // Tipo de identificacion
   idValue?: string;
   activeCount?: boolean; // Para que el usuario admin habilite o desahibilite otras cuentas
+  keyCount?: string; // Llave para asociar todas las cuentas que pertenecen a un mismo grupo
 }
 
 export enum EnumCountPermission {

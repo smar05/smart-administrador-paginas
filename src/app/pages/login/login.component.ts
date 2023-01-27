@@ -75,11 +75,24 @@ export class LoginComponent implements OnInit {
           res.user.multiFactor.user.stsTokenManager.refreshToken
         );
 
+        const uid: string = res.user.multiFactor.user.uid;
+
+        let params: IQueryParams = {
+          orderBy: '"email"',
+          equalTo: `"${this.f.controls.email.value}"`,
+        };
+
+        let res2: any = await this.countService.getData(params).toPromise();
+        let count: ICount = res2[Object.keys(res2)[0]];
+
+        if (!count) {
+          alerts.basicAlert('Error', 'No se ha encontrado la cuenta', 'error');
+          this.loading = false;
+          return;
+        }
+
         //Se captura el localId
-        localStorage.setItem(
-          EnumLocalStorage.localId,
-          res.user.multiFactor.user.uid
-        );
+        localStorage.setItem(EnumLocalStorage.localId, count.keyCount || '');
 
         //Se captura el email
         localStorage.setItem(
@@ -141,7 +154,7 @@ export class LoginComponent implements OnInit {
         (a: any) =>
           ({
             active: resp[a].active,
-            activeCount: resp[a].activeCount
+            activeCount: resp[a].activeCount,
           } as ICount)
       )[0];
 

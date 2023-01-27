@@ -1,3 +1,5 @@
+import { LoginService } from './../../../../services/login.service';
+import { EnumLocalStorage } from './../../../../enums/enum-local-storage';
 import { functions } from 'src/app/helpers/functions';
 import { EnumCountPermission, ICount } from 'src/app/interface/icount';
 import { Iregister } from 'src/app/interface/iregister';
@@ -9,7 +11,6 @@ import { ICities } from './../../../../interface/icities';
 import { IState } from './../../../../interface/istate';
 import { ICountries } from './../../../../interface/icountries';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { alerts } from 'src/app/helpers/alerts';
 import { ICountPermissions } from 'src/app/interface/icount-permissions';
 
@@ -141,9 +142,9 @@ export class NewCountsComponent implements OnInit {
   constructor(
     private form: FormBuilder,
     private registerService: RegisterService,
-    private router: Router,
     private countService: CountService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
@@ -191,6 +192,15 @@ export class NewCountsComponent implements OnInit {
           ? permission
           : EnumCountPermission.admin;
 
+      let keyCount: string =
+        localStorage.getItem(EnumLocalStorage.localId) || '';
+
+      if (keyCount == '') {
+        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+        this.loginService.logout();
+        return;
+      }
+
       const count: ICount = {
         name: this.name.value,
         email: this.email.value,
@@ -204,9 +214,10 @@ export class NewCountsComponent implements OnInit {
         idType: this.idType.value,
         idValue: this.idValue.value,
         activeCount: this.activeCount.value,
+        keyCount: keyCount,
       };
 
-      await this.countService.postDataCuentaActual(count).toPromise();
+      await this.countService.postData(count).toPromise();
 
       this.loadData = false;
     } catch (error: any) {
