@@ -1,3 +1,4 @@
+import { NewCountsComponent } from './new-counts/new-counts.component';
 import { alerts } from 'src/app/helpers/alerts';
 import { MatTableDataSource } from '@angular/material/table';
 import { ICountries } from './../../../interface/icountries';
@@ -48,13 +49,7 @@ export class CountsComponent implements OnInit {
   public countries: ICountries[] = [];
   public statesByCountry: Map<string, IState[]> = new Map(); // <iso country, estados>
   public citiesByCountryAndStates: Map<string, ICities[]> = new Map(); // <iso country|iso state, ciudades>
-  public displayedColumns: string[] = [
-    'position',
-    'name',
-    'email',
-    'activeCount',
-    'actions',
-  ]; //Variable para nombrar las columnas de la tabla
+  public displayedColumns: string[] = ['position', 'name', 'email', 'actions']; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<ICount>; //Instancia la data que aparecera en la tabla
   public expandedElement!: ICount | null;
 
@@ -222,7 +217,17 @@ export class CountsComponent implements OnInit {
     }
   }
 
-  public newCount(): void {}
+  public newCount(): void {
+    const dialogRef = this.dialog.open(NewCountsComponent, {
+      width: '100%',
+    });
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getCounts();
+      }
+    });
+  }
 
   public editCount(id: string): void {}
 

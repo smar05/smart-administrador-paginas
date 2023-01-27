@@ -1,3 +1,5 @@
+import { ICountPermissions } from './icount-permissions';
+
 export interface ICount {
   id?: string;
   name?: string;
@@ -8,7 +10,7 @@ export interface ICount {
   country?: string;
   state?: string;
   city?: number;
-  permission?: string;
+  permission?: string | ICountPermissions;
   idType?: string; // Tipo de identificacion
   idValue?: string;
   activeCount?: boolean; // Para que el usuario admin habilite o desahibilite otras cuentas

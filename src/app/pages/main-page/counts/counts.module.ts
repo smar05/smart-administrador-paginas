@@ -1,3 +1,4 @@
+import { NewCountsComponent } from './new-counts/new-counts.component';
 import { CountsComponent } from './counts.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -15,7 +16,7 @@ import { PipesModule } from '../../../pipes/pipes/pipes.module';
 import { CountsRoutingModule } from './counts-routing.module';
 
 @NgModule({
-  declarations: [CountsComponent],
+  declarations: [CountsComponent, NewCountsComponent],
   imports: [
     CommonModule,
     CountsRoutingModule,

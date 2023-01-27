@@ -42,6 +42,17 @@ export class CountService {
   }
 
   /**
+   * Guardar informacion de la cuenta en la cuenta actual
+   *
+   * @param {ICount} data
+   * @return {*}  {Observable<any>}
+   * @memberof CountService
+   */
+  public postDataCuentaActual(data: ICount): Observable<any> {
+    return this.httpService.post(`${this.urlCount}.json`, data);
+  }
+
+  /**
    * Actualizar cuenta
    *
    * @param {string} id
