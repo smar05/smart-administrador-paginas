@@ -53,6 +53,7 @@ export class CountsComponent implements OnInit {
   public displayedColumns: string[] = ['position', 'name', 'email', 'actions']; //Variable para nombrar las columnas de la tabla
   public dataSource!: MatTableDataSource<ICount>; //Instancia la data que aparecera en la tabla
   public expandedElement!: ICount | null;
+  public showPermission: boolean = false;
 
   //Paginador
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -339,5 +340,17 @@ export class CountsComponent implements OnInit {
           }
         });
     }
+  }
+
+  public getPermissionsData(count: ICount | any, name: any): boolean {
+    if (typeof count.permission == 'object') {
+      return count.permission[name];
+    }
+
+    return false;
+  }
+
+  public mostrarPermisos(): void {
+    this.showPermission = !this.showPermission;
   }
 }
