@@ -75,15 +75,7 @@ export class LoginComponent implements OnInit {
           res.user.multiFactor.user.stsTokenManager.refreshToken
         );
 
-        const uid: string = res.user.multiFactor.user.uid;
-
-        let params: IQueryParams = {
-          orderBy: '"email"',
-          equalTo: `"${this.f.controls.email.value}"`,
-        };
-
-        let res2: any = await this.countService.getData(params).toPromise();
-        let count: ICount = res2[Object.keys(res2)[0]];
+        let count: ICount = await this.countService.getCuentaActual();
 
         if (!count) {
           alerts.basicAlert('Error', 'No se ha encontrado la cuenta', 'error');
