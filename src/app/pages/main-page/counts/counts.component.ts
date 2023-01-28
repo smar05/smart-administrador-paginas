@@ -1,3 +1,4 @@
+import { EditCountsComponent } from './edit-counts/edit-counts.component';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { NewCountsComponent } from './new-counts/new-counts.component';
 import { alerts } from 'src/app/helpers/alerts';
@@ -7,7 +8,7 @@ import { ICities } from './../../../interface/icities';
 import { IState } from './../../../interface/istate';
 import { LocationService } from './../../../services/location.service';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
-import { ICount } from 'src/app/interface/icount';
+import { ICount, EnumCountPermission } from 'src/app/interface/icount';
 import { CountService } from './../../../services/count.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
@@ -95,7 +96,10 @@ export class CountsComponent implements OnInit {
             country: res[a].country,
             state: res[a].state,
             city: res[a].city,
-            permission: res[a].permission,
+            permission:
+              res[a].permission == EnumCountPermission.admin
+                ? EnumCountPermission.admin
+                : JSON.parse(res[a].permission),
             idType: res[a].idType,
             idValue: res[a].idValue,
             activeCount: res[a].activeCount,
@@ -237,7 +241,20 @@ export class CountsComponent implements OnInit {
     });
   }
 
-  public editCount(id: string): void {}
+  public editCount(id: string): void {
+    const dialogRef = this.dialog.open(EditCountsComponent, {
+      width: '100%',
+      data: {
+        id: id,
+      },
+    });
+    //actualizar estado de la tabla
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getCounts();
+      }
+    });
+  }
 
   public deleteCount(id: string, name: string): void {
     alerts

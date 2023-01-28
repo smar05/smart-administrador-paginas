@@ -1,3 +1,4 @@
+import { MatDialogRef } from '@angular/material/dialog';
 import { LoginService } from './../../../../services/login.service';
 import { EnumLocalStorage } from './../../../../enums/enum-local-storage';
 import { functions } from 'src/app/helpers/functions';
@@ -12,7 +13,6 @@ import { IState } from './../../../../interface/istate';
 import { ICountries } from './../../../../interface/icountries';
 import { Component, OnInit } from '@angular/core';
 import { alerts } from 'src/app/helpers/alerts';
-import { ICountPermissions } from 'src/app/interface/icount-permissions';
 
 @Component({
   selector: 'app-new-counts',
@@ -52,7 +52,6 @@ export class NewCountsComponent implements OnInit {
     terms: ['', [Validators.required]],
     idType: ['', [Validators.required]], // Tipo de identificacion
     idValue: ['', Validators.required],
-    activeCount: [true, [Validators.required]],
     permissions: new UntypedFormArray([
       this.form.group({
         users_read: [true, []],
@@ -132,10 +131,6 @@ export class NewCountsComponent implements OnInit {
     return this.f.controls.permissions;
   }
 
-  get activeCount() {
-    return this.f.controls.activeCount;
-  }
-
   public formSubmitted: boolean = false;
   public loadData: boolean = false;
 
@@ -144,7 +139,8 @@ export class NewCountsComponent implements OnInit {
     private registerService: RegisterService,
     private countService: CountService,
     private locationService: LocationService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    public dialogRef: MatDialogRef<NewCountsComponent>
   ) {}
 
   ngOnInit(): void {
@@ -180,16 +176,16 @@ export class NewCountsComponent implements OnInit {
         );
       });
 
-      let permission: ICountPermissions | any = this.permissions.value[0];
+      let permission: any = this.permissions.value[0];
 
       // Si estan todos los permisos, se asigna admin
-      let setPermission: ICountPermissions | string =
+      let setPermission: string =
         Object.keys(permission)
           .map((a: any) => {
             return permission[a];
           })
           .filter((a: boolean) => !a).length > 0
-          ? permission
+          ? JSON.stringify(permission)
           : EnumCountPermission.admin;
 
       let keyCount: string =
@@ -213,12 +209,13 @@ export class NewCountsComponent implements OnInit {
         permission: setPermission,
         idType: this.idType.value,
         idValue: this.idValue.value,
-        activeCount: this.activeCount.value,
+        activeCount: true,
         keyCount: keyCount,
       };
 
       await this.countService.postData(count).toPromise();
 
+      this.dialogRef.close('save');
       this.loadData = false;
     } catch (error: any) {
       console.error(error);

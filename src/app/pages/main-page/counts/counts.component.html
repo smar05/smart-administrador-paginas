@@ -452,7 +452,10 @@
                 </div>
                 <div class="card-footer">
                   <div class="text-right">
-                    <button class="btn btn-sm btn-dark">
+                    <button
+                      class="btn btn-sm btn-dark"
+                      (click)="editCount(myCount.id || '')"
+                    >
                       <i class="fas fa-pencil-alt"></i>
                     </button>
                   </div>

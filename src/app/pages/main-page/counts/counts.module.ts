@@ -14,9 +14,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { PipesModule } from '../../../pipes/pipes/pipes.module';
 import { CountsRoutingModule } from './counts-routing.module';
+import { EditCountsComponent } from './edit-counts/edit-counts.component';
 
 @NgModule({
-  declarations: [CountsComponent, NewCountsComponent],
+  declarations: [CountsComponent, NewCountsComponent, EditCountsComponent],
   imports: [
     CommonModule,
     CountsRoutingModule,

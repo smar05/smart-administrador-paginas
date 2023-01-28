@@ -1,7 +1,7 @@
 <mat-dialog-content>
   <div class="card card-warning">
     <div class="card-header">
-      <h2 class="card-title mb-0">Nueva cuenta</h2>
+      <h2 class="card-title mb-0">Editar cuenta</h2>
       <button type="button" class="close" mat-dialog-close>&times;</button>
     </div>
     <form autocomplete="off" [formGroup]="f" (ngSubmit)="saveCount()">
@@ -53,6 +53,7 @@
               placeholder="Correo electronico"
               formControlName="email"
               required
+              readonly
               [ngClass]="{
                 'is-invalid':
                   invalidField('email') &&
@@ -290,64 +291,13 @@
               Por favor ingrese su genero
             </span>
           </div>
-          <!--contraseña-->
-          <div class="form-group">
-            <label for="password"> Contraseña </label>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Contraseña"
-              formControlName="password"
-              required
-              [ngClass]="{
-                'is-invalid':
-                  invalidField('password') ||
-                  f.controls.password.errors?.minlength
-              }"
-            />
-            <span
-              class="invalid-feedback"
-              *ngIf="
-                invalidField('password') && f.controls.password.errors?.required
-              "
-            >
-              Por favor ingrese su contraseña
-            </span>
-            <span
-              class="invalid-feedback"
-              *ngIf="f.controls.password.errors?.minlength"
-            >
-              La contraseña debe tener minimo 6 caracteres
-            </span>
-          </div>
-          <!--Verificar contraseña-->
-          <div class="form-group">
-            <label for="repeatPassword"> Verificar la contraseña </label>
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Ingrese su contraseña nuevamente"
-              formControlName="repeatPassword"
-              required
-              [ngClass]="{
-                'is-invalid':
-                  invalidField('repeatPassword') || !passwordCoincidence()
-              }"
-            />
-            <span
-              class="invalid-feedback"
-              *ngIf="
-                invalidField('repeatPassword') &&
-                f.controls.repeatPassword.errors?.required
-              "
-            >
-              Por favor ingrese su contraseña
-            </span>
-            <span class="invalid-feedback" *ngIf="!passwordCoincidence()">
-              La contraseña no coincide
-            </span>
-          </div>
-          <div class="form-group">
+          <div
+            class="form-group"
+            *ngIf="
+              cuentaActual.permission?.counts_write ||
+              cuentaActual.permission == 'admin'
+            "
+          >
             <label for=""><strong>Permisos</strong></label>
             <div
               class="row"
@@ -524,33 +474,6 @@
               </div>
             </div>
           </div>
-          <!--Terminos y condiciones-->
-          <div class="form-group">
-            <div class="icheck-primary">
-              <label for="agreeTerms">
-                Estoy de acuerdo con los <a href="#">terminos</a>
-              </label>
-              <input
-                type="checkbox"
-                id="agreeTerms"
-                name="terms"
-                value="agree"
-                formControlName="terms"
-                required
-                [ngClass]="{
-                  'is-invalid': invalidField('terms')
-                }"
-              />
-              <span
-                class="invalid-feedback"
-                *ngIf="
-                  invalidField('terms') && f.controls.terms.errors?.required
-                "
-              >
-                Por favor acepte los terminos y condiciones
-              </span>
-            </div>
-          </div>
         </ng-container>
         <ng-container *ngIf="loadData">
           <app-spinners [type]="'sk-cube'"></app-spinners>
@@ -563,7 +486,7 @@
           class="btn btn-warning float-right"
           [disabled]="f.invalid"
         >
-          Registrar
+          Editar
         </button>
       </div>
     </form>
