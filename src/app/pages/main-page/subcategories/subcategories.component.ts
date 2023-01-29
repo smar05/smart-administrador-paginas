@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { ProductsService } from './../../../services/products.service';
 import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
@@ -58,7 +59,8 @@ export class SubcategoriesComponent implements OnInit {
   constructor(
     private subcategoriesService: SubcategoriesService,
     private productsService: ProductsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -177,5 +179,9 @@ export class SubcategoriesComponent implements OnInit {
           });
         }
       });
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

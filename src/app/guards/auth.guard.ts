@@ -33,6 +33,7 @@ export class AuthGuard implements CanActivate {
 
             if (!this.countService.canGoToUrl(url)) {
               this.router.navigateByUrl('/' + EnumPages.home);
+              resolve(false);
             }
 
             resolve(true);

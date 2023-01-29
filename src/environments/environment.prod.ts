@@ -33,6 +33,11 @@ export const environment = {
     messages: 'messages',
     sales: 'sales',
   },
+  urls_program: {
+    // No pertenecen a las colecciones de la bd, URL's del programa
+    edit_product: 'edit-product',
+    new_product: 'new-product',
+  },
   apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',
   urlLocation: `https://api.countrystatecity.in/v1/`,
 };

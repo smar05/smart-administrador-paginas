@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
@@ -62,7 +63,8 @@ export class CategoriesComponent implements OnInit {
   constructor(
     private categoriesService: CategoriesService,
     private subcategoriesService: SubcategoriesService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -238,5 +240,9 @@ export class CategoriesComponent implements OnInit {
     if (urlImage) {
       this.categoriesImages.set(categorie.id!, urlImage);
     }
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

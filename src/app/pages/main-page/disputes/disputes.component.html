@@ -110,6 +110,7 @@
                 <button
                   class="btn btn-sm btn-dark mr-1 size"
                   (click)="editDispute(element.id)"
+                  *ngIf="hasPermission('disputes_write')"
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>

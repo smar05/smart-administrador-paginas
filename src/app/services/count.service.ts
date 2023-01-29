@@ -189,6 +189,14 @@ export class CountService {
           valido = true; // Todas las cuentas pueden acceder a mi cuenta, dentro de la pagina se le restringen los permisos
           break;
 
+        case environment.urls_program.edit_product:
+          valido = this.hasPermission(EnumCountPermission.products_write);
+          break;
+
+        case environment.urls_program.new_product:
+          valido = this.hasPermission(EnumCountPermission.products_write);
+          break;
+
         default:
           valido = false;
           break;
@@ -198,5 +206,15 @@ export class CountService {
     }
 
     return valido;
+  }
+
+  /**
+   *
+   *
+   * @param {ICount} cuenta
+   * @memberof CountService
+   */
+  public setCuentaActual(cuenta: ICount): void {
+    this.cuentaActual = cuenta;
   }
 }

@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { EditMessagesComponent } from './edit-messages/edit-messages.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -60,7 +61,8 @@ export class MessagesComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private dialog: MatDialog,
-    private navbarComponent: NavbarComponent
+    private navbarComponent: NavbarComponent,
+    private countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -106,5 +108,9 @@ export class MessagesComponent implements OnInit {
         this.navbarComponent.getMessages();
       }
     });
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

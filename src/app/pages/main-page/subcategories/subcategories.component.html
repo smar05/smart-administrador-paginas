@@ -28,6 +28,7 @@
               class="btn btn-block bg-gradient-primary"
               type="button"
               (click)="newSubcategory()"
+              *ngIf="hasPermission('subcategories_write')"
             >
               Nueva subcategoria
             </button>
@@ -81,12 +82,14 @@
                 <button
                   class="btn btn-sm btn-dark"
                   (click)="editSubcategory(element.id)"
+                  *ngIf="hasPermission('subcategories_write')"
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button
                   class="btn btn-sm btn-danger mr-1"
                   (click)="deleteSubcategory(element.id, element.url)"
+                  *ngIf="hasPermission('subcategories_write')"
                 >
                   <i class="fas fa-trash"></i>
                 </button>

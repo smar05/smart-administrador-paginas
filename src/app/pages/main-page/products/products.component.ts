@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
@@ -60,7 +61,8 @@ export class ProductsComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -123,12 +125,6 @@ export class ProductsComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  //Dialogo para un nuevo producto
-  public newProduct(): void {}
-
-  //Cambiar estado de la categoria
-  public changeState(e: any): void {}
 
   //Eliminar producto
   public deleteProduct(id: string): void {
@@ -286,5 +282,9 @@ export class ProductsComponent implements OnInit {
         this.productsImages.set(set, '');
       }
     }
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

@@ -28,6 +28,7 @@
               class="btn btn-block bg-gradient-primary"
               type="button"
               (click)="newCategory()"
+              *ngIf="hasPermission('categories_write')"
             >
               Nueva categoria
             </button>
@@ -81,12 +82,14 @@
                 <button
                   class="btn btn-sm btn-dark"
                   (click)="editCategorie(element.id)"
+                  *ngIf="hasPermission('categories_write')"
                 >
                   <i class="fas fa-pencil-alt"></i>
                 </button>
                 <button
                   class="btn btn-sm btn-danger mr-1"
                   (click)="deleteCategorie(element.id, element.name)"
+                  *ngIf="hasPermission('categories_write')"
                 >
                   <i class="fas fa-trash"></i>
                 </button>
@@ -150,7 +153,7 @@
                       <strong class="mat-header-cell">Vista:</strong>
                       {{ element.view }}
                     </li>
-                    <li class="py-1">
+                    <li class="py-1" *ngIf="hasPermission('categories_write')">
                       <div class="custom-control custom-switch">
                         <input
                           *ngIf="element.state == 'show'"

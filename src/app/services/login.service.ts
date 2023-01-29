@@ -67,6 +67,9 @@ export class LoginService {
     localStorage.removeItem(EnumLocalStorage.refreshToken);
     localStorage.removeItem(EnumLocalStorage.localId);
     localStorage.removeItem(EnumLocalStorage.email);
+
+    this.countService.setCuentaActual({});
+
     this.router.navigateByUrl('/' + EnumPages.login);
   }
 }
