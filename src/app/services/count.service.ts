@@ -185,6 +185,10 @@ export class CountService {
           valido = this.hasPermission(EnumCountPermission.users_read);
           break;
 
+        case environment.collections.count:
+          valido = true; // Todas las cuentas pueden acceder a mi cuenta, dentro de la pagina se le restringen los permisos
+          break;
+
         default:
           valido = false;
           break;

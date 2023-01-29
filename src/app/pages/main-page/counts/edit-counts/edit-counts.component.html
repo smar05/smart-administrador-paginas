@@ -291,13 +291,7 @@
               Por favor ingrese su genero
             </span>
           </div>
-          <div
-            class="form-group"
-            *ngIf="
-              cuentaActual.permission?.counts_write ||
-              cuentaActual.permission == 'admin'
-            "
-          >
+          <div class="form-group" *ngIf="canEditPermisos()">
             <label for=""><strong>Permisos</strong></label>
             <div
               class="row"

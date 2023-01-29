@@ -370,4 +370,8 @@ export class CountsComponent implements OnInit {
   public mostrarPermisos(): void {
     this.showPermission = !this.showPermission;
   }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
+  }
 }

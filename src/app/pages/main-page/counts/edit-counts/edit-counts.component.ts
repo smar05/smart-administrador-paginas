@@ -119,16 +119,7 @@ export class EditCountsComponent implements OnInit {
   }
 
   public async getCuentaActual(): Promise<void> {
-    let email: string = localStorage.getItem(EnumLocalStorage.email) || '';
-    if (!email) this.dialogRef.close('');
-    let params: IQueryParams = {
-      orderBy: '"email"',
-      equalTo: `"${email}"`,
-    };
-    let res: any = await this.countService.getData(params).toPromise();
-    this.cuentaActual = res[Object.keys(res)[0]];
-    if (this.cuentaActual.permission != EnumCountPermission.admin)
-      this.cuentaActual.permission = JSON.parse(this.cuentaActual.permission);
+    this.cuentaActual = await this.countService.getCuentaActual();
   }
 
   public async getCount(): Promise<void> {
@@ -334,5 +325,12 @@ export class EditCountsComponent implements OnInit {
       this.city.setValue(null);
       this.allCities = [];
     }
+  }
+
+  public canEditPermisos(): boolean {
+    return (
+      this.countService.hasPermission('counts_write') &&
+      this.cuentaActual.email != this.email.value
+    );
   }
 }
