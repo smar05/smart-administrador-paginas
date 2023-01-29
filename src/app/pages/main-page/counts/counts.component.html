@@ -1,0 +1,1150 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Cuentas</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+            <li class="breadcrumb-item active">counts</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <!-- Default box -->
+    <ng-container *ngIf="!loading; else load">
+      <div class="card card-solid">
+        <div class="card-body pb-0">
+          <div class="row">
+            <div
+              class="col-12 col-sm-6 col-md-6 d-flex align-items-stretch flex-column"
+            >
+              <div class="card bg-light d-flex flex-fill">
+                <div class="card-header text-muted border-bottom-0">
+                  <h2 class="card-title mb-0"><strong>Mi cuenta</strong></h2>
+                  <br />
+                  <br />
+                  <h3 class="lead">
+                    <b>{{ myCount.name }}</b>
+                  </h3>
+                  <strong (click)="mostrarPermisos()"
+                    >Permisos: <i class="fas fa-eye"></i
+                  ></strong>
+                  <span>
+                    <div [ngSwitch]="myCount.permission">
+                      <p *ngSwitchCase="'admin'">Administrador</p>
+                      <ng-container *ngSwitchDefault>
+                        <div class="row" *ngIf="showPermission">
+                          <!--users_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de usuarios: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'users_read')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="!getPermissionsData(myCount, 'users_read')"
+                            ></i>
+                          </div>
+                          <!--users_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de usuarios: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'users_write')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'users_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--categories_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de categorias: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'categories_read')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'categories_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--categories_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de categorias: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'categories_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'categories_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--subcategories_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de subcategorias: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(
+                                  myCount,
+                                  'subcategories_read'
+                                )
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(
+                                  myCount,
+                                  'subcategories_read'
+                                )
+                              "
+                            ></i>
+                          </div>
+                          <!--subcategories_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de subcategorias: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(
+                                  myCount,
+                                  'subcategories_write'
+                                )
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(
+                                  myCount,
+                                  'subcategories_write'
+                                )
+                              "
+                            ></i>
+                          </div>
+
+                          <!--store_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de tienda: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'store_read')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="!getPermissionsData(myCount, 'store_read')"
+                            ></i>
+                          </div>
+                          <!--store_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de tienda: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'store_write')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'store_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--products_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de productos: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'products_read')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'products_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--products_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de productos: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'products_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'products_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--orders_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de ordenes: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'orders_read')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'orders_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--orders_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de ordenes: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'orders_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'orders_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--sales_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de ventas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'sales_read')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="!getPermissionsData(myCount, 'sales_read')"
+                            ></i>
+                          </div>
+                          <!--sales_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de ventas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'sales_write')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'sales_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--disputes_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de disputas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'disputes_read')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'disputes_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--disputes_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de disputas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'disputes_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'disputes_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--messages_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de mensajes: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'messages_read')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'messages_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--messages_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de mensajes: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'messages_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'messages_write')
+                              "
+                            ></i>
+                          </div>
+
+                          <!--counts_read-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Lectura de cuentas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="getPermissionsData(myCount, 'counts_read')"
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'counts_read')
+                              "
+                            ></i>
+                          </div>
+                          <!--counts_write-->
+                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                            <label for="">Edicion de cuentas: </label>
+                            <i
+                              class="fas fa-check"
+                              *ngIf="
+                                getPermissionsData(myCount, 'counts_write')
+                              "
+                            ></i>
+                            <i
+                              class="fas fa-times"
+                              *ngIf="
+                                !getPermissionsData(myCount, 'counts_write')
+                              "
+                            ></i>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </span>
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <ul class="ml-4 mb-0 fa-ul text-muted">
+                        <li class="small">
+                          <span class="fa-li">
+                            <i class="fas fa-lg fa-envelope"></i
+                          ></span>
+                          <strong>Correo:</strong> {{ myCount.email }}
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-id-card"></i
+                          ></span>
+                          <div [ngSwitch]="myCount.idType">
+                            <p *ngSwitchCase="'C.C'">
+                              <strong>C.C (Cédula de Ciudadania): # </strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'C.E'">
+                              <strong>C.E (Cédula Extranjería): #</strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'P.A'">
+                              <strong>P.A (Pasaporte): #</strong>
+                              {{ myCount.idValue }}
+                            </p>
+                            <p *ngSwitchCase="'NIT'">
+                              <strong
+                                >NIT (Número de Identificación Tributaria):
+                                #</strong
+                              >
+                              {{ myCount.idValue }}
+                            </p>
+                          </div>
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-globe"></i
+                          ></span>
+                          <ul>
+                            <li>
+                              <strong>Pais:</strong>
+                              {{ getCountryNameByIso(myCount.country || "") }}
+                            </li>
+                            <li>
+                              <strong>Estado:</strong>
+                              {{
+                                getStatesByCountryName(
+                                  myCount.country || "",
+                                  myCount.state || ""
+                                )
+                              }}
+                            </li>
+                            <li>
+                              <strong>Ciudad:</strong>
+                              {{
+                                getCitiesByCountryAndStateName(
+                                  myCount.country || "",
+                                  myCount.state || "",
+                                  myCount.city || 0
+                                )
+                              }}
+                            </li>
+                          </ul>
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-genderless"></i
+                          ></span>
+                          <strong>Genero:</strong> {{ myCount.sex }}
+                        </li>
+                        <li class="small">
+                          <span class="fa-li"
+                            ><i class="fas fa-lg fa-phone"></i
+                          ></span>
+                          <strong>Celular:</strong> {{ myCount.celphone }}
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-right">
+                    <button
+                      class="btn btn-sm btn-dark"
+                      (click)="editCount(myCount.id || '')"
+                    >
+                      <i class="fas fa-pencil-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <div class="card" *ngIf="hasPermission('counts_read')">
+        <div class="card-header">
+          <div [hidden]="loading" class="row mb-2">
+            <div class="col-12 col-sm-6 col-xl-3 mr-auto">
+              <button
+                class="btn btn-block bg-gradient-primary"
+                type="button"
+                (click)="newCount()"
+                *ngIf="hasPermission('counts_write')"
+              >
+                Nueva cuenta
+              </button>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3 ml-auto">
+              <input
+                class="form-control"
+                placeholder="Buscar"
+                (keyup)="applyFilter($event)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mat-table-container">
+            <table
+              [hidden]="loading"
+              mat-table
+              matSort
+              matSortActive="position"
+              matSortDirection="asc"
+              [dataSource]="dataSource"
+              class="mat-elevation-z8 matTable-table"
+              multiTemplateDataRows
+            >
+              <!-- Position Column -->
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.position }}
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Nombre
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.name | substr }}
+                </td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Correo
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.email | substr }}
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let element">
+                  <button
+                    class="btn btn-sm btn-warning mr-1"
+                    (click)="
+                      expandedElement =
+                        expandedElement === element ? null : element
+                    "
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <ng-container *ngIf="hasPermission('counts_write')">
+                    <button
+                      class="btn btn-sm btn-danger mr-1 size"
+                      *ngIf="!element.activeCount"
+                      (click)="cambiarEstado(element, false)"
+                    >
+                      <!--<i class="fas fa-clock"></i>-->
+                      <i class="fas fa-times"></i>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-success mr-1 size"
+                      *ngIf="element.activeCount"
+                      (click)="cambiarEstado(element, true)"
+                    >
+                      <i class="fas fa-check"></i>
+                    </button>
+                  </ng-container>
+                  <button
+                    class="btn btn-sm btn-dark"
+                    (click)="editCount(element.id)"
+                    *ngIf="hasPermission('counts_write')"
+                  >
+                    <i class="fas fa-pencil-alt"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger mr-1"
+                    (click)="deleteCount(element.id, element.name)"
+                    *ngIf="hasPermission('counts_write')"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </ng-container>
+
+              <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+              <ng-container matColumnDef="expandedDetail">
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  [attr.colspan]="displayedColumns.length"
+                >
+                  <div
+                    class="example-element-detail"
+                    [@detailExpand]="
+                      element == expandedElement ? 'expanded' : 'collapsed'
+                    "
+                  >
+                    <ul class="pl-0">
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Nombre:</strong>
+                        {{ element.name }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Correo:</strong>
+                        {{ element.email }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Celular:</strong>
+                        {{ element.celphone }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Genero:</strong>
+                        {{ element.sex }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Pais:</strong>
+                        {{ getCountryNameByIso(element.country || "") }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Estado:</strong>
+                        {{
+                          getStatesByCountryName(
+                            element.country || "",
+                            element.state || ""
+                          )
+                        }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <strong class="mat-header-cell">Ciudad:</strong>
+                        {{
+                          getCitiesByCountryAndStateName(
+                            element.country || "",
+                            element.state || "",
+                            element.city || 0
+                          )
+                        }}
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <div [ngSwitch]="element.idType">
+                          <p *ngSwitchCase="'C.C'">
+                            <strong>C.C (Cédula de Ciudadania): # </strong>
+                            {{ element.idValue }}
+                          </p>
+                          <p *ngSwitchCase="'C.E'">
+                            <strong>C.E (Cédula Extranjería): #</strong>
+                            {{ element.idValue }}
+                          </p>
+                          <p *ngSwitchCase="'P.A'">
+                            <strong>P.A (Pasaporte): #</strong>
+                            {{ element.idValue }}
+                          </p>
+                          <p *ngSwitchCase="'NIT'">
+                            <strong
+                              >NIT (Número de Identificación Tributaria):
+                              #</strong
+                            >
+                            {{ element.idValue }}
+                          </p>
+                        </div>
+                      </li>
+                      <li class="py-2">
+                        <span class="mx-2 text-muted"></span>
+                        <label class="mat-header-cell">Permisos:</label>
+                        <span>
+                          <div [ngSwitch]="element.permission">
+                            <p *ngSwitchCase="'admin'">Administrador</p>
+                            <ng-container *ngSwitchDefault>
+                              <div class="row">
+                                <!--users_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <strong for="">Lectura de usuarios: </strong>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'users_read')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(element, 'users_read')
+                                    "
+                                  ></i>
+                                </div>
+                                <!--users_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de usuarios: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'users_write')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'users_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--categories_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de categorias: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'categories_read'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'categories_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--categories_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de categorias: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'categories_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'categories_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--subcategories_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for=""
+                                    >Lectura de subcategorias:
+                                  </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'subcategories_read'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'subcategories_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--subcategories_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for=""
+                                    >Edicion de subcategorias:
+                                  </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'subcategories_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'subcategories_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--store_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de tienda: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'store_read')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(element, 'store_read')
+                                    "
+                                  ></i>
+                                </div>
+                                <!--store_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de tienda: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'store_write')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'store_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--products_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de productos: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'products_read'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'products_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--products_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de productos: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'products_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'products_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--orders_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de ordenes: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'orders_read')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'orders_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--orders_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de ordenes: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'orders_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'orders_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--sales_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de ventas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'sales_read')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(element, 'sales_read')
+                                    "
+                                  ></i>
+                                </div>
+                                <!--sales_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de ventas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'sales_write')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'sales_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--disputes_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de disputas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'disputes_read'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'disputes_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--disputes_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de disputas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'disputes_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'disputes_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--messages_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de mensajes: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'messages_read'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'messages_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--messages_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de mensajes: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'messages_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'messages_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+
+                                <!--counts_read-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Lectura de cuentas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(element, 'counts_read')
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'counts_read'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                                <!--counts_write-->
+                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
+                                  <label for="">Edicion de cuentas: </label>
+                                  <i
+                                    class="fas fa-check"
+                                    *ngIf="
+                                      getPermissionsData(
+                                        element,
+                                        'counts_write'
+                                      )
+                                    "
+                                  ></i>
+                                  <i
+                                    class="fas fa-times"
+                                    *ngIf="
+                                      !getPermissionsData(
+                                        element,
+                                        'counts_write'
+                                      )
+                                    "
+                                  ></i>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let element; columns: displayedColumns"
+                class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: ['expandedDetail']"
+                class="example-detail-row"
+              ></tr>
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td
+                  class="mat-cell text-center"
+                  [attr.colspan]="displayedColumns.length"
+                >
+                  No data matching the filter
+                </td>
+              </tr>
+            </table>
+            <ng-container *ngIf="loading">
+              <app-spinners [type]="'sk-cube'"></app-spinners>
+            </ng-container>
+          </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <mat-paginator
+            [hidden]="loading"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            showFirstLastButtons
+            aria-label="Select page of periodic elements"
+          >
+          </mat-paginator>
+        </div>
+        <!-- /.card-footer-->
+      </div>
+    </ng-container>
+
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+</div>
+
+<ng-template #load>
+  <app-spinners [type]="'sk-cube'"></app-spinners>
+</ng-template>
+<!-- /.content-wrapper -->

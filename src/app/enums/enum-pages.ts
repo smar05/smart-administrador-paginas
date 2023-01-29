@@ -11,5 +11,6 @@ export enum EnumPages {
   sales = 'sales',
   messages = 'messages',
   home = '',
+  counts = 'counts',
   error = '**',
 }

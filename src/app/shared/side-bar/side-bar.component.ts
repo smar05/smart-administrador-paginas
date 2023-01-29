@@ -1,3 +1,5 @@
+import { ICount } from 'src/app/interface/icount';
+import { CountService } from './../../services/count.service';
 import { LoginService } from './../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,12 +9,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./side-bar.component.css'],
 })
 export class SideBarComponent implements OnInit {
-  constructor(private loginService: LoginService) {}
+  public myCount: ICount = {};
 
-  ngOnInit(): void {}
+  constructor(
+    private loginService: LoginService,
+    private countService: CountService
+  ) {}
+
+  ngOnInit(): void {
+    this.getMyCount();
+  }
 
   //FUncion de salida del sistema
   public logout(): void {
     this.loginService.logout();
+  }
+
+  public async getMyCount(): Promise<void> {
+    this.myCount = await this.countService.getCuentaActual();
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

@@ -1,24 +1,25 @@
-import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
-import { CountService } from './../../services/count.service';
-import { RegisterService } from './../../services/register.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { LoginService } from './../../../../services/login.service';
+import { EnumLocalStorage } from './../../../../enums/enum-local-storage';
 import { functions } from 'src/app/helpers/functions';
-import { alerts } from 'src/app/helpers/alerts';
-import { LocationService } from './../../services/location.service';
-import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
-import { ICities } from './../../interface/icities';
-import { IState } from './../../interface/istate';
-import { ICountries } from './../../interface/icountries';
-import { Component, OnInit } from '@angular/core';
-import { Iregister } from 'src/app/interface/iregister';
 import { EnumCountPermission, ICount } from 'src/app/interface/icount';
+import { Iregister } from 'src/app/interface/iregister';
+import { LocationService } from './../../../../services/location.service';
+import { CountService } from './../../../../services/count.service';
+import { RegisterService } from './../../../../services/register.service';
+import { FormBuilder, UntypedFormArray, Validators } from '@angular/forms';
+import { ICities } from './../../../../interface/icities';
+import { IState } from './../../../../interface/istate';
+import { ICountries } from './../../../../interface/icountries';
+import { Component, OnInit } from '@angular/core';
+import { alerts } from 'src/app/helpers/alerts';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  selector: 'app-new-counts',
+  templateUrl: './new-counts.component.html',
+  styleUrls: ['./new-counts.component.css'],
 })
-export class RegisterComponent implements OnInit {
+export class NewCountsComponent implements OnInit {
   public allCountries: ICountries[] = [];
   public allStatesByCountry: IState[] = [];
   public allCities: ICities[] = [];
@@ -51,6 +52,30 @@ export class RegisterComponent implements OnInit {
     terms: ['', [Validators.required]],
     idType: ['', [Validators.required]], // Tipo de identificacion
     idValue: ['', Validators.required],
+    permissions: new UntypedFormArray([
+      this.form.group({
+        users_read: [true, []],
+        users_write: [true, []],
+        categories_read: [true, []],
+        categories_write: [true, []],
+        subcategories_read: [true, []],
+        subcategories_write: [true, []],
+        store_read: [true, []],
+        store_write: [true, []],
+        products_read: [true, []],
+        products_write: [true, []],
+        orders_read: [true, []],
+        orders_write: [true, []],
+        sales_read: [true, []],
+        sales_write: [true, []],
+        disputes_read: [true, []],
+        disputes_write: [true, []],
+        messages_read: [true, []],
+        messages_write: [true, []],
+        counts_read: [true, []],
+        counts_write: [true, []],
+      }),
+    ]),
   });
 
   //Validaciones personalizadas
@@ -102,22 +127,27 @@ export class RegisterComponent implements OnInit {
     return this.f.controls.idType;
   }
 
+  get permissions() {
+    return this.f.controls.permissions;
+  }
+
   public formSubmitted: boolean = false;
-  public loading: boolean = false;
+  public loadData: boolean = false;
 
   constructor(
     private form: FormBuilder,
     private registerService: RegisterService,
-    private router: Router,
     private countService: CountService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private loginService: LoginService,
+    public dialogRef: MatDialogRef<NewCountsComponent>
   ) {}
 
   ngOnInit(): void {
     this.getCountries();
   }
 
-  public async onSubmit(f: any): Promise<void> {
+  public async saveCount(): Promise<void> {
     this.formSubmitted = true; //Formulario enviado
 
     //Formulario correcto
@@ -132,7 +162,7 @@ export class RegisterComponent implements OnInit {
       password: this.f.controls.password.value,
     };
 
-    this.loading = true;
+    this.loadData = true;
 
     try {
       let resp: any = await this.registerService.registerAuth(data);
@@ -146,27 +176,47 @@ export class RegisterComponent implements OnInit {
         );
       });
 
+      let permission: any = this.permissions.value[0];
+
+      // Si estan todos los permisos, se asigna admin
+      let setPermission: string =
+        Object.keys(permission)
+          .map((a: any) => {
+            return permission[a];
+          })
+          .filter((a: boolean) => !a).length > 0
+          ? JSON.stringify(permission)
+          : EnumCountPermission.admin;
+
+      let keyCount: string =
+        localStorage.getItem(EnumLocalStorage.localId) || '';
+
+      if (keyCount == '') {
+        alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
+        this.loginService.logout();
+        return;
+      }
+
       const count: ICount = {
         name: this.name.value,
         email: this.email.value,
         celphone: this.celphone.value,
         sex: this.sex.value,
-        active: false,
+        active: true,
         country: this.country.value,
         state: this.state.value,
         city: this.city.value,
-        permission: EnumCountPermission.admin,
+        permission: setPermission,
         idType: this.idType.value,
         idValue: this.idValue.value,
         activeCount: true,
-        keyCount: uid,
+        keyCount: keyCount,
       };
 
       await this.countService.postData(count).toPromise();
 
-      this.loading = false;
-
-      this.router.navigateByUrl('/login');
+      this.dialogRef.close('save');
+      this.loadData = false;
     } catch (error: any) {
       console.error(error);
 
@@ -192,7 +242,7 @@ export class RegisterComponent implements OnInit {
       }
 
       alerts.basicAlert('Error', errorText, 'error');
-      this.loading = false;
+      this.loadData = false;
     }
   }
 

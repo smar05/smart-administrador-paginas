@@ -1,0 +1,488 @@
+<mat-dialog-content>
+  <div class="card card-warning">
+    <div class="card-header">
+      <h2 class="card-title mb-0">Editar cuenta</h2>
+      <button type="button" class="close" mat-dialog-close>&times;</button>
+    </div>
+    <form autocomplete="off" [formGroup]="f" (ngSubmit)="saveCount()">
+      <div class="card-body">
+        <ng-container *ngIf="!loadData">
+          <!--name-->
+          <div class="form-group">
+            <label for="name">Nombre completo</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Nombre completo"
+              formControlName="name"
+              required
+              maxlength="50"
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('name') ||
+                  (f.controls.name.invalid &&
+                    f.controls.name.errors?.maxlength) ||
+                  (f.controls.name.invalid && f.controls.name.errors?.pattern)
+              }"
+            />
+            <span
+              class="invalid-feedback"
+              *ngIf="invalidField('name') && f.controls.name.errors?.required"
+            >
+              Por favor ingrese su nombre
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="f.controls.name.errors?.pattern"
+            >
+              Se encontraron caracteres invalidos
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="f.controls.name.errors?.maxlength"
+            >
+              El nombre no puede tener mas de 50 caracteres
+            </span>
+          </div>
+          <!--Correo-->
+          <div class="form-group">
+            <label for="email"> Correo </label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Correo electronico"
+              formControlName="email"
+              required
+              readonly
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('email') &&
+                  f.controls.email.invalid &&
+                  f.controls.email.errors?.email
+              }"
+            />
+            <span
+              class="invalid-feedback"
+              *ngIf="invalidField('email') && f.controls.email.errors?.required"
+            >
+              Por favor ingrese su correo
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="f.controls.email.errors?.email"
+            >
+              El correo no es valido
+            </span>
+          </div>
+          <!--celular-->
+          <div class="form-group">
+            <label for="celphone">Celular</label>
+            <input
+              type="number"
+              class="form-control"
+              placeholder="No. Celular"
+              formControlName="celphone"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('celphone') ||
+                  (f.controls.celphone.invalid &&
+                    f.controls.celphone.errors?.max) ||
+                  (f.controls.celphone.invalid &&
+                    f.controls.celphone.errors?.pattern)
+              }"
+            />
+            <span
+              class="invalid-feedback"
+              *ngIf="
+                invalidField('celphone') && f.controls.celphone.errors?.required
+              "
+            >
+              Por favor ingrese su numero de celular
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="f.controls.celphone.errors?.pattern"
+            >
+              Se encontraron caracteres invalidos
+            </span>
+            <span
+              class="invalid-feedback"
+              *ngIf="f.controls.celphone.errors?.max"
+            >
+              El numero de celular no puede tener mas de 10 digitos
+            </span>
+          </div>
+          <!--Tipo de identificacion-->
+          <div class="form-group">
+            <label for="idType"> Tipo de identificación </label>
+            <select
+              type="text"
+              class="form-control"
+              placeholder="Tipo de identificación"
+              formControlName="idType"
+              required
+              [ngClass]="{
+                'is-invalid': invalidField('idType')
+              }"
+            >
+              <option value="" disabled selected>Tipo de identificación</option>
+              <option value="C.C">C.C (Cédula de Ciudadania)</option>
+              <option value="C.E">C.E (Cédula Extranjería)</option>
+              <option value="P.A">P.A (Pasaporte)</option>
+              <option value="NIT">
+                NIT (Número de Identificación Tributaria)
+              </option>
+            </select>
+
+            <span
+              class="invalid-feedback"
+              *ngIf="
+                invalidField('idType') && f.controls.idType.errors?.required
+              "
+            >
+              Por favor ingrese su Tipo de identificación
+            </span>
+          </div>
+          <!--Numero de identificacion-->
+          <div class="form-group">
+            <label for="idValue"> Número de identificación </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Número de identificación"
+              formControlName="idValue"
+              required
+              [ngClass]="{
+                'is-invalid': invalidField('idValue')
+              }"
+            />
+            <span
+              class="invalid-feedback"
+              *ngIf="
+                invalidField('idValue') && f.controls.idValue.errors?.required
+              "
+            >
+              Por favor ingrese su Número de identificación
+            </span>
+          </div>
+          <!--Pais-->
+          <div class="form-group">
+            <label for="country"> Pais </label>
+            <select
+              type="text"
+              class="form-control"
+              placeholder="Pais"
+              formControlName="country"
+              required
+              (change)="this.countryChange()"
+              [ngClass]="{
+                'is-invalid': invalidField('country')
+              }"
+            >
+              <option value="" disabled selected>Pais</option>
+              <option
+                value="{{ country.iso2 }}"
+                *ngFor="let country of this.allCountries"
+              >
+                {{ country.name }}
+              </option>
+            </select>
+
+            <span
+              class="invalid-feedback"
+              *ngIf="
+                invalidField('country') && f.controls.country.errors?.required
+              "
+            >
+              Por favor ingrese su Pais
+            </span>
+          </div>
+          <!--Estado-->
+          <div
+            class="form-group"
+            *ngIf="this.country.value && this.allStatesByCountry"
+          >
+            <label for="state"> Estado </label>
+            <select
+              type="text"
+              class="form-control"
+              placeholder="Estado"
+              formControlName="state"
+              required
+              (change)="this.stateChange()"
+              [ngClass]="{
+                'is-invalid': invalidField('state')
+              }"
+            >
+              <option value="" disabled selected>Estado</option>
+              <option
+                value="{{ state.iso2 }}"
+                *ngFor="let state of this.allStatesByCountry"
+              >
+                {{ state.name }}
+              </option>
+            </select>
+
+            <span
+              class="invalid-feedback"
+              *ngIf="invalidField('state') && f.controls.state.errors?.required"
+            >
+              Por favor ingrese su Estado
+            </span>
+          </div>
+          <!--Ciudad-->
+          <div
+            class="form-group"
+            *ngIf="
+              this.country.value &&
+              this.allStatesByCountry &&
+              this.state.value &&
+              this.allCities
+            "
+          >
+            <label for="city"> Ciudad </label>
+            <select
+              type="text"
+              class="form-control"
+              placeholder="Ciudad"
+              formControlName="city"
+              required
+              [ngClass]="{
+                'is-invalid': invalidField('city')
+              }"
+            >
+              <option value="" disabled selected>Ciudad</option>
+              <option value="{{ city.id }}" *ngFor="let city of this.allCities">
+                {{ city.name }}
+              </option>
+            </select>
+
+            <span
+              class="invalid-feedback"
+              *ngIf="invalidField('city') && f.controls.city.errors?.required"
+            >
+              Por favor ingrese su Ciudad
+            </span>
+          </div>
+          <!--Genero-->
+          <div class="form-group">
+            <label for="sex"> Genero </label>
+            <select
+              type="text"
+              class="form-control"
+              placeholder="Genero"
+              formControlName="sex"
+              required
+              [ngClass]="{
+                'is-invalid': invalidField('sex')
+              }"
+            >
+              <option value="" disabled selected>Genero</option>
+              <option value="Hombre">Hombre</option>
+              <option value="Mujer">Mujer</option>
+              <option value="Otro">Otro</option>
+            </select>
+
+            <span
+              class="invalid-feedback"
+              *ngIf="invalidField('sex') && f.controls.sex.errors?.required"
+            >
+              Por favor ingrese su genero
+            </span>
+          </div>
+          <div class="form-group" *ngIf="canEditPermisos()">
+            <label for=""><strong>Permisos</strong></label>
+            <div
+              class="row"
+              *ngFor="let permission of permissions.controls; let i = index"
+            >
+              <!--users_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de usuarios: </label>
+                <input type="checkbox" formControlName="users_read" />
+              </div>
+              <!--users_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de usuarios: </label>
+                <input type="checkbox" formControlName="users_write" />
+              </div>
+
+              <!--categories_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de categorias: </label>
+                <input type="checkbox" formControlName="categories_read" />
+              </div>
+              <!--categories_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de categorias: </label>
+                <input type="checkbox" formControlName="categories_write" />
+              </div>
+
+              <!--subcategories_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de subcategorias: </label>
+                <input type="checkbox" formControlName="subcategories_read" />
+              </div>
+              <!--subcategories_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de subcategorias: </label>
+                <input type="checkbox" formControlName="subcategories_write" />
+              </div>
+
+              <!--store_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de tienda: </label>
+                <input type="checkbox" formControlName="store_read" />
+              </div>
+              <!--store_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de tienda: </label>
+                <input type="checkbox" formControlName="store_write" />
+              </div>
+
+              <!--products_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de productos: </label>
+                <input type="checkbox" formControlName="products_read" />
+              </div>
+              <!--products_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de productos: </label>
+                <input type="checkbox" formControlName="products_write" />
+              </div>
+
+              <!--orders_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de ordenes: </label>
+                <input type="checkbox" formControlName="orders_read" />
+              </div>
+              <!--orders_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de ordenes: </label>
+                <input type="checkbox" formControlName="orders_write" />
+              </div>
+
+              <!--sales_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de ventas: </label>
+                <input type="checkbox" formControlName="sales_read" />
+              </div>
+              <!--sales_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de ventas: </label>
+                <input type="checkbox" formControlName="sales_write" />
+              </div>
+
+              <!--disputes_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de disputas: </label>
+                <input type="checkbox" formControlName="disputes_read" />
+              </div>
+              <!--disputes_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de disputas: </label>
+                <input type="checkbox" formControlName="disputes_write" />
+              </div>
+
+              <!--messages_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de mensajes: </label>
+                <input type="checkbox" formControlName="messages_read" />
+              </div>
+              <!--messages_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de mensajes: </label>
+                <input type="checkbox" formControlName="messages_write" />
+              </div>
+
+              <!--counts_read-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Lectura de cuentas: </label>
+                <input type="checkbox" formControlName="counts_read" />
+              </div>
+              <!--counts_write-->
+              <div
+                class="col-12 col-lg-3 form-group mx-0 pr-0 mb-3"
+                [formGroup]="permission"
+              >
+                <label for="">Edicion de cuentas: </label>
+                <input type="checkbox" formControlName="counts_write" />
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="loadData">
+          <app-spinners [type]="'sk-cube'"></app-spinners>
+        </ng-container>
+      </div>
+      <div class="card-footer">
+        <button mat-dialog-close class="btn btn-secondary">Cerrar</button>
+        <button
+          type="submit"
+          class="btn btn-warning float-right"
+          [disabled]="f.invalid"
+        >
+          Editar
+        </button>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>

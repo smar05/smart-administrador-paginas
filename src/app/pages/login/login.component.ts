@@ -75,10 +75,21 @@ export class LoginComponent implements OnInit {
           res.user.multiFactor.user.stsTokenManager.refreshToken
         );
 
+        let count: ICount = await this.countService.getCuentaActual();
+
+        if (!count) {
+          alerts.basicAlert('Error', 'No se ha encontrado la cuenta', 'error');
+          this.loading = false;
+          return;
+        }
+
         //Se captura el localId
+        localStorage.setItem(EnumLocalStorage.localId, count.keyCount || '');
+
+        //Se captura el email
         localStorage.setItem(
-          EnumLocalStorage.localId,
-          res.user.multiFactor.user.uid
+          EnumLocalStorage.email,
+          this.f.controls.email.value
         );
 
         this.validarUsuarioActivo(this.f.controls.email.value);
@@ -135,6 +146,7 @@ export class LoginComponent implements OnInit {
         (a: any) =>
           ({
             active: resp[a].active,
+            activeCount: resp[a].activeCount,
           } as ICount)
       )[0];
 
@@ -142,6 +154,15 @@ export class LoginComponent implements OnInit {
         alerts.basicAlert(
           'Usuario inactivo',
           'Su cuenta se encuentra inactiva, contacte a un asesor por favor',
+          'error'
+        );
+        this.logout();
+        return false;
+      }
+      if (!count.activeCount) {
+        alerts.basicAlert(
+          'Usuario inactivo',
+          'Su cuenta se encuentra inactiva, contacte a un usuario administrador',
           'error'
         );
         this.logout();

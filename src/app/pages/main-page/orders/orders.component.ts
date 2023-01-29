@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { EditOrdersComponent } from './edit-orders/edit-orders.component';
 import { MatDialog } from '@angular/material/dialog';
 import { OrdersService } from './../../../services/orders.service';
@@ -58,7 +59,8 @@ export class OrdersComponent implements OnInit {
 
   constructor(
     private ordersService: OrdersService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -128,5 +130,9 @@ export class OrdersComponent implements OnInit {
         this.getData();
       }
     });
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

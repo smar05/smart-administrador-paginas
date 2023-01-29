@@ -1,3 +1,4 @@
+import { CountService } from './../../../services/count.service';
 import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DisputesService } from './../../../services/disputes.service';
@@ -61,7 +62,8 @@ export class DisputesComponent implements OnInit {
   constructor(
     private disputesService: DisputesService,
     private dialog: MatDialog,
-    private navbarComponent: NavbarComponent
+    private navbarComponent: NavbarComponent,
+    private countService: CountService
   ) {}
 
   ngOnInit(): void {
@@ -110,5 +112,9 @@ export class DisputesComponent implements OnInit {
         this.navbarComponent.getDisputes();
       }
     });
+  }
+
+  public hasPermission(type: string): boolean | any {
+    return this.countService.hasPermission(type);
   }
 }

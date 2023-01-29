@@ -16,13 +16,15 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
         <img
-          src="../../assets/img/user2-160x160.jpg"
+          src="../../assets/img/undraw_pic_profile_re_7g2h.svg"
           class="img-circle elevation-2"
           alt="User Image"
         />
       </div>
       <div class="info">
-        <a href="#" class="d-block">Alexander Pierce</a>
+        <a [routerLink]="['/counts']" class="d-block">{{
+          myCount.name || "" | substr
+        }}</a>
       </div>
     </div>
 
@@ -42,55 +44,55 @@
             <p>Home</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('users_read')">
           <a [routerLink]="['/users']" class="nav-link">
             <i class="nav-icon fas fa-users"></i>
             <p>Users</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('categories_read')">
           <a [routerLink]="['/categories']" class="nav-link">
             <i class="nav-icon fas fa-list"></i>
             <p>Categories</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('subcategories_read')">
           <a [routerLink]="['/subcategories']" class="nav-link">
             <i class="nav-icon fas fa-th"></i>
             <p>Subcategories</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('store_read')">
           <a [routerLink]="['/stores']" class="nav-link">
             <i class="nav-icon fas fa-store"></i>
             <p>Stores</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('products_read')">
           <a [routerLink]="['/products']" class="nav-link">
             <i class="nav-icon fas fa-shopping-bag"></i>
             <p>Products</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('orders_read')">
           <a [routerLink]="['/orders']" class="nav-link">
             <i class="nav-icon fas fa-shopping-basket"></i>
             <p>Orders</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('sales_read')">
           <a [routerLink]="['/sales']" class="nav-link">
             <i class="nav-icon fas fa-shopping-cart"></i>
             <p>Sales</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('disputes_read')">
           <a [routerLink]="['/disputes']" class="nav-link">
             <i class="nav-icon fas fa-comment-alt"></i>
             <p>Disputes</p>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('messages_read')">
           <a [routerLink]="['/messages']" class="nav-link">
             <i class="nav-icon fas fa-comments"></i>
             <p>Messages</p>
