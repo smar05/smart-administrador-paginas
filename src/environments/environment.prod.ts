@@ -38,6 +38,12 @@ export const environment = {
     edit_product: 'edit-product',
     new_product: 'new-product',
   },
+  aplications: {
+    admin: {
+      version: 'aplications/admin/version',
+    },
+  },
+  version: '1.0.0',
   apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',
   urlLocation: `https://api.countrystatecity.in/v1/`,
 };

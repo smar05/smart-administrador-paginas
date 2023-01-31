@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
   public anioActual!: number;
+  public version: string = environment.version;
 
   constructor() {}
 
