@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { ICities } from './../../../interface/icities';
 import { IState } from './../../../interface/istate';
 import { ICountries } from './../../../interface/icountries';
@@ -58,10 +60,12 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private userService: UsersService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.alertPage();
     this.getAllCountries();
     await this.getData();
 
@@ -205,5 +209,11 @@ export class UsersComponent implements OnInit {
         this.citiesByCountryAndStates.set(key, resp);
       }
     }
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.users)
+      .subscribe((res: any) => {});
   }
 }

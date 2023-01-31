@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { SubcategoriesService } from './../../../services/subcategories.service';
@@ -64,10 +66,12 @@ export class CategoriesComponent implements OnInit {
     private categoriesService: CategoriesService,
     private subcategoriesService: SubcategoriesService,
     public dialog: MatDialog,
-    public countService: CountService
+    public countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
 
     //Tamaño de la pantalla
@@ -244,5 +248,11 @@ export class CategoriesComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.categories)
+      .subscribe((res: any) => {});
   }
 }

@@ -3,6 +3,7 @@ import { alerts } from 'src/app/helpers/alerts';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { AlertsPagesService } from './services/alerts-pages.service';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +13,17 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'INTEGRO-dashboard';
   private urlVersionAdmin: string = `${environment.urlFirebaseSinLocalId}${environment.aplications.admin.version}.json`;
+  private urlAlert: string = `${environment.urlFirebaseSinLocalId}${environment.aplications.admin.alerts.allPages}.json`;
 
   constructor(
     private httpClient: HttpClient,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
     this.validarVersionDelAplicativo();
+    this.alertPage();
   }
 
   /**
@@ -43,5 +47,9 @@ export class AppComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService.alertPage().subscribe((res: any) => {});
   }
 }

@@ -26,9 +26,11 @@ export class IntInterceptor implements HttpInterceptor {
     if (
       request.url == environment.urlLogin ||
       request.url == environment.urlRefreshToken ||
-      (request.url.includes(environment.collections.count) &&
+      (request.url.includes(environment.collections.counts) &&
         request.method == 'POST') || //Para registrar una nueva cuenta
       (request.url.includes(environment.aplications.admin.version) &&
+        request.method == 'GET') ||
+      (request.url.includes(environment.aplications.admin.alerts.url) &&
         request.method == 'GET')
     )
       return next.handle(request);

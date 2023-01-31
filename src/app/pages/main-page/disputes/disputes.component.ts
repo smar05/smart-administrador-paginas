@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
 import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -63,10 +65,12 @@ export class DisputesComponent implements OnInit {
     private disputesService: DisputesService,
     private dialog: MatDialog,
     private navbarComponent: NavbarComponent,
-    private countService: CountService
+    private countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
   }
 
@@ -116,5 +120,11 @@ export class DisputesComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.disputes)
+      .subscribe((res: any) => {});
   }
 }

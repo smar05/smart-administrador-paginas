@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { alerts } from './../../../helpers/alerts';
@@ -62,10 +64,12 @@ export class ProductsComponent implements OnInit {
   constructor(
     private productsService: ProductsService,
     public dialog: MatDialog,
-    private countService: CountService
+    private countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
 
     //Tamaño de la pantalla
@@ -286,5 +290,11 @@ export class ProductsComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.products)
+      .subscribe((res: any) => {});
   }
 }

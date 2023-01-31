@@ -31,11 +31,12 @@ export const environment = {
     products: 'products',
     subCategories: 'sub-categories',
     users: 'users',
-    count: 'count', // Coleccion por fuera de la agrupacion por cuentas
+    counts: 'counts', // Coleccion por fuera de la agrupacion por cuentas
     orders: 'orders',
     disputes: 'disputes',
     messages: 'messages',
     sales: 'sales',
+    store: 'store',
   },
   urls_program: {
     // No pertenecen a las colecciones de la bd, URL's del programa
@@ -45,6 +46,10 @@ export const environment = {
   aplications: {
     admin: {
       version: 'aplications/admin/version',
+      alerts: {
+        allPages: 'aplications/admin/alerts/allPages',
+        url: 'aplications/admin/alerts/',
+      },
     },
   },
   version: '1.0.0',

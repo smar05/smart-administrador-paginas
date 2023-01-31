@@ -1,3 +1,4 @@
+import { AlertsPagesService } from './../../services/alerts-pages.service';
 import { CountService } from './../../services/count.service';
 import { ICount } from 'src/app/interface/icount';
 import { IQueryParams } from './../../interface/i-query-params';
@@ -30,10 +31,13 @@ export class LoginComponent implements OnInit {
     private form: UntypedFormBuilder,
     private loginService: LoginService,
     private router: Router,
-    private countService: CountService
+    private countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.alertPage();
+  }
 
   public login(): void {
     this.formSubmitted = true; //Formulario enviado
@@ -183,5 +187,11 @@ export class LoginComponent implements OnInit {
 
   public logout(): void {
     this.loginService.logout();
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.login)
+      .subscribe((res: any) => {});
   }
 }
