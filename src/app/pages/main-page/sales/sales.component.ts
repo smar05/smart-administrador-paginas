@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { SalesService } from './../../../services/sales.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -54,9 +56,13 @@ export class SalesComponent implements OnInit {
   //Orden
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private salesService: SalesService) {}
+  constructor(
+    private salesService: SalesService,
+    private alertsPagesService: AlertsPagesService
+  ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
   }
 
@@ -106,4 +112,10 @@ export class SalesComponent implements OnInit {
   }
 
   public editSale(id: string): void {}
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.sales)
+      .subscribe((res: any) => {});
+  }
 }

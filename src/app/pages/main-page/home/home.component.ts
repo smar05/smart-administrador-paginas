@@ -1,3 +1,4 @@
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { Iproducts, EnumProductImg } from './../../../interface/iproducts';
 import { Iorders } from './../../../interface/iorders';
 import { OrdersService } from './../../../services/orders.service';
@@ -57,10 +58,12 @@ export class HomeComponent implements OnInit {
     private productsService: ProductsService,
     private salesService: SalesService,
     private usersService: UsersService,
-    private ordersService: OrdersService
+    private ordersService: OrdersService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getProducts();
     this.getSales();
     this.getUsers();
@@ -248,5 +251,9 @@ export class HomeComponent implements OnInit {
           });
       });
     });
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService.alertPage('home').subscribe((res: any) => {});
   }
 }

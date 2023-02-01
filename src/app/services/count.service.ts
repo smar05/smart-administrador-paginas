@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class CountService {
-  private urlCount: string = environment.collections.count;
+  private urlCount: string = environment.collections.counts;
   private urlFirebase: string = environment.urlFirebaseSinLocalId;
   private cuentaActual: ICount = {};
 
@@ -185,7 +185,11 @@ export class CountService {
           valido = this.hasPermission(EnumCountPermission.users_read);
           break;
 
-        case environment.collections.count:
+        case environment.collections.store:
+          valido = this.hasPermission(EnumCountPermission.store_read);
+          break;
+
+        case environment.collections.counts:
           valido = true; // Todas las cuentas pueden acceder a mi cuenta, dentro de la pagina se le restringen los permisos
           break;
 

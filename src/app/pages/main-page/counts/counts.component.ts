@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { EditCountsComponent } from './edit-counts/edit-counts.component';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { NewCountsComponent } from './new-counts/new-counts.component';
@@ -65,10 +67,12 @@ export class CountsComponent implements OnInit {
   constructor(
     private countService: CountService,
     private locationService: LocationService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getAllCountries();
     this.getCounts();
   }
@@ -373,5 +377,11 @@ export class CountsComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.counts)
+      .subscribe((res: any) => {});
   }
 }

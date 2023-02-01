@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
 import { EditOrdersComponent } from './edit-orders/edit-orders.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -60,10 +62,12 @@ export class OrdersComponent implements OnInit {
   constructor(
     private ordersService: OrdersService,
     private dialog: MatDialog,
-    private countService: CountService
+    private countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
   }
 
@@ -134,5 +138,11 @@ export class OrdersComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.orders)
+      .subscribe((res: any) => {});
   }
 }

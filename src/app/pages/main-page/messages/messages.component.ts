@@ -1,3 +1,5 @@
+import { EnumPages } from './../../../enums/enum-pages';
+import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
 import { NavbarComponent } from './../../../shared/navbar/navbar.component';
 import { EditMessagesComponent } from './edit-messages/edit-messages.component';
@@ -62,10 +64,12 @@ export class MessagesComponent implements OnInit {
     private messageService: MessageService,
     private dialog: MatDialog,
     private navbarComponent: NavbarComponent,
-    private countService: CountService
+    private countService: CountService,
+    private alertsPagesService: AlertsPagesService
   ) {}
 
   ngOnInit(): void {
+    this.alertPage();
     this.getData();
   }
 
@@ -112,5 +116,11 @@ export class MessagesComponent implements OnInit {
 
   public hasPermission(type: string): boolean | any {
     return this.countService.hasPermission(type);
+  }
+
+  public alertPage(): void {
+    this.alertsPagesService
+      .alertPage(EnumPages.messages)
+      .subscribe((res: any) => {});
   }
 }

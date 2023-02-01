@@ -27,17 +27,28 @@ export const environment = {
     products: 'products',
     subCategories: 'sub-categories',
     users: 'users',
-    count: 'count', // Coleccion por fuera de la agrupacion por cuentas
+    counts: 'counts', // Coleccion por fuera de la agrupacion por cuentas
     orders: 'orders',
     disputes: 'disputes',
     messages: 'messages',
     sales: 'sales',
+    store: 'store',
   },
   urls_program: {
     // No pertenecen a las colecciones de la bd, URL's del programa
     edit_product: 'edit-product',
     new_product: 'new-product',
   },
+  aplications: {
+    admin: {
+      version: 'aplications/admin/version',
+      alerts: {
+        allPages: 'aplications/admin/alerts/allPages',
+        url: 'aplications/admin/alerts/',
+      },
+    },
+  },
+  version: '1.0.0',
   apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',
   urlLocation: `https://api.countrystatecity.in/v1/`,
 };
