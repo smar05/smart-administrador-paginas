@@ -32,7 +32,7 @@ export const environment = {
     disputes: 'disputes',
     messages: 'messages',
     sales: 'sales',
-    store: 'store',
+    stores: 'stores',
   },
   urls_program: {
     // No pertenecen a las colecciones de la bd, URL's del programa
