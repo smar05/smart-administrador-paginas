@@ -185,7 +185,7 @@ export class CountService {
           valido = this.hasPermission(EnumCountPermission.users_read);
           break;
 
-        case environment.collections.store:
+        case environment.collections.stores:
           valido = this.hasPermission(EnumCountPermission.store_read);
           break;
 
