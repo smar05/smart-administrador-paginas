@@ -8,6 +8,9 @@ import { SubcategoriesService } from './../../../../services/subcategories.servi
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import '../../../../shared/spinkit/sk-cube-grid.css';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 export interface IDialogData {
   id: string;
@@ -54,28 +57,47 @@ export class EditSubcategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData = true;
-    this.subcategoriesService.getItem(this.data.id).subscribe((resp: any) => {
-      this.categoryView = resp.category;
-      this.titleList.setValue(resp.title_list);
-      this.selectTL = resp.title_list;
-      this.nameView = resp.name;
-      this.urlInput = resp.url;
-      this.products_inventory = resp.products_inventory;
-      this.view = resp.view;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      //Traer la informacion de la categoria seleccionada
-      let params: IQueryParams = {
-        orderBy: '"name"',
-        equalTo: `"${resp.category}"`,
-      };
+    this.subcategoriesService
+      .getItemFS(this.data.id, qf)
+      .toPromise()
+      .then((resp1: IFireStoreRes) => {
+        let resp2: any = { id: resp1.id, ...resp1.data };
 
-      this.categoriesService.getData(params).subscribe((resp2: any) => {
-        this.titleListArray = Object.keys(resp2).map((a) =>
-          JSON.parse(resp2[a].title_list)
-        );
-        this.loadData = false;
+        this.categoryView = resp2.category;
+        this.titleList.setValue(resp2.title_list);
+        this.selectTL = resp2.title_list;
+        this.nameView = resp2.name;
+        this.urlInput = resp2.url;
+        this.products_inventory = resp2.products_inventory;
+        this.view = resp2.view;
+
+        //Traer la informacion de la categoria seleccionada
+        let params: IQueryParams = {
+          orderBy: '"name"',
+          equalTo: `"${resp2.category}"`,
+        };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('name', '==', resp2.category);
+
+        this.categoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp2: IFireStoreRes[]) => {
+            this.titleListArray = resp2.map((a: IFireStoreRes) =>
+              JSON.parse(a.data.title_list)
+            );
+            this.loadData = false;
+          });
       });
-    });
   }
 
   //Guardar subcategoria
@@ -92,27 +114,26 @@ export class EditSubcategoriesComponent implements OnInit {
       url: this.urlInput,
       products_inventory: Number(this.products_inventory),
       view: Number(this.view),
+      idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
 
-    this.subcategoriesService
-      .patchData(this.data.id, dataSubcategory)
-      .subscribe(
-        (resp: any) => {
-          this.dialogRef.close('save');
-          alerts.basicAlert(
-            'Listo',
-            'La subcategoria ha sido actualizada',
-            'success'
-          );
-        },
-        (err: any) => {
-          alerts.basicAlert(
-            'Error',
-            'No se ha podido actualizar la subcategoria',
-            'error'
-          );
-        }
-      );
+    this.subcategoriesService.patchDataFS(this.data.id, dataSubcategory).then(
+      () => {
+        this.dialogRef.close('save');
+        alerts.basicAlert(
+          'Listo',
+          'La subcategoria ha sido actualizada',
+          'success'
+        );
+      },
+      (err: any) => {
+        alerts.basicAlert(
+          'Error',
+          'No se ha podido actualizar la subcategoria',
+          'error'
+        );
+      }
+    );
 
     this.loadData = false;
   }

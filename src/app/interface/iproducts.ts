@@ -27,6 +27,7 @@ export interface Iproducts {
   views: number;
   gallery: string;
   delete?: boolean; //True si el producto fue eliminado
+  idShop: string;
 }
 
 export enum EnumProductImg {

@@ -18,6 +18,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 @Component({
   selector: 'app-users',
@@ -83,23 +86,29 @@ export class UsersComponent implements OnInit {
   //Tomar la data de usuarios
   public async getData(): Promise<void> {
     this.loadData = true;
-    let resp: any = await this.userService.getData().toPromise();
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    let resp: IFireStoreRes[] = await this.userService
+      .getDataFS(qf)
+      .toPromise();
     let position = 1;
-    this.users = Object.keys(resp).map(
-      (a) =>
+    this.users = resp.map(
+      (a: IFireStoreRes) =>
         ({
-          id: a,
+          id: a.id,
           position: position++,
-          address: resp[a].address,
-          city: resp[a].city,
-          country: resp[a].country,
-          name: resp[a].name,
-          lastName: resp[a].lastName,
-          email: resp[a].email,
-          phone: resp[a].phone,
-          state: resp[a].state,
-          idType: resp[a].idType,
-          idValue: resp[a].idValue,
+          address: a.data.address,
+          city: a.data.city,
+          country: a.data.country,
+          name: a.data.name,
+          lastName: a.data.lastName,
+          email: a.data.email,
+          phone: a.data.phone,
+          state: a.data.state,
+          idType: a.data.idType,
+          idValue: a.data.idValue,
+          idShop: a.data.idShop,
         } as Iusers)
     );
     this.dataSource = new MatTableDataSource(this.users);
@@ -214,6 +223,7 @@ export class UsersComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.users)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

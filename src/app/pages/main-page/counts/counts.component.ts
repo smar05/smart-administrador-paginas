@@ -23,6 +23,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-counts',
@@ -84,60 +86,68 @@ export class CountsComponent implements OnInit {
       orderBy: '"keyCount"',
       equalTo: `"${localStorage.getItem(EnumLocalStorage.localId)}"`,
     };
+    let qf: QueryFn = (ref) =>
+      ref.where(
+        'keyCount',
+        '==',
+        localStorage.getItem(EnumLocalStorage.localId)
+      );
 
-    this.countService.getData(params).subscribe((res: any) => {
-      let position = Object.keys(res).length;
-      this.counts = Object.keys(res).map(
-        (a: any) =>
-          ({
-            id: a,
+    this.countService
+      .getDataFS(qf)
+      .toPromise()
+      .then((res: IFireStoreRes[]) => {
+        let position = Object.keys(res).length;
+        this.counts = res.map((a: IFireStoreRes) => {
+          return {
+            id: a.id,
             position: position--,
-            name: res[a].name,
-            email: res[a].email,
-            celphone: res[a].celphone,
-            sex: res[a].sex,
-            active: res[a].active,
-            country: res[a].country,
-            state: res[a].state,
-            city: res[a].city,
+            name: a.data.name,
+            email: a.data.email,
+            celphone: a.data.celphone,
+            sex: a.data.sex,
+            active: a.data.active,
+            country: a.data.country,
+            state: a.data.state,
+            city: a.data.city,
             permission:
-              res[a].permission == EnumCountPermission.admin
+              a.data.permission == EnumCountPermission.admin
                 ? EnumCountPermission.admin
-                : JSON.parse(res[a].permission),
-            idType: res[a].idType,
-            idValue: res[a].idValue,
-            activeCount: res[a].activeCount,
-            keyCount: res[a].keyCount,
-          } as ICount)
-      );
+                : JSON.parse(a.data.permission),
+            idType: a.data.idType,
+            idValue: a.data.idValue,
+            activeCount: a.data.activeCount,
+            keyCount: a.data.keyCount,
+          };
+        });
 
-      let email: string | null = localStorage.getItem(EnumLocalStorage.email);
+        let email: string | null = localStorage.getItem(EnumLocalStorage.email);
 
-      // Se obtiene la cuenta actual logueada
-      this.myCount =
-        this.counts.find((count: ICount) => count.email == email) || {};
+        // Se obtiene la cuenta actual logueada
+        this.myCount =
+          this.counts.find((count: ICount) => count.email == email) || {};
 
-      this.counts.forEach(async (count: ICount) => {
-        if (count.country && count.state && count.city) {
-          await this.getStatesByCountry(count.country, count.state);
-          await this.getCitiesByCountryAndState(
-            count.country,
-            count.state,
-            count.city
-          );
-        }
+        this.counts.forEach(async (count: ICount) => {
+          if (count.country && count.state && count.city) {
+            await this.getStatesByCountry(count.country, count.state);
+            await this.getCitiesByCountryAndState(
+              count.country,
+              count.state,
+              count.city
+            );
+          }
+        });
+
+        this.counts = this.counts.filter(
+          (count: ICount) => count.id != this.myCount.id
+        );
+
+        this.dataSource = new MatTableDataSource(this.counts);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        this.loading = false;
       });
-
-      this.counts = this.counts.filter(
-        (count: ICount) => count.id != this.myCount.id
-      );
-
-      this.dataSource = new MatTableDataSource(this.counts);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-
-      this.loading = false;
-    });
   }
 
   public async getStatesByCountry(
@@ -271,8 +281,8 @@ export class CountsComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           //Eliminar registro de la base de datos
-          this.countService.deleteData(id).subscribe(
-            (resp: any) => {
+          this.countService.deleteDataFS(id).then(
+            () => {
               alerts.basicAlert(
                 'Listo',
                 'El usuario ha sido eliminado',
@@ -308,8 +318,8 @@ export class CountsComponent implements OnInit {
             let data: ICount = {
               activeCount: false,
             };
-            this.countService.patchData(count.id, data).subscribe(
-              (resp) => {
+            this.countService.patchDataFS(count.id, data).then(
+              () => {
                 this.getCounts();
                 alerts.basicAlert(
                   'Listo',
@@ -341,8 +351,8 @@ export class CountsComponent implements OnInit {
             let data: ICount = {
               activeCount: true,
             };
-            this.countService.patchData(count.id, data).subscribe(
-              (resp) => {
+            this.countService.patchDataFS(count.id, data).then(
+              () => {
                 this.getCounts();
                 alerts.basicAlert(
                   'Listo',
@@ -382,6 +392,7 @@ export class CountsComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.counts)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

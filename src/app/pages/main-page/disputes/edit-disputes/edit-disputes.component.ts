@@ -8,6 +8,8 @@ import { DisputesService } from './../../../../services/disputes.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 
 export interface IDialogData {
   id: string;
@@ -40,6 +42,7 @@ export class EditDisputesComponent implements OnInit {
   public dataOrder: string = '';
   public loadData: boolean = false;
   public formSubmitted: boolean = false; // Valida envio de formulario
+  public dispute: Idisputes;
 
   constructor(
     private form: UntypedFormBuilder,
@@ -53,11 +56,15 @@ export class EditDisputesComponent implements OnInit {
   }
 
   public getData(): void {
-    this.disputesService.getItem(this.data.id).subscribe((resp: any) => {
-      this.message = resp.message;
-      this.answer.setValue(resp.answer);
-      this.dataOrder = resp.order;
-    });
+    this.disputesService
+      .getItemFS(this.data.id)
+      .toPromise()
+      .then((resp: IFireStoreRes) => {
+        this.message = resp.data.message;
+        this.answer.setValue(resp.data.answer);
+        this.dataOrder = resp.data.order;
+        this.dispute = { id: resp.id, ...resp.data };
+      });
   }
 
   public editDispute(): void {
@@ -67,14 +74,14 @@ export class EditDisputesComponent implements OnInit {
 
     this.loadData = true;
 
-    let dataDispute: Idisputes = {
-      answer: this.f.controls.answer.value,
-      date_answer: new Date(),
-      status: EnumDisputesStatus.answered,
-    };
+    let dataDispute: Idisputes = this.dispute;
+    delete dataDispute.id;
+    dataDispute.answer = this.f.controls.answer.value;
+    dataDispute.date_answer = new Date();
+    dataDispute.status = EnumDisputesStatus.answered;
 
     // Guardar en bd
-    this.disputesService.patchData(this.data.id, dataDispute).subscribe(
+    this.disputesService.patchDataFS(this.data.id, dataDispute).then(
       (resp: any) => {
         this.loadData = false;
         this.dialogRef.close('save');

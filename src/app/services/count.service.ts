@@ -8,6 +8,9 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ICount } from '../interface/icount';
 import { Router } from '@angular/router';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from '../interface/ifireStoreRes';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +20,11 @@ export class CountService {
   private urlFirebase: string = environment.urlFirebaseSinLocalId;
   private cuentaActual: ICount = {};
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private fireStorageService: FireStorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de usuarios en Firebase
@@ -84,6 +91,70 @@ export class CountService {
     return this.http.delete(`${this.urlFirebase}${this.urlCount}/${id}.json`);
   }
 
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof CountService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlCount, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'));
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof CountService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlCount, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {ICount} data
+   * @return {*}  {Promise<any>}
+   * @memberof CountService
+   */
+  public postDataFS(data: ICount): Promise<any> {
+    return this.fireStorageService.post(this.urlCount, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {ICount} data
+   * @return {*}  {Promise<any>}
+   * @memberof CountService
+   */
+  public patchDataFS(doc: string, data: ICount): Promise<any> {
+    return this.fireStorageService.patch(this.urlCount, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof CountService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlCount, doc);
+  }
+
+  //------------ FireStorage---------------//
+
   // Metodos propios ///////////////////////////////////////////////////////////////
 
   /**
@@ -110,10 +181,11 @@ export class CountService {
       orderBy: '"email"',
       equalTo: `"${email}"`,
     };
+    let qf: QueryFn = (ref) => ref.where('email', '==', email).limit(1);
 
-    let res2: any = await this.getData(params).toPromise();
-    let idCount: any = Object.keys(res2)[0];
-    let count: ICount = res2[Object.keys(res2)[0]];
+    let res2: IFireStoreRes[] = await this.getDataFS(qf).toPromise();
+    let idCount: any = res2[0].id;
+    let count: ICount = { id: idCount, ...res2[0].data };
     count.id = idCount;
     if (count.permission != EnumCountPermission.admin)
       count.permission = JSON.parse(count.permission);

@@ -17,6 +17,9 @@ import {
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { EditDisputesComponent } from './edit-disputes/edit-disputes.component';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   providers: [NavbarComponent],
@@ -77,18 +80,29 @@ export class DisputesComponent implements OnInit {
   public getData(): void {
     this.loadData = true;
 
-    this.disputesService.getData().subscribe((resp: any) => {
-      // Se ajusta la respuesta de la bd a la interfaz
-      let position: number = 1;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      this.disputes = this.disputesService.formatDisputes(resp);
+    this.disputesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        // Se ajusta la respuesta de la bd a la interfaz
+        this.disputes = this.disputesService.formatDisputes(
+          resp.map((a: IFireStoreRes) => {
+            return {
+              id: a.id,
+              ...a.data,
+            };
+          })
+        );
 
-      this.dataSource = new MatTableDataSource(this.disputes);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.disputes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-      this.loadData = false;
-    });
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -125,6 +139,7 @@ export class DisputesComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.disputes)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

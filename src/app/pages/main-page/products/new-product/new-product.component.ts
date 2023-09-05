@@ -18,6 +18,10 @@ import {
 import { Component, OnInit } from '@angular/core';
 import '../../../../shared/spinkit/sk-cube-grid.css';
 import { Router } from '@angular/router';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { Isubcategories } from 'src/app/interface/isubcategories';
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
@@ -367,46 +371,45 @@ export class NewProductComponent implements OnInit {
       views: 0,
       gallery: '',
       delete: false,
+      idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
 
     //Guardar la informacion del producto en base de datos
-    this.productsService.postData(dataProduct).subscribe(
+    this.productsService.postDataFS(dataProduct).then(
       async (res: any) => {
         //Guardar las imagenes en storage
         if (this.imgFile)
           await this.saveProductImages(
-            res.name,
+            res.id,
             this.imgFile,
             EnumProductImg.main
           );
         if (this.imgHSliderFile)
           await this.saveProductImages(
-            res.name,
+            res.id,
             this.imgHSliderFile,
             EnumProductImg.horizontal_slider
           );
         if (this.imgTBFile)
           await this.saveProductImages(
-            res.name,
+            res.id,
             this.imgTBFile,
             EnumProductImg.top_banner
           );
         if (this.imgDBFile)
           await this.saveProductImages(
-            res.name,
+            res.id,
             this.imgDBFile,
             EnumProductImg.default_banner
           );
         if (this.files && this.files.length > 0) {
           let nombreGaleria: string[] = await this.saveProductGallery(
-            res.name,
+            res.id,
             this.files
           );
 
           dataProduct.gallery = JSON.stringify(nombreGaleria);
-          await this.productsService
-            .patchData(res.name, dataProduct)
-            .toPromise();
+          await this.productsService.patchDataFS(res.id, dataProduct).then();
         }
 
         this.loadData = false;
@@ -438,16 +441,28 @@ export class NewProductComponent implements OnInit {
           orderBy: '"url"',
           equalTo: `"${name}"`,
         };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('url', '==', name)
+            .limit(1);
 
-        this.productsService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 0) {
-            resolve({ product: true });
-            this.urlInput = '';
-          } else {
-            resolve(null);
-            this.urlInput = name;
-          }
-        });
+        this.productsService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes) => {
+            if (Object.keys(resp).length > 0) {
+              resolve({ product: true });
+              this.urlInput = '';
+            } else {
+              resolve(null);
+              this.urlInput = name;
+            }
+          });
       });
     };
   }
@@ -461,14 +476,29 @@ export class NewProductComponent implements OnInit {
           orderBy: '"category"',
           equalTo: `"${category.name}"`,
         };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('category', '==', category.name);
 
-        this.subcategoriesService.getData(params).subscribe((resp: any) => {
-          this.subcategories = Object.keys(resp).map((a) => ({
-            name: resp[a].name,
-            titleList: resp[a].title_list,
-            url: resp[a].url,
-          }));
-        });
+        this.subcategoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            this.subcategories = resp.map(
+              (a: IFireStoreRes) =>
+                ({
+                  name: a.data.name,
+                  titleList: a.data.title_list,
+                  url: a.data.url,
+                  idShop: a.data.idShop,
+                } as Isubcategories | any)
+            );
+          });
       }
     });
   }
@@ -638,13 +668,23 @@ export class NewProductComponent implements OnInit {
   }
 
   public getCategories(): any {
-    this.categoriesService.getData().subscribe((resp: any) => {
-      this.categories = Object.keys(resp).map((a: any) => ({
-        name: resp[a].name,
-        titleList: JSON.parse(resp[a].title_list),
-        url: resp[a].url,
-      }));
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    this.categoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.categories = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              name: a.data.name,
+              titleList: JSON.parse(a.data.title_list),
+              url: a.data.url,
+              idShop: a.data.idShop,
+            } as Icategories)
+        );
+      });
   }
 
   public async saveProductImages(

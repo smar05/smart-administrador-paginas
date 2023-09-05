@@ -18,6 +18,9 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 import { alerts } from 'src/app/helpers/alerts';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-edit-product',
@@ -259,170 +262,198 @@ export class EditProductComponent implements OnInit {
 
   public getData(): void {
     this.loadData = true;
-    this.productsService.getItem(this.id).subscribe(async (resp: Iproducts) => {
-      this.productEnDb = resp;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      this.name.setValue(resp.name);
-      this.urlInput = resp.url;
-      this.categoryName = resp.category;
-      this.titleList = resp.title_list;
-      this.delivery_time.setValue(resp.delivery_time);
-      this.description.setValue(resp.description);
-      this.price.setValue(resp.price);
-      this.shipping.setValue(resp.shipping);
-      this.stock.setValue(resp.stock);
-      this.summary.setValue(JSON.parse(resp.summary));
-      this.tags.setValue(JSON.parse(resp.tags));
-      this.type_video.setValue(JSON.parse(resp.video)[0]);
-      this.id_video.setValue(JSON.parse(resp.video)[1]);
-      this.type_offer.setValue(JSON.parse(resp.offer)[0]);
-      this.value_offer.setValue(JSON.parse(resp.offer)[1]);
-      this.date_offer.setValue(JSON.parse(resp.offer)[2]);
+    this.productsService
+      .getItemFS(this.id, qf)
+      .toPromise()
+      .then(async (resp: IFireStoreRes) => {
+        let resp2: Iproducts = { id: resp.id, ...resp.data };
 
-      JSON.parse(resp.summary).forEach((sum: string, index: number) => {
-        this.summaryGroup[index] = { input: sum };
-      });
+        this.productEnDb = resp2;
 
-      JSON.parse(resp.details).forEach((detail: any, index: number) => {
-        this.details.push(
-          this.form.group({
-            title: [detail.title, [Validators.required]],
-            value: [detail.value, [Validators.required]],
-          })
-        );
-      });
+        this.name.setValue(resp2.name);
+        this.urlInput = resp2.url;
+        this.categoryName = resp2.category;
+        this.titleList = resp2.title_list;
+        this.delivery_time.setValue(resp2.delivery_time);
+        this.description.setValue(resp2.description);
+        this.price.setValue(resp2.price);
+        this.shipping.setValue(resp2.shipping);
+        this.stock.setValue(resp2.stock);
+        this.summary.setValue(JSON.parse(resp2.summary));
+        this.tags.setValue(JSON.parse(resp2.tags));
+        this.type_video.setValue(JSON.parse(resp2.video)[0]);
+        this.id_video.setValue(JSON.parse(resp2.video)[1]);
+        this.type_offer.setValue(JSON.parse(resp2.offer)[0]);
+        this.value_offer.setValue(JSON.parse(resp2.offer)[1]);
+        this.date_offer.setValue(JSON.parse(resp2.offer)[2]);
 
-      if (JSON.parse(resp.specification).length > 0) {
-        JSON.parse(resp.specification).forEach((spec: any, index: number) => {
-          const specValue = Object.keys(spec).map(
-            (a: any) =>
-              ({
-                key: a,
-                values: spec[a],
-              } as any)
-          );
+        JSON.parse(resp2.summary).forEach((sum: string, index: number) => {
+          this.summaryGroup[index] = { input: sum };
+        });
 
-          this.specifications.push(
+        JSON.parse(resp2.details).forEach((detail: any, index: number) => {
+          this.details.push(
             this.form.group({
-              type: [specValue[0].key],
-              values: [specValue[0].values],
+              title: [detail.title, [Validators.required]],
+              value: [detail.value, [Validators.required]],
             })
           );
         });
-      }
 
-      this.top_banner.push(
-        this.form.group({
-          H3_tag: [
-            JSON.parse(resp.top_banner)['H3_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          P1_tag: [
-            JSON.parse(resp.top_banner)['P1_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          H4_tag: [
-            JSON.parse(resp.top_banner)['H4_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          P2_tag: [
-            JSON.parse(resp.top_banner)['P2_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          Span_tag: [
-            JSON.parse(resp.top_banner)['Span_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          Button_tag: [
-            JSON.parse(resp.top_banner)['Button_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          IMG_tag: ['', []], //No se guarda en base de datos
-        })
-      );
+        if (JSON.parse(resp2.specification).length > 0) {
+          JSON.parse(resp2.specification).forEach(
+            (spec: any, index: number) => {
+              const specValue = Object.keys(spec).map(
+                (a: any) =>
+                  ({
+                    key: a,
+                    values: spec[a],
+                  } as any)
+              );
 
-      this.horizontal_slider.push(
-        this.form.group({
-          H4_tag: [
-            JSON.parse(resp.horizontal_slider)['H4_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          H3_1_tag: [
-            JSON.parse(resp.horizontal_slider)['H3_1_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          H3_2_tag: [
-            JSON.parse(resp.horizontal_slider)['H3_2_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          H3_3_tag: [
-            JSON.parse(resp.horizontal_slider)['H3_3_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          H3_4s_tag: [
-            JSON.parse(resp.horizontal_slider)['H3_4s_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          Button_tag: [
-            JSON.parse(resp.horizontal_slider)['Button_tag'],
-            [Validators.required, Validators.maxLength(50)],
-          ],
-          IMG_tag: ['', []], //No se guarda en base de datos
-        })
-      );
-
-      //Obtener imagenes del producto
-      this.imgTemp = await this.productsService.getImage(
-        `${this.id}/${EnumProductImg.main}`
-      );
-      this.imgTempDB = await this.productsService.getImage(
-        `${this.id}/${EnumProductImg.default_banner}`
-      );
-      this.imgTempHSlider = await this.productsService.getImage(
-        `${this.id}/${EnumProductImg.horizontal_slider}`
-      );
-      this.imgTempTB = await this.productsService.getImage(
-        `${this.id}/${EnumProductImg.top_banner}`
-      );
-      if (resp.gallery) {
-        JSON.parse(resp.gallery).forEach(async (galleryItem: string) => {
-          let urlImage: string = await this.productsService.getImage(
-            `${this.id}/${EnumProductImg.gallery}/${galleryItem}`
+              this.specifications.push(
+                this.form.group({
+                  type: [specValue[0].key],
+                  values: [specValue[0].values],
+                })
+              );
+            }
           );
-          this.allGallery.push(urlImage);
-          this.editGallery.push(urlImage);
-          this.galeriaValores.set(urlImage, galleryItem);
-        });
-      }
-
-      let category: Icategories = this.categories.find(
-        (category: Icategories) => {
-          return category.url == resp.category;
         }
-      );
 
-      //Informacion de las subcategorias
-      let params: IQueryParams = {
-        orderBy: '"category"',
-        equalTo: `"${category.name}"`,
-      };
-
-      this.subcategoriesService.getData(params).subscribe((res: any) => {
-        this.subcategories = Object.keys(res).map((a) => ({
-          name: res[a].name,
-          titleList: res[a].title_list,
-          url: res[a].url,
-        }));
-
-        let subCategory: Isubcategories = this.subcategories.find(
-          (subCategory: Isubcategories) => subCategory.url == resp.sub_category
+        this.top_banner.push(
+          this.form.group({
+            H3_tag: [
+              JSON.parse(resp2.top_banner)['H3_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            P1_tag: [
+              JSON.parse(resp2.top_banner)['P1_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            H4_tag: [
+              JSON.parse(resp2.top_banner)['H4_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            P2_tag: [
+              JSON.parse(resp2.top_banner)['P2_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            Span_tag: [
+              JSON.parse(resp2.top_banner)['Span_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            Button_tag: [
+              JSON.parse(resp2.top_banner)['Button_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            IMG_tag: ['', []], //No se guarda en base de datos
+          })
         );
 
-        this.sub_category.setValue(`${subCategory.url}_${subCategory.name}`);
-      });
+        this.horizontal_slider.push(
+          this.form.group({
+            H4_tag: [
+              JSON.parse(resp2.horizontal_slider)['H4_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            H3_1_tag: [
+              JSON.parse(resp2.horizontal_slider)['H3_1_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            H3_2_tag: [
+              JSON.parse(resp2.horizontal_slider)['H3_2_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            H3_3_tag: [
+              JSON.parse(resp2.horizontal_slider)['H3_3_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            H3_4s_tag: [
+              JSON.parse(resp2.horizontal_slider)['H3_4s_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            Button_tag: [
+              JSON.parse(resp2.horizontal_slider)['Button_tag'],
+              [Validators.required, Validators.maxLength(50)],
+            ],
+            IMG_tag: ['', []], //No se guarda en base de datos
+          })
+        );
 
-      this.loadData = false;
-    });
+        //Obtener imagenes del producto
+        this.imgTemp = await this.productsService.getImage(
+          `${this.id}/${EnumProductImg.main}`
+        );
+        this.imgTempDB = await this.productsService.getImage(
+          `${this.id}/${EnumProductImg.default_banner}`
+        );
+        this.imgTempHSlider = await this.productsService.getImage(
+          `${this.id}/${EnumProductImg.horizontal_slider}`
+        );
+        this.imgTempTB = await this.productsService.getImage(
+          `${this.id}/${EnumProductImg.top_banner}`
+        );
+        if (resp2.gallery) {
+          JSON.parse(resp2.gallery).forEach(async (galleryItem: string) => {
+            let urlImage: string = await this.productsService.getImage(
+              `${this.id}/${EnumProductImg.gallery}/${galleryItem}`
+            );
+            this.allGallery.push(urlImage);
+            this.editGallery.push(urlImage);
+            this.galeriaValores.set(urlImage, galleryItem);
+          });
+        }
+
+        let category: Icategories = this.categories.find(
+          (category: Icategories) => {
+            return category.url == resp2.category;
+          }
+        );
+
+        //Informacion de las subcategorias
+        let params: IQueryParams = {
+          orderBy: '"category"',
+          equalTo: `"${category.name}"`,
+        };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('category', '==', category.name);
+
+        this.subcategoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((res: IFireStoreRes[]) => {
+            this.subcategories = res.map(
+              (a: IFireStoreRes) =>
+                ({
+                  name: a.data.name,
+                  titleList: a.data.title_list,
+                  url: a.data.url,
+                  idShop: a.data.idShop,
+                } as Isubcategories | any)
+            );
+
+            let subCategory: Isubcategories = this.subcategories.find(
+              (subCategory: Isubcategories) =>
+                subCategory.url == resp2.sub_category
+            );
+
+            this.sub_category.setValue(
+              `${subCategory.url}_${subCategory.name}`
+            );
+          });
+
+        this.loadData = false;
+      });
   }
 
   //Guardar producto
@@ -516,11 +547,12 @@ export class EditProductComponent implements OnInit {
       views: this.productEnDb.views,
       gallery: this.productEnDb.gallery,
       delete: false,
+      idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
 
     //Guardar la informacion del producto en base de datos
-    this.productsService.patchData(this.id, dataProduct).subscribe(
-      async (res: any) => {
+    this.productsService.patchDataFS(this.id, dataProduct).then(
+      async () => {
         //Guardar las imagenes en storage
         if (this.imgFile && this.imgTemp) {
           await this.productsService.deleteImages(
@@ -591,18 +623,16 @@ export class EditProductComponent implements OnInit {
               `${this.id}/${EnumProductImg.gallery}/${name}`
             );
           });
-
-          nombreGaleriaAGuardar = nombreGaleriaAGuardar.concat(
-            JSON.parse(dataProduct.gallery)
-          );
         }
+
+        nombreGaleriaAGuardar = nombreGaleriaAGuardar.concat(
+          JSON.parse(dataProduct.gallery)
+        );
 
         dataProduct.gallery = JSON.stringify(nombreGaleriaAGuardar);
 
         if (dataProduct.gallery)
-          await this.productsService
-            .patchData(this.id, dataProduct)
-            .toPromise();
+          await this.productsService.patchDataFS(this.id, dataProduct).then();
 
         this.loadData = false;
         alerts.basicAlert('Listo', 'El producto ha sido guardado', 'success');
@@ -633,16 +663,28 @@ export class EditProductComponent implements OnInit {
           orderBy: '"url"',
           equalTo: `"${name}"`,
         };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('url', '==', name)
+            .limit(2);
 
-        this.productsService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 1) {
-            resolve({ product: true });
-            this.urlInput = '';
-          } else {
-            resolve(null);
-            this.urlInput = name;
-          }
-        });
+        this.productsService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            if (Object.keys(resp).length > 1) {
+              resolve({ product: true });
+              this.urlInput = '';
+            } else {
+              resolve(null);
+              this.urlInput = name;
+            }
+          });
       });
     };
   }
@@ -656,14 +698,28 @@ export class EditProductComponent implements OnInit {
           orderBy: '"category"',
           equalTo: `"${category.name}"`,
         };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('category', '==', category.name);
 
-        this.subcategoriesService.getData(params).subscribe((resp: any) => {
-          this.subcategories = Object.keys(resp).map((a) => ({
-            name: resp[a].name,
-            titleList: resp[a].title_list,
-            url: resp[a].url,
-          }));
-        });
+        this.subcategoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            this.subcategories = resp.map((a: IFireStoreRes) => {
+              return {
+                name: a.data.name,
+                titleList: a.data.title_list,
+                url: a.data.url,
+                idShop: a.data.idShop,
+              };
+            });
+          });
       }
     });
   }
@@ -833,13 +889,22 @@ export class EditProductComponent implements OnInit {
   }
 
   public getCategories(): any {
-    this.categoriesService.getData().subscribe((resp: any) => {
-      this.categories = Object.keys(resp).map((a: any) => ({
-        name: resp[a].name,
-        titleList: JSON.parse(resp[a].title_list),
-        url: resp[a].url,
-      }));
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+    this.categoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.categories = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              name: a.data.name,
+              titleList: JSON.parse(a.data.title_list),
+              url: a.data.url,
+              idShop: a.data.idShop,
+            } as Icategories)
+        );
+      });
   }
 
   public async saveProductImages(

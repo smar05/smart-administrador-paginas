@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HttpService {
-  private urlApi: string = environment.urlFirebaseSinLocalId;
+  private urlApi: string = environment.urlFirebaseSinLocalId + 'shops/';
 
   constructor(private http: HttpClient) {}
 

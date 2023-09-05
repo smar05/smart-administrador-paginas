@@ -1,12 +1,22 @@
 import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
-import { Icategories } from './../../../../interface/icategories';
+import {
+  EnumCategorieImg,
+  Icategories,
+} from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  Validators,
+} from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import '../../../../shared/spinkit/sk-cube-grid.css';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 export interface IDialogData {
   id: string;
@@ -41,6 +51,7 @@ export class EditCategoriesComponent implements OnInit {
   public titleView: any = {};
   public state: string = '';
   public view: number = 0;
+  private idShop: string = '';
 
   constructor(
     private form: UntypedFormBuilder,
@@ -51,19 +62,24 @@ export class EditCategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData = true;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
     this.categoriesService
-      .getItem(this.data.id)
-      .subscribe(async (resp: any) => {
-        this.icon.setValue(resp.icon);
-        this.iconView = `<i class="${resp.icon}"></i>`;
+      .getItemFS(this.data.id, qf)
+      .toPromise()
+      .then(async (resp: IFireStoreRes) => {
+        this.icon.setValue(resp.data.icon);
+        this.iconView = `<i class="${resp.data.icon}"></i>`;
         this.imgTemp = await this.categoriesService.getImage(
-          `${this.data.id}/main`
+          `${this.data.id}/${EnumCategorieImg.main}`
         );
-        this.nameView = resp.name;
-        this.urlInput = resp.url;
-        this.titleView = JSON.parse(resp.title_list);
-        this.state = resp.state;
-        this.view = resp.view;
+        this.nameView = resp.data.name;
+        this.urlInput = resp.data.url;
+        this.titleView = JSON.parse(resp.data.title_list);
+        this.state = resp.data.state;
+        this.view = resp.data.view;
+        this.idShop = resp.data.idShop;
         this.loadData = false;
       });
   }
@@ -91,18 +107,19 @@ export class EditCategoriesComponent implements OnInit {
       url: this.urlInput,
       view: Number(this.view),
       state: this.state,
+      idShop: this.idShop,
     };
 
     //Guardar en base de datos la categoria
-    this.categoriesService.patchData(this.data.id, dataCategory).subscribe(
-      async (resp: Icategories) => {
+    this.categoriesService.patchDataFS(this.data.id, dataCategory).then(
+      async () => {
         //Verificar si hay cambio de imagen
-        if (this.imageChange && resp) {
+        if (this.imageChange) {
           //Borrado de la imagen anterior
           try {
             if (this.data.id)
               await this.categoriesService.deleteImages(
-                `${this.data.id}/main/`
+                `${this.data.id}/${EnumCategorieImg.main}/`
               );
           } catch (error) {
             alerts.basicAlert(
@@ -115,7 +132,9 @@ export class EditCategoriesComponent implements OnInit {
             return;
           }
 
-          let name: string = `main.${this.imageFile.name.split('.')[1]}`;
+          let name: string = `${EnumCategorieImg.main}.${
+            this.imageFile.name.split('.')[1]
+          }`;
 
           let a: any = null;
 
@@ -123,7 +142,7 @@ export class EditCategoriesComponent implements OnInit {
             if (this.imageFile && this.data.id)
               a = await this.categoriesService.saveImage(
                 this.imageFile,
-                `${this.data.id}/main/${name}`
+                `${this.data.id}/${EnumCategorieImg.main}/${name}`
               );
           } catch (error) {
             alerts.basicAlert(
@@ -183,13 +202,25 @@ export class EditCategoriesComponent implements OnInit {
           equalTo: `"${name}"`,
         };
 
-        this.categoriesService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 0) {
-            resolve({ category: true });
-          } else {
-            this.urlInput = name;
-          }
-        });
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('url', '==', name)
+            .limit(1);
+        this.categoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            if (Object.keys(resp).length > 0) {
+              resolve({ category: true });
+            } else {
+              this.urlInput = name;
+            }
+          });
       });
     };
   }

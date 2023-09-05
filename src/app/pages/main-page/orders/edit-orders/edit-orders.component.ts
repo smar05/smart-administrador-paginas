@@ -11,6 +11,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { EnumOrderProcessStatus } from 'src/app/interface/iorders';
 import { EnumSalesStatus } from 'src/app/interface/isales';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 export interface IDialogData {
   id: string;
@@ -39,6 +42,7 @@ export class EditOrdersComponent implements OnInit {
   ];
   public loadData: boolean = false;
   public formSubmitted: boolean = false; // Valida envio de formulario
+  public order: Iorders;
 
   constructor(
     private form: UntypedFormBuilder,
@@ -53,16 +57,23 @@ export class EditOrdersComponent implements OnInit {
   }
 
   public getData(): void {
-    this.ordersService.getItem(this.data.id).subscribe((resp: any) => {
-      this.processOrder = JSON.parse(resp.process);
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      //Guardar la edicion de entrega si el producto aun no se ha enviado
-      if (this.processOrder[1].status == EnumOrderProcessStatus.pending) {
-        this.processOrder.splice(2, 1);
-      }
+    this.ordersService
+      .getItemFS(this.data.id, qf)
+      .toPromise()
+      .then((resp: IFireStoreRes) => {
+        this.processOrder = JSON.parse(resp.data.process);
+        this.order = { id: resp.id, ...resp.data };
 
-      this.process.setValue(JSON.parse(resp.process));
-    });
+        //Guardar la edicion de entrega si el producto aun no se ha enviado
+        if (this.processOrder[1].status == EnumOrderProcessStatus.pending) {
+          this.processOrder.splice(2, 1);
+        }
+
+        this.process.setValue(JSON.parse(resp.data.process));
+      });
   }
 
   public editOrder(): void {
@@ -98,28 +109,35 @@ export class EditOrdersComponent implements OnInit {
         orderBy: '"id_order"',
         equalTo: `"${this.data.id}"`,
       };
-      this.salesService.getData(params).subscribe((resp: any[]) => {
-        let idSale: string = Object.keys(resp)[0];
+      let qf: QueryFn = (ref) =>
+        ref
+          .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
+          .where('id_order', '==', this.data.id)
+          .limit(1);
 
-        let body: Isales = {
-          status: EnumSalesStatus.success,
-        };
+      this.salesService
+        .getDataFS(qf)
+        .toPromise()
+        .then((resp: IFireStoreRes[]) => {
+          let idSale: string = resp[0].id;
+          let body: Isales = resp[0].data;
+          body.status = EnumSalesStatus.success;
 
-        //Cambiar el estado de la venta
-        this.salesService.patchData(idSale, body).subscribe((resp2: any) => {});
-      });
+          //Cambiar el estado de la venta
+          this.salesService.patchDataFS(idSale, body).then(() => {});
+        });
     } else {
       status = EnumOrderStatus.pending;
     }
 
-    let dataOrders: Iorders = {
-      status: status,
-      process: JSON.stringify(this.f.controls.process.value),
-    };
+    let dataOrders: Iorders = this.order;
+    delete dataOrders.id;
+    dataOrders.status = status;
+    dataOrders.process = JSON.stringify(this.f.controls.process.value);
 
     // Guardar en bd
-    this.ordersService.patchData(this.data.id, dataOrders).subscribe(
-      (resp: any) => {
+    this.ordersService.patchDataFS(this.data.id, dataOrders).then(
+      () => {
         this.loadData = false;
         this.dialogRef.close('save');
         alerts.basicAlert('Ok', 'La orden ha ido guardada', 'success');

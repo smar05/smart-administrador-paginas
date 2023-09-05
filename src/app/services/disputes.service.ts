@@ -5,6 +5,9 @@ import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from '../interface/ifireStoreRes';
 
 @Injectable({
   providedIn: 'root',
@@ -13,31 +16,10 @@ export class DisputesService {
   private urlDisputes: string = environment.collections.disputes;
   public disputes: number = 0; // Variable para la cantidad de disputas en el navbar
 
-  constructor(private httpService: HttpService) {}
-
-  /**
-   * Se toma la informacion de la coleccion de ordenes en Firebase
-   *
-   * @param {IQueryParams} [queryParams={}]
-   * @return {*}  {Observable<any>}
-   * @memberof DisputesService
-   */
-  public getData(queryParams: IQueryParams = {}): Observable<any> {
-    return this.httpService.get(`${this.urlDisputes}.json`, queryParams).pipe(
-      map((resp: any) => {
-        // Contamos solo las que no tienen respuesta para el icono en el navbar
-        this.disputes = Object.keys(resp)
-          .map((a: any) => {
-            return { answer: resp[a].answer };
-          })
-          .filter(
-            (a: Idisputes) => a.answer == undefined || a.answer == null
-          ).length;
-
-        return resp;
-      })
-    );
-  }
+  constructor(
+    private httpService: HttpService,
+    private fireStorageService: FireStorageService
+  ) {}
 
   /**
    * Tomar un item de ordenes
@@ -85,6 +67,85 @@ export class DisputesService {
     return this.httpService.delete(`${this.urlDisputes}/${id}.json`);
   }
 
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof DisputesService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlDisputes, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'))
+      .pipe(
+        map((resp: IFireStoreRes[]) => {
+          // Contamos solo las que no tienen respuesta para el icono en el navbar
+          this.disputes = resp
+            .map((a: IFireStoreRes) => {
+              return { answer: a.data.answer };
+            })
+            .filter(
+              (a: IFireStoreRes | any) =>
+                a.data.answer == undefined || a.data.answer == null
+            ).length;
+
+          return resp;
+        })
+      );
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof DisputesService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlDisputes, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {Idisputes} data
+   * @return {*}  {Promise<any>}
+   * @memberof DisputesService
+   */
+  public postDataFS(data: Idisputes): Promise<any> {
+    return this.fireStorageService.post(this.urlDisputes, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {Idisputes} data
+   * @return {*}  {Promise<any>}
+   * @memberof DisputesService
+   */
+  public patchDataFS(doc: string, data: Idisputes): Promise<any> {
+    return this.fireStorageService.patch(this.urlDisputes, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof DisputesService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlDisputes, doc);
+  }
+
+  //------------ FireStorage---------------//
+
   // Metodos propios
 
   /**
@@ -110,6 +171,7 @@ export class DisputesService {
           receiver: resp[a].receiver,
           transmitter: resp[a].transmitter,
           status: resp[a].status,
+          idShop: resp[a].idShop,
         } as Idisputes)
     );
 

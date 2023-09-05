@@ -11,6 +11,7 @@ import { IState } from './../../../../interface/istate';
 import { ICountries } from './../../../../interface/icountries';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Component, OnInit, Inject } from '@angular/core';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 export interface IDialogData {
   id: string;
@@ -123,7 +124,10 @@ export class EditCountsComponent implements OnInit {
   }
 
   public async getCount(): Promise<void> {
-    let res: ICount = await this.countService.getItem(this.id).toPromise();
+    let res1: IFireStoreRes = await this.countService
+      .getItemFS(this.id)
+      .toPromise();
+    let res: ICount = { id: res1.id, ...res1.data };
 
     let permission: any =
       res.permission == EnumCountPermission.admin
@@ -224,7 +228,7 @@ export class EditCountsComponent implements OnInit {
         idValue: this.idValue.value,
       };
 
-      await this.countService.patchData(this.id, count).toPromise();
+      await this.countService.patchDataFS(this.id, count).then();
 
       this.dialogRef.close('save');
       this.loadData = false;

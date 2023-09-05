@@ -16,6 +16,7 @@ export interface Iorders {
   status?: string;
   url?: string;
   user?: string;
+  idShop: string;
 }
 
 export enum EnumOrderStatus {

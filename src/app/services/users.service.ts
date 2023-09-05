@@ -4,6 +4,8 @@ import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,10 @@ import { Injectable } from '@angular/core';
 export class UsersService {
   private urlUsers: string = environment.collections.users;
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private fireStorageService: FireStorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de usuarios en Firebase
@@ -69,4 +74,68 @@ export class UsersService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlUsers}/${id}.json`);
   }
+
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof UsersService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlUsers, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'));
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof UsersService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlUsers, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {Iusers} data
+   * @return {*}  {Promise<any>}
+   * @memberof UsersService
+   */
+  public postDataFS(data: Iusers): Promise<any> {
+    return this.fireStorageService.post(this.urlUsers, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {Iusers} data
+   * @return {*}  {Promise<any>}
+   * @memberof UsersService
+   */
+  public patchDataFS(doc: string, data: Iusers): Promise<any> {
+    return this.fireStorageService.patch(this.urlUsers, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof UsersService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlUsers, doc);
+  }
+
+  //------------ FireStorage---------------//
 }

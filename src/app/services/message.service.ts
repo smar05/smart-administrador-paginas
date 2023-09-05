@@ -5,6 +5,9 @@ import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { FireStorageService } from './fire-storage.service';
+import { IFireStoreRes } from '../interface/ifireStoreRes';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +16,10 @@ export class MessageService {
   private urlMessage: string = environment.collections.messages;
   public messages: number = 0;
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private fireStorageService: FireStorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de ordenes en Firebase
@@ -30,9 +36,7 @@ export class MessageService {
           .map((a: any) => {
             return { answer: resp[a].answer };
           })
-          .filter(
-            (a: Imessages) => a.answer == undefined || a.answer == null
-          ).length;
+          .filter((a: any) => a.answer == undefined || a.answer == null).length;
 
         return resp;
       })
@@ -85,6 +89,85 @@ export class MessageService {
     return this.httpService.delete(`${this.urlMessage}/${id}.json`);
   }
 
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof MessageService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlMessage, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'))
+      .pipe(
+        map((resp: IFireStoreRes[]) => {
+          // Contamos solo las que no tienen respuesta
+          this.messages = resp
+            .map((a: IFireStoreRes) => {
+              return { answer: a.data.answer };
+            })
+            .filter(
+              (a: IFireStoreRes | any) =>
+                a.data.answer == undefined || a.data.answer == null
+            ).length;
+
+          return resp;
+        })
+      );
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof MessageService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlMessage, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {Imessages} data
+   * @return {*}  {Promise<any>}
+   * @memberof MessageService
+   */
+  public postDataFS(data: Imessages): Promise<any> {
+    return this.fireStorageService.post(this.urlMessage, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {Imessages} data
+   * @return {*}  {Promise<any>}
+   * @memberof MessageService
+   */
+  public patchDataFS(doc: string, data: Imessages): Promise<any> {
+    return this.fireStorageService.patch(this.urlMessage, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof MessageService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlMessage, doc);
+  }
+
+  //------------ FireStorage---------------//
+
   // Metodos propios
 
   /**
@@ -97,19 +180,20 @@ export class MessageService {
   public formatMessages(resp: any): Imessages[] {
     let position: number = 1;
 
-    let messages: Imessages[] = Object.keys(resp).map(
-      (a) =>
+    let messages: Imessages[] = resp.map(
+      (a: Imessages) =>
         ({
-          id: a,
+          id: a.id,
           position: position++,
-          answer: resp[a].answer,
-          date_answer: resp[a].date_answer,
-          date_message: resp[a].date_message,
-          message: resp[a].message,
-          url_product: resp[a].url_product,
-          receiver: resp[a].receiver,
-          transmitter: resp[a].transmitter,
-          status: resp[a].status,
+          answer: a.answer,
+          date_answer: a.date_answer,
+          date_message: a.date_message,
+          message: a.message,
+          url_product: a.url_product,
+          receiver: a.receiver,
+          transmitter: a.transmitter,
+          status: a.status,
+          idShop: a.idShop,
         } as Imessages)
     );
 

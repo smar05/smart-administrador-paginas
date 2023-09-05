@@ -5,6 +5,8 @@ import { StorageService } from './storage.service';
 import { HttpService } from './http.service';
 import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,8 @@ export class StoreService {
 
   constructor(
     private httpService: HttpService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private fireStorageService: FireStorageService
   ) {}
 
   /**
@@ -74,6 +77,70 @@ export class StoreService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlStore}/${id}.json`);
   }
+
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof StoreService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlStore, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'));
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof StoreService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlStore, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {IStore} data
+   * @return {*}  {Promise<any>}
+   * @memberof StoreService
+   */
+  public postDataFS(data: IStore): Promise<any> {
+    return this.fireStorageService.post(this.urlStore, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {IStore} data
+   * @return {*}  {Promise<any>}
+   * @memberof StoreService
+   */
+  public patchDataFS(doc: string, data: IStore): Promise<any> {
+    return this.fireStorageService.patch(this.urlStore, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof StoreService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlStore, doc);
+  }
+
+  //------------ FireStorage---------------//
 
   //Storage//////////////////////
   /**

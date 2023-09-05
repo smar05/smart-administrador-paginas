@@ -13,6 +13,7 @@ export interface Isales {
   unit_price?: number;
   url?: string;
   paid_out?: string;
+  idShop: string;
 }
 
 export enum EnumSalesStatus {

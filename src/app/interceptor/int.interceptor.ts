@@ -25,13 +25,7 @@ export class IntInterceptor implements HttpInterceptor {
     //ni de refrescar token
     if (
       request.url == environment.urlLogin ||
-      request.url == environment.urlRefreshToken ||
-      (request.url.includes(environment.collections.counts) &&
-        request.method == 'POST') || //Para registrar una nueva cuenta
-      (request.url.includes(environment.aplications.admin.version) &&
-        request.method == 'GET') ||
-      (request.url.includes(environment.aplications.admin.alerts.url) &&
-        request.method == 'GET')
+      request.url == environment.urlRefreshToken
     )
       return next.handle(request);
     this.token = localStorage.getItem(EnumLocalStorage.token);
