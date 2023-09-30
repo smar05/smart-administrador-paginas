@@ -89,10 +89,6 @@ export class ProductsComponent implements OnInit {
   //Tomar la data de productos
   public getData(): void {
     this.loadData = true;
-    let params: IQueryParams = {
-      orderBy: '"delete"',
-      equalTo: false,
-    };
     let qf: QueryFn = (ref) =>
       ref
         .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))

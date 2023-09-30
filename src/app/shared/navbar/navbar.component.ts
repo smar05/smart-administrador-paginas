@@ -30,10 +30,6 @@ export class NavbarComponent implements OnInit {
   }
 
   public getMessages(): void {
-    let params: IQueryParams = {
-      orderBy: '"status"',
-      equalTo: `"${EnumMessagesStatus.not_answered}"`,
-    };
     let qf: QueryFn = (ref) =>
       ref
         .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
@@ -46,11 +42,6 @@ export class NavbarComponent implements OnInit {
   }
 
   public getDisputes(): void {
-    let params: IQueryParams = {
-      orderBy: '"status"',
-      equalTo: `"${EnumDisputesStatus.not_answered}"`,
-    };
-
     // EL conteo de disputas se hace desde el servicio
     let qf: QueryFn = (ref) =>
       ref

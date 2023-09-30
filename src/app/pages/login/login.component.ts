@@ -151,10 +151,6 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    let params: IQueryParams = {
-      orderBy: '"email"',
-      equalTo: `"${email}"`,
-    };
     let qf: QueryFn = (ref) => ref.where('email', '==', email);
     let resp: IFireStoreRes[] = await this.countService
       .getDataFS(qf)

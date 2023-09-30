@@ -177,10 +177,6 @@ export class CountService {
       return {};
     }
 
-    let params: IQueryParams = {
-      orderBy: '"email"',
-      equalTo: `"${email}"`,
-    };
     let qf: QueryFn = (ref) => ref.where('email', '==', email).limit(1);
 
     let res2: IFireStoreRes[] = await this.getDataFS(qf).toPromise();

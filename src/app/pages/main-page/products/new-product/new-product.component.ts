@@ -437,10 +437,6 @@ export class NewProductComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        let params: IQueryParams = {
-          orderBy: '"url"',
-          equalTo: `"${name}"`,
-        };
         let qf: QueryFn = (ref) =>
           ref
             .where(
@@ -472,10 +468,6 @@ export class NewProductComponent implements OnInit {
     this.categories.filter((category: Icategories) => {
       if (category.name == e.target.value.split('_')[1]) {
         //Informacion de las subcategorias
-        let params: IQueryParams = {
-          orderBy: '"category"',
-          equalTo: `"${category.name}"`,
-        };
         let qf: QueryFn = (ref) =>
           ref
             .where(

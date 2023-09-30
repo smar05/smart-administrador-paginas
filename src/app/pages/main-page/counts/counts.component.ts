@@ -82,10 +82,6 @@ export class CountsComponent implements OnInit {
   public getCounts(): void {
     this.loading = true;
 
-    let params: IQueryParams = {
-      orderBy: '"keyCount"',
-      equalTo: `"${localStorage.getItem(EnumLocalStorage.localId)}"`,
-    };
     let qf: QueryFn = (ref) =>
       ref.where(
         'keyCount',

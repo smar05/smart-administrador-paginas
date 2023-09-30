@@ -197,11 +197,6 @@ export class EditCategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        let params: IQueryParams = {
-          orderBy: '"url"',
-          equalTo: `"${name}"`,
-        };
-
         let qf: QueryFn = (ref) =>
           ref
             .where(

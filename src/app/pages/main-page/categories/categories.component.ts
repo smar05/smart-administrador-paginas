@@ -188,11 +188,6 @@ export class CategoriesComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           //Validar que la categoria no tenga una subcategoria
-          let params: IQueryParams = {
-            orderBy: '"category"',
-            equalTo: `"${name}"`,
-          };
-
           let qf: QueryFn = (ref) =>
             ref
               .where(

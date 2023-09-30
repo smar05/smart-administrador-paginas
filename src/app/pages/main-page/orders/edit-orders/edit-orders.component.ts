@@ -105,10 +105,6 @@ export class EditOrdersComponent implements OnInit {
       status = EnumOrderStatus.delivered;
 
       //Se trae la venta relacionada a la orden
-      let params: IQueryParams = {
-        orderBy: '"id_order"',
-        equalTo: `"${this.data.id}"`,
-      };
       let qf: QueryFn = (ref) =>
         ref
           .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))

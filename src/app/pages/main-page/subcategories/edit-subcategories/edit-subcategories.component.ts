@@ -75,10 +75,6 @@ export class EditSubcategoriesComponent implements OnInit {
         this.view = resp2.view;
 
         //Traer la informacion de la categoria seleccionada
-        let params: IQueryParams = {
-          orderBy: '"name"',
-          equalTo: `"${resp2.category}"`,
-        };
         let qf: QueryFn = (ref) =>
           ref
             .where(

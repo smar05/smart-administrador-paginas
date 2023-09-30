@@ -165,10 +165,6 @@ export class SubcategoriesComponent implements OnInit {
       )
       .then((result: any) => {
         if (result.isConfirmed) {
-          let params: IQueryParams = {
-            orderBy: '"sub_category"',
-            equalTo: `"${url}"`,
-          };
           let qf: QueryFn = (ref) =>
             ref
               .where(
