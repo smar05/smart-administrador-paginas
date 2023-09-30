@@ -10,6 +10,9 @@ import { UsersService } from './../../../services/users.service';
 import { SalesService } from './../../../services/sales.service';
 import { ProductsService } from './../../../services/products.service';
 import { Component, OnInit } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-home',
@@ -72,32 +75,45 @@ export class HomeComponent implements OnInit {
 
   public getProducts(): void {
     this.loadItems.products = true;
-    this.productsService.getData().subscribe((resp: any) => {
-      this.itemsQuantity.products = Object.keys(resp).length;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      let products: Iproducts[] = this.productsService.formatProducts(resp);
+    this.productsService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.itemsQuantity.products = Object.keys(resp).length;
 
-      products.sort((a: Iproducts, b: Iproducts) => {
-        if (a.date_created > b.date_created) return 1;
-        if (a.date_created < b.date_created) return -1;
-
-        return 0;
-      });
-
-      this.latestProducts = products.slice(
-        this.itemsQuantity.products - 5,
-        this.itemsQuantity.products
-      );
-
-      this.latestProducts.forEach(async (product: Iproducts) => {
-        let urlImagen: string = await this.productsService.getImage(
-          `${product.id}/${EnumProductImg.main}`
+        let products: Iproducts[] = this.productsService.formatProducts(
+          resp.map((a: IFireStoreRes) => {
+            return {
+              id: a.id,
+              ...a.data,
+            };
+          })
         );
-        if (product.id) this.imagenesProductos.set(product.id, urlImagen);
-      });
 
-      this.loadItems.products = false;
-    });
+        products.sort((a: Iproducts, b: Iproducts) => {
+          if (a.date_created > b.date_created) return 1;
+          if (a.date_created < b.date_created) return -1;
+
+          return 0;
+        });
+
+        this.latestProducts = products.slice(
+          this.itemsQuantity.products - 5,
+          this.itemsQuantity.products
+        );
+
+        this.latestProducts.forEach(async (product: Iproducts) => {
+          let urlImagen: string = await this.productsService.getImage(
+            `${product.id}/${EnumProductImg.main}`
+          );
+          if (product.id) this.imagenesProductos.set(product.id, urlImagen);
+        });
+
+        this.loadItems.products = false;
+      });
   }
 
   public getSales(): void {
@@ -121,52 +137,64 @@ export class HomeComponent implements OnInit {
       startAt: `"${functions.formatDate(this.startDate)}"`,
       endAt: `"${functions.formatDate(this.endDate)}"`,
     };
-    this.salesService.getData(params).subscribe((resp: any) => {
-      this.itemsQuantity.sales = Object.keys(resp).length;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      //Separar mes y total
-      let sales: any[] = [];
-      Object.keys(resp).map((a: any) => {
-        if (resp[a].status == EnumSalesStatus.success) {
-          sales.push({
-            date: resp[a].date.substring(0, 7),
-            total: Number(resp[a].total),
-          });
-        }
+    this.salesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.itemsQuantity.sales = Object.keys(resp).length;
+
+        //Separar mes y total
+        let sales: any[] = [];
+        resp.map((a: IFireStoreRes) => {
+          if (a.data.status == EnumSalesStatus.success) {
+            sales.push({
+              date: a.data.date.substring(0, 7),
+              total: Number(a.data.total),
+            });
+          }
+        });
+
+        // Sacar total en mes repetido
+        let result: any[] = this.groupByDateAndSumTotals(sales);
+
+        // Ordenar de menor a mayor las fechas
+        result.sort(function (a, b) {
+          let fechaA: any = new Date(a.date);
+          let fechaB: any = new Date(b.date);
+          return fechaA - fechaB;
+        });
+
+        //Agregar el arreglo a la data del grafico
+        Object.keys(result).map((a: any, i: number) => {
+          const data = [result[a].date, result[a].total];
+
+          this.chart.data[i] = data;
+        });
+
+        // Sumar el total de ventas
+        this.chart.data.forEach((value: any) => {
+          this.totalSales += value[1];
+        });
+
+        this.loadItems.sales = false;
       });
-
-      // Sacar total en mes repetido
-      let result: any[] = this.groupByDateAndSumTotals(sales);
-
-      // Ordenar de menor a mayor las fechas
-      result.sort(function (a, b) {
-        let fechaA: any = new Date(a.date);
-        let fechaB: any = new Date(b.date);
-        return fechaA - fechaB;
-      });
-
-      //Agregar el arreglo a la data del grafico
-      Object.keys(result).map((a: any, i: number) => {
-        const data = [result[a].date, result[a].total];
-
-        this.chart.data[i] = data;
-      });
-
-      // Sumar el total de ventas
-      this.chart.data.forEach((value: any) => {
-        this.totalSales += value[1];
-      });
-
-      this.loadItems.sales = false;
-    });
   }
 
   public getUsers(): void {
     this.loadItems.users = true;
-    this.usersService.getData().subscribe((resp: any) => {
-      this.itemsQuantity.users = Object.keys(resp).length;
-      this.loadItems.users = false;
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    this.usersService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.itemsQuantity.users = Object.keys(resp).length;
+        this.loadItems.users = false;
+      });
   }
 
   /**
@@ -232,28 +260,41 @@ export class HomeComponent implements OnInit {
       orderBy: '"date"',
       limitToLast: 5,
     };
-    this.salesService.getData(params).subscribe((resp: any) => {
-      Object.keys(resp).map((a: any, i: number) => {
-        this.latestOrders[i] = {};
+    let qf: QueryFn = (ref) =>
+      ref
+        .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
+        .orderBy('date')
+        .limitToLast(5);
 
-        // Se tran las ultimas 5 ordenes
-        this.ordersService
-          .getItem(resp[a].id_order)
-          .subscribe((resp2: Iorders) => {
-            this.latestOrders[i] = {
-              id: a,
-              product: resp2.product,
-              status: resp2.status,
-              date: resp[a].date,
-            };
+    this.salesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        resp.map((a: IFireStoreRes, i: number) => {
+          this.latestOrders[i] = {};
 
-            this.loadItems.loadOrders = false;
-          });
+          // Se tran las ultimas 5 ordenes
+          this.ordersService
+            .getItemFS(a.data.id_order)
+            .toPromise()
+            .then((resp2: IFireStoreRes) => {
+              this.latestOrders[i] = {
+                id: a.id,
+                product: resp2.data.product,
+                status: resp2.data.status,
+                date: a.data.date,
+              };
+
+              this.loadItems.loadOrders = false;
+            });
+        });
       });
-    });
   }
 
   public alertPage(): void {
-    this.alertsPagesService.alertPage('home').subscribe((res: any) => {});
+    this.alertsPagesService
+      .alertPage('home')
+      .toPromise()
+      .then((res: any) => {});
   }
 }

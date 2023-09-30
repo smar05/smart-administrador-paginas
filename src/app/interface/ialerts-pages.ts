@@ -4,4 +4,11 @@ export interface IAlertsPages {
   icon: SweetAlertIcon;
   text: string;
   title: string;
+  idApplication: string;
+  page: string;
+}
+
+export enum EnumAlertsPagesIdApplication {
+  ADMIN = 'admin',
+  E_SHOP = 'e_shop',
 }

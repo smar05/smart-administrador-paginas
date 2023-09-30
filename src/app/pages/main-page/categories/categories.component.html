@@ -160,7 +160,7 @@
                           type="checkbox"
                           class="custom-control-input"
                           id="switch_{{ element.id }}"
-                          (change)="changeState($event)"
+                          (change)="changeState($event, element.id)"
                           checked
                         />
                         <input
@@ -168,7 +168,7 @@
                           type="checkbox"
                           class="custom-control-input"
                           id="switch_{{ element.id }}"
-                          (change)="changeState($event)"
+                          (change)="changeState($event, element.id)"
                         />
                         <label
                           for="switch_{{ element.id }}"

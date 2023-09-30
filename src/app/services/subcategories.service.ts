@@ -4,6 +4,8 @@ import { HttpService } from './http.service';
 import { Isubcategories } from './../interface/isubcategories';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,10 @@ import { Injectable } from '@angular/core';
 export class SubcategoriesService {
   private urlSubCategories: string = environment.collections.subCategories;
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private fireStorageService: FireStorageService
+  ) {}
 
   /**
    * Se toma la informacion de la coleccion de subcategorias en Firebase
@@ -72,4 +77,68 @@ export class SubcategoriesService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlSubCategories}/${id}.json`);
   }
+
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlSubCategories, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'));
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof SubcategoriesService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlSubCategories, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {Isubcategories} data
+   * @return {*}  {Promise<any>}
+   * @memberof SubcategoriesService
+   */
+  public postDataFS(data: Isubcategories): Promise<any> {
+    return this.fireStorageService.post(this.urlSubCategories, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {Isubcategories} data
+   * @return {*}  {Promise<any>}
+   * @memberof SubcategoriesService
+   */
+  public patchDataFS(doc: string, data: Isubcategories): Promise<any> {
+    return this.fireStorageService.patch(this.urlSubCategories, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof SubcategoriesService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlSubCategories, doc);
+  }
+
+  //------------ FireStorage---------------//
 }

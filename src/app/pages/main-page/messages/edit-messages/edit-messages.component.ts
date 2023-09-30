@@ -8,6 +8,9 @@ import { MessageService } from './../../../../services/message.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 export interface IDialogData {
   id: string;
@@ -37,6 +40,7 @@ export class EditMessagesComponent implements OnInit {
   }
 
   public message: string = '';
+  public messageObject: Imessages;
   public loadData: boolean = false;
   public formSubmitted: boolean = false; // Valida envio de formulario
 
@@ -52,10 +56,18 @@ export class EditMessagesComponent implements OnInit {
   }
 
   public getData(): void {
-    this.messageService.getItem(this.data.id).subscribe((resp: any) => {
-      this.message = resp.message;
-      this.answer.setValue(resp.answer);
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    this.messageService
+      .getItemFS(this.data.id, qf)
+      .toPromise()
+      .then((resp: IFireStoreRes) => {
+        this.message = resp.data.message;
+        this.messageObject = resp.data;
+        this.messageObject.id = resp.id;
+        this.answer.setValue(resp.data.answer);
+      });
   }
 
   public editMessage(): void {
@@ -65,15 +77,16 @@ export class EditMessagesComponent implements OnInit {
 
     this.loadData = true;
 
-    let dataMessage: Imessages = {
-      answer: this.f.controls.answer.value,
-      date_answer: new Date(),
-      status: EnumMessagesStatus.answered,
-    };
+    let dataMessage: Imessages = this.messageObject;
+    delete dataMessage.id;
+    dataMessage.status = EnumMessagesStatus.answered;
+    dataMessage.date_answer = new Date().toISOString();
+    dataMessage.answer = this.f.controls.answer.value;
+    dataMessage.idShop = localStorage.getItem(EnumLocalStorage.localId);
 
     // Guardar en bd
-    this.messageService.patchData(this.data.id, dataMessage).subscribe(
-      (resp: any) => {
+    this.messageService.patchDataFS(this.data.id, dataMessage).then(
+      () => {
         this.loadData = false;
         this.dialogRef.close('save');
         alerts.basicAlert('Ok', 'El mensaje ha sido guardada', 'success');

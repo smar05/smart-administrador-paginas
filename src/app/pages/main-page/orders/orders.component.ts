@@ -16,6 +16,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-orders',
@@ -73,41 +76,46 @@ export class OrdersComponent implements OnInit {
 
   public getData(): void {
     this.loadData = true;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-    this.ordersService.getData().subscribe((resp: any) => {
-      // Se ajusta la respuesta de la bd a la interfaz
-      let position: number = 1;
+    this.ordersService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        // Se ajusta la respuesta de la bd a la interfaz
+        let position: number = 1;
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
+        this.orders = resp.map((a: IFireStoreRes) => {
+          return {
+            id: a.id,
             position: position++,
-            address: resp[a].address,
-            category: resp[a].category,
-            city: resp[a].city,
-            country: resp[a].country,
-            details: resp[a].details,
-            email: resp[a].email,
-            image: resp[a].image,
-            info: resp[a].info,
-            phone: resp[a].phone,
-            price: resp[a].price,
-            process: JSON.parse(resp[a].process),
-            product: resp[a].product,
-            quantity: resp[a].quantity,
-            status: resp[a].status,
-            url: resp[a].url,
-            user: resp[a].user,
-          } as Iorders)
-      );
+            address: a.data.address,
+            category: a.data.category,
+            city: a.data.city,
+            country: a.data.country,
+            details: a.data.details,
+            email: a.data.email,
+            image: a.data.image,
+            info: a.data.info,
+            phone: a.data.phone,
+            price: a.data.price,
+            process: JSON.parse(a.data.process),
+            product: a.data.product,
+            quantity: a.data.quantity,
+            status: a.data.status,
+            url: a.data.url,
+            user: a.data.user,
+            idShop: a.data.idShop,
+          };
+        });
 
-      this.dataSource = new MatTableDataSource(this.orders);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.orders);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-      this.loadData = false;
-    });
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -143,6 +151,7 @@ export class OrdersComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.orders)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AlertsPagesService } from './services/alerts-pages.service';
+import { FireStorageService } from './services/fire-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +13,12 @@ import { AlertsPagesService } from './services/alerts-pages.service';
 })
 export class AppComponent implements OnInit {
   title = 'INTEGRO-dashboard';
-  private urlVersionAdmin: string = `${environment.urlFirebaseSinLocalId}${environment.aplications.admin.version}.json`;
-  private urlAlert: string = `${environment.urlFirebaseSinLocalId}${environment.aplications.admin.alerts.allPages}.json`;
 
   constructor(
     private httpClient: HttpClient,
     private loginService: LoginService,
-    private alertsPagesService: AlertsPagesService
+    private alertsPagesService: AlertsPagesService,
+    private fireStorageService: FireStorageService
   ) {}
 
   ngOnInit(): void {
@@ -32,24 +32,29 @@ export class AppComponent implements OnInit {
    * @memberof AppComponent
    */
   public validarVersionDelAplicativo(): void {
-    this.httpClient.get(this.urlVersionAdmin).subscribe(
-      (res: string | any) => {
-        if (res != environment.version) {
+    this.fireStorageService
+      .getItem(environment.collections.versions, 'admin')
+      .toPromise()
+      .then((res) => {
+        if (res.data().version != environment.version) {
           alerts.basicAlert(
             'Versión del aplicativo desactualizada',
-            `Esta versión del aplicativo: ${environment.version} no se encuentra actualizada, por favor elimine el cache de su navegador y vuelva a ingresar verificando que se encuentre en la version: ${res}`,
+            `Esta versión del aplicativo: ${
+              environment.version
+            } no se encuentra actualizada, por favor elimine el cache de su navegador y vuelva a ingresar verificando que se encuentre en la version: ${
+              res.data().version
+            }`,
             'warning'
           );
           this.loginService.logout();
         }
-      },
-      (error: any) => {
-        console.error(error);
-      }
-    );
+      });
   }
 
   public alertPage(): void {
-    this.alertsPagesService.alertPage().subscribe((res: any) => {});
+    this.alertsPagesService
+      .alertPage()
+      .toPromise()
+      .then((res: any) => {});
   }
 }

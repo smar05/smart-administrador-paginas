@@ -213,7 +213,7 @@ export class NewCountsComponent implements OnInit {
         keyCount: keyCount,
       };
 
-      await this.countService.postData(count).toPromise();
+      await this.countService.postDataFS(count).then();
 
       this.dialogRef.close('save');
       this.loadData = false;

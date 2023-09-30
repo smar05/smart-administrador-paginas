@@ -5,6 +5,8 @@ import { IQueryParams } from './../interface/i-query-params';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { FireStorageService } from './fire-storage.service';
+import { QueryFn } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,8 @@ export class ProductsService {
 
   constructor(
     private httpService: HttpService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private fireStorageService: FireStorageService
   ) {}
 
   /**
@@ -74,6 +77,70 @@ export class ProductsService {
   public deleteData(id: string): Observable<any> {
     return this.httpService.delete(`${this.urlProducts}/${id}.json`);
   }
+
+  //------------ FireStorage---------------//
+  /**
+   *
+   *
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof ProductsService
+   */
+  public getDataFS(qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getData(this.urlProducts, qf)
+      .pipe(this.fireStorageService.mapForPipe('many'));
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {QueryFn} [qf=null]
+   * @return {*}  {Observable<any>}
+   * @memberof ProductsService
+   */
+  public getItemFS(doc: string, qf: QueryFn = null): Observable<any> {
+    return this.fireStorageService
+      .getItem(this.urlProducts, doc, qf)
+      .pipe(this.fireStorageService.mapForPipe('one'));
+  }
+
+  /**
+   *
+   *
+   * @param {Iproducts} data
+   * @return {*}  {Promise<any>}
+   * @memberof ProductsService
+   */
+  public postDataFS(data: Iproducts): Promise<any> {
+    return this.fireStorageService.post(this.urlProducts, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @param {Iproducts} data
+   * @return {*}  {Promise<any>}
+   * @memberof ProductsService
+   */
+  public patchDataFS(doc: string, data: Iproducts): Promise<any> {
+    return this.fireStorageService.patch(this.urlProducts, doc, data);
+  }
+
+  /**
+   *
+   *
+   * @param {string} doc
+   * @return {*}  {Promise<any>}
+   * @memberof ProductsService
+   */
+  public deleteDataFS(doc: string): Promise<any> {
+    return this.fireStorageService.delete(this.urlProducts, doc);
+  }
+
+  //------------ FireStorage---------------//
 
   //Storage//////////////////////
   /**
@@ -184,44 +251,64 @@ export class ProductsService {
    */
   public formatProducts(array: any): Iproducts[] {
     let position: number = Object.keys(array).length;
-    let products: Iproducts[] = Object.keys(array).map(
-      (a) =>
+    let products: Iproducts[] = array.map(
+      (a: Iproducts | any) =>
         ({
-          id: a,
+          id: a.id,
           position: position--,
-          category: array[a].category,
-          date_created: array[a].date_created,
-          default_banner: array[a].default_banner,
-          delivery_time: array[a].delivery_time,
-          description: array[a].description,
-          details: JSON.parse(array[a].details),
-          feedback: JSON.parse(array[a].feedback),
-          horizontal_slider: JSON.parse(array[a].horizontal_slider),
-          name: array[a].name,
-          offer: array[a].offer,
-          price: array[a].price,
-          reviews: JSON.parse(array[a].reviews),
-          sales: array[a].sales,
-          shipping: array[a].shipping,
-          specification: array[a].specification
-            ? JSON.parse(array[a].specification)
-            : [],
-          stock: array[a].stock,
-          store: array[a].store,
-          sub_category: array[a].sub_category,
-          summary: JSON.parse(array[a].summary),
-          tags: array[a].tags,
-          title_list: array[a].title_list,
-          top_banner: JSON.parse(array[a].top_banner),
-          url: array[a].url,
-          vertical_slider: array[a].vertical_slider,
-          video: JSON.parse(array[a].video),
-          views: array[a].views,
-          gallery: array[a].gallery,
-          delete: array[a].delete,
+          category: a.category,
+          date_created: a.date_created,
+          delivery_time: a.delivery_time,
+          description: a.description,
+          details: JSON.parse(a.details),
+          feedback: JSON.parse(a.feedback),
+          horizontal_slider: JSON.parse(a.horizontal_slider),
+          name: a.name,
+          offer: a.offer,
+          price: a.price,
+          reviews: JSON.parse(a.reviews),
+          sales: a.sales,
+          shipping: a.shipping,
+          specification: a.specification ? JSON.parse(a.specification) : [],
+          stock: a.stock,
+          store: a.store,
+          sub_category: a.sub_category,
+          summary: JSON.parse(a.summary),
+          tags: a.tags,
+          title_list: a.title_list,
+          top_banner: JSON.parse(a.top_banner),
+          url: a.url,
+          vertical_slider: a.vertical_slider,
+          video: JSON.parse(a.video),
+          views: a.views,
+          gallery: a.gallery,
+          delete: a.delete,
+          idShop: a.idShop,
         } as Iproducts)
     );
 
     return products;
+  }
+
+  /**
+   * Modifica el producto para guardarlo en DB
+   *
+   * @param {Iproducts} producto
+   * @return {*}  {Iproducts}
+   * @memberof ProductsService
+   */
+  public dataToSave(producto: Iproducts): Iproducts {
+    let returnData: Iproducts = producto;
+    returnData.feedback = JSON.stringify(producto.feedback);
+    delete returnData.id;
+    returnData.details = JSON.stringify(producto.details);
+    returnData.horizontal_slider = JSON.stringify(producto.horizontal_slider);
+    returnData.reviews = JSON.stringify(producto.reviews);
+    returnData.specification = JSON.stringify(producto.specification);
+    returnData.summary = JSON.stringify(producto.summary);
+    returnData.top_banner = JSON.stringify(producto.top_banner);
+    returnData.video = JSON.stringify(producto.video);
+
+    return returnData;
   }
 }

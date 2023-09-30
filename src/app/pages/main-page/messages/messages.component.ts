@@ -17,6 +17,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   providers: [NavbarComponent],
@@ -75,17 +78,29 @@ export class MessagesComponent implements OnInit {
 
   public getData(): void {
     this.loadData = true;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-    this.messageService.getData().subscribe((resp: any) => {
-      // Se ajusta la respuesta de la bd a la interfaz
-      this.messages = this.messageService.formatMessages(resp);
+    this.messageService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        // Se ajusta la respuesta de la bd a la interfaz
+        this.messages = this.messageService.formatMessages(
+          resp.map((a: IFireStoreRes) => {
+            return {
+              id: a.id,
+              ...a.data,
+            };
+          })
+        );
 
-      this.dataSource = new MatTableDataSource(this.messages);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.messages);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-      this.loadData = false;
-    });
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -121,6 +136,7 @@ export class MessagesComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.messages)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

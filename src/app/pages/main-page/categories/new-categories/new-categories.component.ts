@@ -1,14 +1,25 @@
 import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
-import { Icategories } from './../../../../interface/icategories';
+import {
+  EnumCategorieImg,
+  EnumCategorieState,
+  Icategories,
+} from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  Validators,
+} from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialogRef } from '@angular/material/dialog';
 import '../../../../shared/spinkit/sk-cube-grid.css';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-new-categories',
@@ -89,20 +100,23 @@ export class NewCategoriesComponent implements OnInit {
       title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
-      state: 'hidden',
+      state: EnumCategorieState.hidden,
+      idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
 
     //Guardar en base de datos la categoria
-    this.categoriesService.postData(dataCategory).subscribe(
+    this.categoriesService.postDataFS(dataCategory).then(
       async (resp: any) => {
         //Guardar la imagen en storage
-        let name: string = `main.${this.imageFile.name.split('.')[1]}`;
+        let name: string = `${EnumCategorieImg.main}.${
+          this.imageFile.name.split('.')[1]
+        }`;
 
         try {
-          if (this.imageFile && this.imgTemp && resp.name)
+          if (this.imageFile && this.imgTemp && resp.id)
             await this.categoriesService.saveImage(
               this.imageFile,
-              `${resp.name}/main/${name}`
+              `${resp.id}/${EnumCategorieImg.main}/${name}`
             );
         } catch (error) {
           alerts.basicAlert(
@@ -156,18 +170,26 @@ export class NewCategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        let params: IQueryParams = {
-          orderBy: '"url"',
-          equalTo: `"${name}"`,
-        };
+        let qf: QueryFn = (q) =>
+          q
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('url', '==', name)
+            .limit(1);
 
-        this.categoriesService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 0) {
-            resolve({ category: true });
-          } else {
-            this.urlInput = name;
-          }
-        });
+        this.categoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            if (resp.length > 0) {
+              resolve({ category: true });
+            } else {
+              this.urlInput = name;
+            }
+          });
       });
     };
   }

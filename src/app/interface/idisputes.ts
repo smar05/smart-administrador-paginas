@@ -8,6 +8,7 @@ export interface Idisputes {
   receiver?: string;
   transmitter?: string;
   status?: string;
+  idShop: string;
 }
 
 export enum EnumDisputesStatus {

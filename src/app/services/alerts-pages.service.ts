@@ -1,17 +1,20 @@
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { alerts } from 'src/app/helpers/alerts';
-import { IAlertsPages } from './../interface/ialerts-pages';
-import { HttpClient } from '@angular/common/http';
-import { IQueryParams } from './../interface/i-query-params';
+import {
+  EnumAlertsPagesIdApplication,
+  IAlertsPages,
+} from './../interface/ialerts-pages';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { FireStorageService } from './fire-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlertsPagesService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private fireStorageService: FireStorageService) {}
 
   /**
    * Alertas por paginas
@@ -20,28 +23,25 @@ export class AlertsPagesService {
    * @memberof AlertsPagesService
    */
   public alertPage(page: string = ''): Observable<any> {
-    let url: string = `${environment.urlFirebaseSinLocalId}`;
-    let params: IQueryParams | any = {
-      orderBy: '"active"',
-      equalTo: true,
-    };
+    let qf: QueryFn = (qf) =>
+      qf
+        .where('active', '==', true)
+        .where('page', '==', page)
+        .where('idApplication', '==', EnumAlertsPagesIdApplication.ADMIN)
+        .limit(1);
 
-    if (page) {
-      url += `${environment.aplications.admin.alerts.url}${page}.json`;
-    } else {
-      url += `${environment.aplications.admin.alerts.allPages}.json`;
-    }
+    return this.fireStorageService
+      .getData(environment.collections.alerts, qf)
+      .pipe(
+        map((res: any) => {
+          if (res && res.docs.length > 0) {
+            let alerta: IAlertsPages = res.docs.map((a: any) => {
+              return a.data();
+            })[0];
 
-    return this.httpClient.get(url, { params }).pipe(
-      map((res: any) => {
-        if (res && Object.keys(res).length > 0) {
-          let alerta: IAlertsPages = Object.keys(res).map((a: any) => {
-            return res[a];
-          })[0];
-
-          alerts.basicAlert(alerta.title, alerta.text, alerta.icon);
-        }
-      })
-    );
+            alerts.basicAlert(alerta.title, alerta.text, alerta.icon);
+          }
+        })
+      );
   }
 }

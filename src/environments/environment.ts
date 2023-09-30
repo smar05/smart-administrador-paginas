@@ -2,7 +2,7 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-const apiKey = 'AIzaSyBxCouwRSjWYrt9lWcc3GhqYaeUhxYVrWc';
+const apiKey: string = 'AIzaSyCtV65qh8OjmZ75uNDO1zw0lYlPYsrnjsc';
 
 export const environment = {
   production: false,
@@ -18,13 +18,12 @@ export const environment = {
   },
   firebaseConfig: {
     apiKey: apiKey,
-    authDomain: 'smar-software.firebaseapp.com',
-    databaseURL: 'https://smar-software-default-rtdb.firebaseio.com',
-    projectId: 'smar-software',
-    storageBucket: 'smar-software.appspot.com',
-    messagingSenderId: '474388620930',
-    appId: '1:474388620930:web:cefbaad0c4c544efe3769b',
-    measurementId: 'G-Q0QR49CGXL',
+    authDomain: 'integro-group.firebaseapp.com',
+    projectId: 'integro-group',
+    storageBucket: 'integro-group.appspot.com',
+    messagingSenderId: '387701533633',
+    appId: '1:387701533633:web:716a4376a5c6ce52381d40',
+    measurementId: 'G-7N5RZ3Q7FE',
   },
   collections: {
     categories: 'categories',
@@ -37,20 +36,13 @@ export const environment = {
     messages: 'messages',
     sales: 'sales',
     stores: 'stores',
+    versions: 'versions',
+    alerts: 'alerts',
   },
   urls_program: {
     // No pertenecen a las colecciones de la bd, URL's del programa
     edit_product: 'edit-product',
     new_product: 'new-product',
-  },
-  aplications: {
-    admin: {
-      version: 'aplications/admin/version',
-      alerts: {
-        allPages: 'aplications/admin/alerts/allPages',
-        url: 'aplications/admin/alerts/',
-      },
-    },
   },
   version: '1.0.0',
   apiKeyLocation: 'dU1Pc1lYSnBVZDVqcVpSYjhVSkswTGhWTWlRWVZaUHpIdFBuemhINA==',

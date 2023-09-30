@@ -12,6 +12,8 @@ import { Ilogin } from '../../interface/ilogin';
 import { alerts } from '../../helpers/alerts';
 import { Router } from '@angular/router';
 import '../../shared/spinkit/sk-cube-grid.css';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-login',
@@ -103,22 +105,32 @@ export class LoginComponent implements OnInit {
         this.loading = false;
       })
       .catch((err: any) => {
-        console.error(err);
-
         //Errores al ingresar
-        let error: any = err.error?.errors[0];
+        let error: any = err.code;
 
-        if (error) {
-          if (error.message == 'EMAIL_NOT_FOUND') {
-            alerts.basicAlert('Error', 'Correo no encontrado', 'error');
-          } else if (error.message == 'INVALID_PASSWORD') {
-            alerts.basicAlert('Error', 'Contraseña invalida', 'error');
-          } else if (error.message == 'INVALID_EMAIL') {
-            alerts.basicAlert('Error', 'Correo invalido', 'error');
-          } else {
-            alerts.basicAlert('Error', 'Ha ocurrido un error', 'error');
-          }
+        switch (error) {
+          case 'auth/invalid-email':
+            alerts.basicAlert(
+              'Error',
+              'El formato del correo electrónico es inválido.',
+              'error'
+            );
+            break;
+          case 'auth/user-disabled':
+            alerts.basicAlert(
+              'Error',
+              'La cuenta de usuario está deshabilitada.',
+              'error'
+            );
+            break;
+          case 'auth/wrong-password':
+            alerts.basicAlert('Error', 'Contraseña incorrecta.', 'error');
+            break;
+          default:
+            alerts.basicAlert('Error', 'Error en el inicio de sesión', 'error');
+            break;
         }
+
         this.loading = false;
       });
   }
@@ -139,18 +151,17 @@ export class LoginComponent implements OnInit {
       return false;
     }
 
-    let params: IQueryParams = {
-      orderBy: '"email"',
-      equalTo: `"${email}"`,
-    };
-    let resp: any = await this.countService.getData(params).toPromise();
+    let qf: QueryFn = (ref) => ref.where('email', '==', email);
+    let resp: IFireStoreRes[] = await this.countService
+      .getDataFS(qf)
+      .toPromise();
 
     if (resp) {
-      let count: ICount = Object.keys(resp).map(
-        (a: any) =>
+      let count: ICount = resp.map(
+        (a: IFireStoreRes) =>
           ({
-            active: resp[a].active,
-            activeCount: resp[a].activeCount,
+            active: a.data.active,
+            activeCount: a.data.activeCount,
           } as ICount)
       )[0];
 
@@ -192,6 +203,7 @@ export class LoginComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.login)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

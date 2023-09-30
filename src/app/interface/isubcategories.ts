@@ -5,4 +5,5 @@ export interface Isubcategories {
   title_list: string;
   url: string;
   view: number;
+  idShop: string;
 }

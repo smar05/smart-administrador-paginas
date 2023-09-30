@@ -10,6 +10,7 @@ export interface Iusers {
   phone: string;
   idType: string; // Tipo de identificacion
   idValue: string;
+  idShop: string;
 }
 
 export enum EnumUsersIdType {

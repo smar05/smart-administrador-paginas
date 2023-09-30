@@ -162,7 +162,7 @@ export class RegisterComponent implements OnInit {
         keyCount: uid,
       };
 
-      await this.countService.postData(count).toPromise();
+      await this.countService.postDataFS(count).then();
 
       this.loading = false;
 

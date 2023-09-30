@@ -7,6 +7,7 @@ import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 import { CategoriesService } from './../../../services/categories.service';
 import {
+  EnumCategorieImg,
   EnumCategorieState,
   Icategories,
 } from './../../../interface/icategories';
@@ -24,6 +25,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-categories',
@@ -88,32 +92,30 @@ export class CategoriesComponent implements OnInit {
   //Tomar la data de categorias
   public getData(): void {
     this.loadData = true;
-    this.categoriesService.getData().subscribe((resp: any): any => {
-      let position = Object.keys(resp).length;
-      this.categories = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+    this.categoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]): any => {
+        let position = Object.keys(resp).length;
+        this.categories = resp.map((a: IFireStoreRes) => {
+          return {
+            id: a.id,
             position: position--,
-            name: resp[a].name,
-            icon: resp[a].icon,
-            image: resp[a].image,
-            title_list: resp[a].title_list,
-            url: resp[a].url,
-            view: resp[a].view,
-            state: resp[a].state,
-          } as Icategories)
-      );
-      this.dataSource = new MatTableDataSource(this.categories);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+            ...a.data,
+          };
+        });
+        this.dataSource = new MatTableDataSource(this.categories);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-      this.categories.forEach(async (categorie: Icategories) => {
-        await this.getCategorieImage(categorie);
+        this.categories.forEach(async (categorie: Icategories) => {
+          await this.getCategorieImage(categorie);
+        });
+
+        this.loadData = false;
       });
-
-      this.loadData = false;
-    });
   }
 
   //FIltro de busqueda
@@ -139,17 +141,21 @@ export class CategoriesComponent implements OnInit {
   }
 
   //Cambiar estado de la categoria
-  public changeState(e: any): void {
-    const data = e.target.checked
-      ? {
-          state: EnumCategorieState.show,
-        }
-      : {
-          state: EnumCategorieState.hidden,
-        };
+  public changeState(e: any, id: string): void {
+    let state: string = e.target.checked
+      ? EnumCategorieState.show
+      : EnumCategorieState.hidden;
+
+    let categorie: Icategories | any = this.categories.find(
+      (c: Icategories) => c.id == id
+    );
+    categorie.state = state;
+    delete categorie.position;
+    delete categorie.id;
+
     this.categoriesService
-      .patchData(e.target.id.split('_')[1], data)
-      .subscribe(() => {
+      .patchDataFS(e.target.id.split('_')[1], categorie)
+      .then(() => {
         this.getData();
       });
   }
@@ -182,14 +188,19 @@ export class CategoriesComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           //Validar que la categoria no tenga una subcategoria
-          let params: IQueryParams = {
-            orderBy: '"category"',
-            equalTo: `"${name}"`,
-          };
-
+          let qf: QueryFn = (ref) =>
+            ref
+              .where(
+                'idShop',
+                '==',
+                localStorage.getItem(EnumLocalStorage.localId)
+              )
+              .where('category', '==', name)
+              .limit(1);
           this.subcategoriesService
-            .getData(params)
-            .subscribe(async (resp: any) => {
+            .getDataFS(qf)
+            .toPromise()
+            .then(async (resp: IFireStoreRes[]) => {
               if (Object.keys(resp).length > 0) {
                 alerts.basicAlert(
                   'Error',
@@ -200,7 +211,9 @@ export class CategoriesComponent implements OnInit {
                 //Eliminar imagen de categoria
                 try {
                   if (name && id)
-                    await this.categoriesService.deleteImages(`${id}/main/`);
+                    await this.categoriesService.deleteImages(
+                      `${id}/${EnumCategorieImg.main}/`
+                    );
                 } catch (error) {
                   alerts.basicAlert(
                     'Error',
@@ -211,7 +224,7 @@ export class CategoriesComponent implements OnInit {
                 }
 
                 //Eliminar registro de la base de datos
-                this.categoriesService.deleteData(id).subscribe(
+                this.categoriesService.deleteDataFS(id).then(
                   (resp: any) => {
                     alerts.basicAlert(
                       'Listo',
@@ -238,7 +251,9 @@ export class CategoriesComponent implements OnInit {
     let urlImage: string = '';
 
     if (categorie.id) {
-      urlImage = await this.categoriesService.getImage(`${categorie.id}/main`);
+      urlImage = await this.categoriesService.getImage(
+        `${categorie.id}/${EnumCategorieImg.main}`
+      );
     }
 
     if (urlImage) {
@@ -253,6 +268,7 @@ export class CategoriesComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.categories)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

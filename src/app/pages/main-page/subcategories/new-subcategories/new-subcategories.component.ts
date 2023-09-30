@@ -5,8 +5,16 @@ import { functions } from 'src/app/helpers/functions';
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
-import { UntypedFormBuilder, Validators, AbstractControl } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  Validators,
+  AbstractControl,
+} from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { Icategories } from 'src/app/interface/icategories';
 
 @Component({
   selector: 'app-new-subcategories',
@@ -63,13 +71,23 @@ export class NewSubcategoriesComponent implements OnInit {
   ngOnInit(): void {
     //Capturamos la informacion de categorias
     this.loadData = true;
-    this.categoriesService.getData().subscribe((resp: any) => {
-      this.categories = Object.keys(resp).map((a) => ({
-        name: resp[a].name,
-        titleList: JSON.parse(resp[a].title_list),
-      }));
-      this.loadData = false;
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    this.categoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.categories = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              name: a.data.name,
+              titleList: JSON.parse(a.data.title_list),
+              idShop: a.data.idShop,
+            } as Icategories)
+        );
+        this.loadData = false;
+      });
   }
 
   //Guardar subcategoria
@@ -89,9 +107,10 @@ export class NewSubcategoriesComponent implements OnInit {
       url: this.urlInput,
       products_inventory: 0,
       view: 0,
+      idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
     //Guardar en base de datos la categoria
-    this.subcategoriesService.postData(dataCategory).subscribe(
+    this.subcategoriesService.postDataFS(dataCategory).then(
       (resp) => {
         this.loadData = false;
         this.dialogRef.close('save');
@@ -113,18 +132,26 @@ export class NewSubcategoriesComponent implements OnInit {
     return (control: AbstractControl) => {
       const name = functions.createUrl(control.value);
       return new Promise((resolve) => {
-        let params: IQueryParams = {
-          orderBy: '"url"',
-          equalTo: `"${name}"`,
-        };
+        let qf: QueryFn = (ref) =>
+          ref
+            .where(
+              'idShop',
+              '==',
+              localStorage.getItem(EnumLocalStorage.localId)
+            )
+            .where('url', '==', name)
+            .limit(1);
 
-        this.subcategoriesService.getData(params).subscribe((resp) => {
-          if (Object.keys(resp).length > 0) {
-            resolve({ subcategory: true });
-          } else {
-            this.urlInput = name;
-          }
-        });
+        this.subcategoriesService
+          .getDataFS(qf)
+          .toPromise()
+          .then((resp: IFireStoreRes[]) => {
+            if (Object.keys(resp).length > 0) {
+              resolve({ subcategory: true });
+            } else {
+              this.urlInput = name;
+            }
+          });
       });
     };
   }

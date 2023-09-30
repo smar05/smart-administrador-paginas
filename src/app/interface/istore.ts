@@ -10,4 +10,5 @@ export interface IStore {
   principalColor: string;
   social: string | any;
   url: string;
+  idShop: string;
 }

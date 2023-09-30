@@ -20,6 +20,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-stores',
@@ -78,44 +81,51 @@ export class StoresComponent implements OnInit {
   //Tomar la data de categorias
   public getData(): void {
     this.loadData = true;
-    this.storeService.getData().subscribe((res: any): any => {
-      let position = Object.keys(res).length;
-      this.stores = Object.keys(res).map(
-        (a) =>
-          ({
-            id: a,
-            position: position--,
-            abaout: res[a].abaout,
-            address: JSON.parse(res[a].address),
-            celphone: JSON.parse(res[a].celphone),
-            email: JSON.parse(res[a].email),
-            idType: res[a].idType,
-            idValue: res[a].idValue,
-            name: res[a].name,
-            principalColor: res[a].principalColor,
-            social: JSON.parse(res[a].social),
-            url: res[a].url,
-          } as IStore)
-      );
-      this.dataSource = new MatTableDataSource(this.stores);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-      this.stores.forEach(async (store: IStore) => {
-        await this.getStoreImage(store);
+    this.storeService
+      .getDataFS(qf)
+      .toPromise()
+      .then((res: IFireStoreRes[]): any => {
+        let position = Object.keys(res).length;
+        this.stores = res.map(
+          (a: IFireStoreRes) =>
+            ({
+              id: a.id,
+              position: position--,
+              abaout: a.data.abaout,
+              address: JSON.parse(a.data.address),
+              celphone: JSON.parse(a.data.celphone),
+              email: JSON.parse(a.data.email),
+              idType: a.data.idType,
+              idValue: a.data.idValue,
+              name: a.data.name,
+              principalColor: a.data.principalColor,
+              social: JSON.parse(a.data.social),
+              url: a.data.url,
+              idShop: a.data.idShop,
+            } as IStore)
+        );
+        this.dataSource = new MatTableDataSource(this.stores);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-        store.address.forEach(async (address: any) => {
-          await this.getStatesByCountry(address.country, address.state);
-          await this.getCitiesByCountryAndState(
-            address.country,
-            address.state,
-            address.city
-          );
+        this.stores.forEach(async (store: IStore) => {
+          await this.getStoreImage(store);
+
+          store.address.forEach(async (address: any) => {
+            await this.getStatesByCountry(address.country, address.state);
+            await this.getCitiesByCountryAndState(
+              address.country,
+              address.state,
+              address.city
+            );
+          });
         });
-      });
 
-      this.loadData = false;
-    });
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -175,7 +185,8 @@ export class StoresComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.categories)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 
   public getAllCountries(): void {

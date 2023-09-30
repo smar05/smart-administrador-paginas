@@ -23,6 +23,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-products',
@@ -86,19 +89,29 @@ export class ProductsComponent implements OnInit {
   //Tomar la data de productos
   public getData(): void {
     this.loadData = true;
-    let params: IQueryParams = {
-      orderBy: '"delete"',
-      equalTo: false,
-    };
-    this.productsService.getData(params).subscribe((resp: any): any => {
-      //Integrar la respuesta del servidor con la interfaz
-      let position = Object.keys(resp).length;
-      this.products = this.productsService.formatProducts(resp);
+    let qf: QueryFn = (ref) =>
+      ref
+        .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
+        .where('delete', '==', false);
 
-      //Imagenes de los productos
-      this.products.forEach(async (product: Iproducts) => {
-        await this.getProductMainImage(product, EnumProductImg.main); //Imagen principal
-        /*
+    this.productsService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]): any => {
+        //Integrar la respuesta del servidor con la interfaz
+        this.products = this.productsService.formatProducts(
+          resp.map((a: IFireStoreRes) => {
+            return {
+              id: a.id,
+              ...a.data,
+            };
+          })
+        );
+
+        //Imagenes de los productos
+        this.products.forEach(async (product: Iproducts) => {
+          await this.getProductMainImage(product, EnumProductImg.main); //Imagen principal
+          /*
         await this.getProductMainImage(product, EnumProductImg.default_banner);
         await this.getProductMainImage(
           product,
@@ -107,18 +120,18 @@ export class ProductsComponent implements OnInit {
         await this.getProductMainImage(product, EnumProductImg.top_banner);
         await this.getProductMainImage(product, EnumProductImg.vertical_slider);
         */
+        });
+
+        this.dataSource = new MatTableDataSource(this.products);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.loadData = false;
+
+        //Configuracion de las reseñas
+        for (const i in this.products) {
+          this.configReviews(this.products[i].reviews, i);
+        }
       });
-
-      this.dataSource = new MatTableDataSource(this.products);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.loadData = false;
-
-      //Configuracion de las reseñas
-      for (const i in this.products) {
-        this.configReviews(this.products[i].reviews, i);
-      }
-    });
   }
 
   //FIltro de busqueda
@@ -147,9 +160,8 @@ export class ProductsComponent implements OnInit {
         if (result.isConfirmed) {
           if (product) {
             this.productsService
-              .patchData(id, { delete: true })
-              .toPromise()
-              .then((res: any) => {
+              .patchDataFS(id, { delete: true } as Iproducts)
+              .then(() => {
                 this.products = this.products.filter(
                   (producto: Iproducts) => producto.id != id
                 );
@@ -197,6 +209,7 @@ export class ProductsComponent implements OnInit {
   //Cambia el estado del producto
   public cambiarEstado(producto: any, estado: string): void {
     let feedback = producto.feedback;
+
     if (estado === EnumProductReviewType.approved) {
       //Desactivar el estado
       alerts
@@ -209,11 +222,11 @@ export class ProductsComponent implements OnInit {
         .then((result: any) => {
           if (result.isConfirmed) {
             feedback.type = EnumProductReviewType.review;
-            let data = {
-              feedback: JSON.stringify(feedback),
-            };
-            this.productsService.patchData(producto.id, data).subscribe(
-              (resp) => {
+            let id: string = producto.id;
+            let data: Iproducts = this.productsService.dataToSave(producto);
+
+            this.productsService.patchDataFS(id, data).then(
+              () => {
                 this.getData();
                 alerts.basicAlert(
                   'Listo',
@@ -243,11 +256,11 @@ export class ProductsComponent implements OnInit {
         .then((result: any) => {
           if (result.isConfirmed) {
             feedback.type = EnumProductReviewType.approved;
-            let data = {
-              feedback: JSON.stringify(feedback),
-            };
-            this.productsService.patchData(producto.id, data).subscribe(
-              (resp) => {
+            let id: string = producto.id;
+            let data: Iproducts = this.productsService.dataToSave(producto);
+
+            this.productsService.patchDataFS(id, data).then(
+              () => {
                 this.getData();
                 alerts.basicAlert(
                   'Listo',
@@ -295,6 +308,7 @@ export class ProductsComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.products)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

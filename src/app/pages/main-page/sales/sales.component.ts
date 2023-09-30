@@ -13,6 +13,9 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-sales',
@@ -68,38 +71,44 @@ export class SalesComponent implements OnInit {
 
   public getData(): void {
     this.loadData = true;
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
 
-    this.salesService.getData().subscribe((resp: any) => {
-      // Se ajusta la respuesta de la bd a la interfaz
-      let position: number = 1;
+    this.salesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        // Se ajusta la respuesta de la bd a la interfaz
+        let position: number = 1;
 
-      this.orders = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position++,
-            client: resp[a].client,
-            date: resp[a].date,
-            id_order: resp[a].id_order,
-            id_payment: resp[a].id_payment,
-            payment_method: resp[a].payment_method,
-            product: resp[a].product,
-            quantity: resp[a].quantity,
-            status: resp[a].status,
-            unit_price: resp[a].unit_price,
-            commission: resp[a].commission,
-            total: resp[a].total,
-            url: resp[a].url,
-            paid_out: resp[a].paid_out,
-          } as Isales)
-      );
+        this.orders = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              id: a.id,
+              position: position++,
+              client: a.data.client,
+              date: a.data.date,
+              id_order: a.data.id_order,
+              id_payment: a.data.id_payment,
+              payment_method: a.data.payment_method,
+              product: a.data.product,
+              quantity: a.data.quantity,
+              status: a.data.status,
+              unit_price: a.data.unit_price,
+              commission: a.data.commission,
+              total: a.data.total,
+              url: a.data.url,
+              paid_out: a.data.paid_out,
+              idShop: a.data.idShop,
+            } as Isales)
+        );
 
-      this.dataSource = new MatTableDataSource(this.orders);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.orders);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
 
-      this.loadData = false;
-    });
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -116,6 +125,7 @@ export class SalesComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.sales)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }

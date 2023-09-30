@@ -21,6 +21,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { QueryFn } from '@angular/fire/compat/firestore';
+import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
 @Component({
   selector: 'app-subcategories',
@@ -84,26 +87,33 @@ export class SubcategoriesComponent implements OnInit {
   //Tomar la data de subcategorias
   public getData(): void {
     this.loadData = true;
-    this.subcategoriesService.getData().subscribe((resp: any): any => {
-      let position = Object.keys(resp).length;
-      this.subcategories = Object.keys(resp).map(
-        (a) =>
-          ({
-            id: a,
-            position: position--,
-            category: resp[a].category,
-            name: resp[a].name,
-            products_inventory: resp[a].products_inventory,
-            title_list: resp[a].title_list,
-            url: resp[a].url,
-            view: resp[a].view,
-          } as Isubcategories)
-      );
-      this.dataSource = new MatTableDataSource(this.subcategories);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.loadData = false;
-    });
+    let qf: QueryFn = (ref) =>
+      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+
+    this.subcategoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]): any => {
+        let position = Object.keys(resp).length;
+        this.subcategories = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              id: a.id,
+              position: position--,
+              category: a.data.category,
+              name: a.data.name,
+              products_inventory: a.data.products_inventory,
+              title_list: a.data.title_list,
+              url: a.data.url,
+              view: a.data.view,
+              idShop: a.data.idShop,
+            } as Isubcategories)
+        );
+        this.dataSource = new MatTableDataSource(this.subcategories);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.loadData = false;
+      });
   }
 
   //FIltro de busqueda
@@ -155,23 +165,29 @@ export class SubcategoriesComponent implements OnInit {
       )
       .then((result: any) => {
         if (result.isConfirmed) {
-          let params: IQueryParams = {
-            orderBy: '"sub_category"',
-            equalTo: `"${url}"`,
-          };
+          let qf: QueryFn = (ref) =>
+            ref
+              .where(
+                'idShop',
+                '==',
+                localStorage.getItem(EnumLocalStorage.localId)
+              )
+              .where('sub_category', '==', url)
+              .limit(1);
 
-          this.productsService.getData(params).subscribe((resp: any) => {
-            if (Object.keys(resp).length > 0) {
-              alerts.basicAlert(
-                'Error',
-                'La subcategoria tiene productos relacionados',
-                'error'
-              );
-            } else {
-              //Eliminar el registro
-              this.subcategoriesService
-                .deleteData(id)
-                .subscribe((resp: any) => {
+          this.productsService
+            .getDataFS(qf)
+            .toPromise()
+            .then((resp: IFireStoreRes[]) => {
+              if (Object.keys(resp).length > 0) {
+                alerts.basicAlert(
+                  'Error',
+                  'La subcategoria tiene productos relacionados',
+                  'error'
+                );
+              } else {
+                //Eliminar el registro
+                this.subcategoriesService.deleteDataFS(id).then(() => {
                   alerts.basicAlert(
                     'Listo',
                     'La subcategoria ha sido eliminada',
@@ -179,8 +195,8 @@ export class SubcategoriesComponent implements OnInit {
                   );
                   this.getData();
                 });
-            }
-          });
+              }
+            });
         }
       });
   }
@@ -192,6 +208,7 @@ export class SubcategoriesComponent implements OnInit {
   public alertPage(): void {
     this.alertsPagesService
       .alertPage(EnumPages.subcategories)
-      .subscribe((res: any) => {});
+      .toPromise()
+      .then((res: any) => {});
   }
 }
