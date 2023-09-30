@@ -40,6 +40,7 @@ export class EditMessagesComponent implements OnInit {
   }
 
   public message: string = '';
+  public messageObject: Imessages;
   public loadData: boolean = false;
   public formSubmitted: boolean = false; // Valida envio de formulario
 
@@ -63,6 +64,8 @@ export class EditMessagesComponent implements OnInit {
       .toPromise()
       .then((resp: IFireStoreRes) => {
         this.message = resp.data.message;
+        this.messageObject = resp.data;
+        this.messageObject.id = resp.id;
         this.answer.setValue(resp.data.answer);
       });
   }
@@ -74,12 +77,12 @@ export class EditMessagesComponent implements OnInit {
 
     this.loadData = true;
 
-    let dataMessage: Imessages = {
-      answer: this.f.controls.answer.value,
-      date_answer: new Date(),
-      status: EnumMessagesStatus.answered,
-      idShop: localStorage.getItem(EnumLocalStorage.localId),
-    };
+    let dataMessage: Imessages = this.messageObject;
+    delete dataMessage.id;
+    dataMessage.status = EnumMessagesStatus.answered;
+    dataMessage.date_answer = new Date().toISOString();
+    dataMessage.answer = this.f.controls.answer.value;
+    dataMessage.idShop = localStorage.getItem(EnumLocalStorage.localId);
 
     // Guardar en bd
     this.messageService.patchDataFS(this.data.id, dataMessage).then(

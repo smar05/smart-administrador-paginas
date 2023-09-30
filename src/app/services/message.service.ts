@@ -106,11 +106,11 @@ export class MessageService {
           // Contamos solo las que no tienen respuesta
           this.messages = resp
             .map((a: IFireStoreRes) => {
-              return { answer: a.data.answer };
+              return { answer: a.data?.answer };
             })
             .filter(
               (a: IFireStoreRes | any) =>
-                a.data.answer == undefined || a.data.answer == null
+                a.data?.answer == undefined || a.data?.answer == null
             ).length;
 
           return resp;

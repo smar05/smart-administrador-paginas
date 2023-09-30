@@ -88,7 +88,7 @@ export class DisputesService {
             })
             .filter(
               (a: IFireStoreRes | any) =>
-                a.data.answer == undefined || a.data.answer == null
+                a.data?.answer == undefined || a.data?.answer == null
             ).length;
 
           return resp;
@@ -161,7 +161,7 @@ export class DisputesService {
     let disputes: Idisputes[] = Object.keys(resp).map(
       (a) =>
         ({
-          id: a,
+          id: resp[a].id,
           position: position++,
           answer: resp[a].answer,
           date_answer: resp[a].date_answer,
