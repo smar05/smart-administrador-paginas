@@ -1,6 +1,8 @@
 {
   "name": "smar-dashboard",
   "version": "0.0.0",
+  "node-v": "16.16.0",
+  "angular-v": "14.2.10",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
