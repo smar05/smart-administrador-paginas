@@ -260,26 +260,28 @@ export class ProductsService {
           date_created: a.date_created,
           delivery_time: a.delivery_time,
           description: a.description,
-          details: JSON.parse(a.details),
-          feedback: JSON.parse(a.feedback),
-          horizontal_slider: JSON.parse(a.horizontal_slider),
+          details: a.details ? JSON.parse(a.details) : '',
+          feedback: a.feedback,
+          horizontal_slider: a.horizontal_slider
+            ? JSON.parse(a.horizontal_slider)
+            : '',
           name: a.name,
           offer: a.offer,
           price: a.price,
-          reviews: JSON.parse(a.reviews),
+          reviews: a.reviews ? JSON.parse(a.reviews) : '',
           sales: a.sales,
           shipping: a.shipping,
           specification: a.specification ? JSON.parse(a.specification) : [],
           stock: a.stock,
           store: a.store,
           sub_category: a.sub_category,
-          summary: JSON.parse(a.summary),
+          summary: a.summary ? JSON.parse(a.summary) : '',
           tags: a.tags,
           title_list: a.title_list,
-          top_banner: JSON.parse(a.top_banner),
+          top_banner: a.top_banner ? JSON.parse(a.top_banner) : '',
           url: a.url,
           vertical_slider: a.vertical_slider,
-          video: JSON.parse(a.video),
+          video: a.video ? JSON.parse(a.video) : '',
           views: a.views,
           gallery: a.gallery,
           delete: a.delete,
@@ -299,7 +301,7 @@ export class ProductsService {
    */
   public dataToSave(producto: Iproducts): Iproducts {
     let returnData: Iproducts = producto;
-    returnData.feedback = JSON.stringify(producto.feedback);
+    returnData.feedback = producto.feedback;
     delete returnData.id;
     returnData.details = JSON.stringify(producto.details);
     returnData.horizontal_slider = JSON.stringify(producto.horizontal_slider);

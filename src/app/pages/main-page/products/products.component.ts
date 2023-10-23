@@ -221,8 +221,9 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = EnumProductReviewType.review;
+            feedback = EnumProductReviewType.review;
             let id: string = producto.id;
+            producto.feedback = feedback;
             let data: Iproducts = this.productsService.dataToSave(producto);
 
             this.productsService.patchDataFS(id, data).then(
@@ -255,8 +256,9 @@ export class ProductsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            feedback.type = EnumProductReviewType.approved;
+            feedback = EnumProductReviewType.approved;
             let id: string = producto.id;
+            producto.feedback = feedback;
             let data: Iproducts = this.productsService.dataToSave(producto);
 
             this.productsService.patchDataFS(id, data).then(

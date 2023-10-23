@@ -5,7 +5,11 @@ import { alerts } from './../../../../helpers/alerts';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
-import { Iproducts, EnumProductImg } from './../../../../interface/iproducts';
+import {
+  Iproducts,
+  EnumProductImg,
+  EnumProductReviewType,
+} from './../../../../interface/iproducts';
 import { ProductsService } from './../../../../services/products.service';
 import { functions } from './../../../../helpers/functions';
 import {
@@ -331,7 +335,7 @@ export class NewProductComponent implements OnInit {
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
-      feedback: JSON.stringify({ type: 'approved', comment: '' }),
+      feedback: EnumProductReviewType.approved,
       horizontal_slider: JSON.stringify(
         this.horizontal_slider.value.map((top: any) => {
           if (top.IMG_tag) delete top.IMG_tag;

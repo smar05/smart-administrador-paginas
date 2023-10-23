@@ -81,7 +81,7 @@
                 <ng-container *ngIf="hasPermission('products_write')">
                   <button
                     class="btn btn-sm btn-danger mr-1 size"
-                    *ngIf="element.feedback.type != 'approved'"
+                    *ngIf="element.feedback != 'approved'"
                     (click)="cambiarEstado(element, 'review')"
                   >
                     <!--<i class="fas fa-clock"></i>-->
@@ -89,7 +89,7 @@
                   </button>
                   <button
                     class="btn btn-sm btn-success mr-1 size"
-                    *ngIf="element.feedback.type == 'approved'"
+                    *ngIf="element.feedback == 'approved'"
                     (click)="cambiarEstado(element, 'approved')"
                   >
                     <i class="fas fa-check"></i>

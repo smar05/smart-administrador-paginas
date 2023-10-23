@@ -503,7 +503,7 @@ export class EditProductComponent implements OnInit {
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
-      feedback: JSON.stringify({ type: 'approved', comment: '' }),
+      feedback: this.productEnDb.feedback,
       horizontal_slider: JSON.stringify(
         this.horizontal_slider.value.map((top: any) => {
           if (top.IMG_tag) delete top.IMG_tag;
