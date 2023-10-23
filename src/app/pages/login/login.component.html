@@ -53,7 +53,11 @@
             <div class="row">
               <!-- /.col -->
               <div class="col-12">
-                <button type="submit" class="btn btn-primary btn-block bg-main">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-block bg-main"
+                  [disabled]="this.f.invalid"
+                >
                   Iniciar sesion
                 </button>
               </div>
