@@ -155,13 +155,6 @@
                       <strong class="mat-header-cell">Url: </strong>
                       {{ element.url }}
                     </li>
-                    <!--
-                    <li class="py-2">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Tienda: </strong>
-                      {{ element.store }}
-                    </li>
-                    -->
                     <li class="py-2">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Categoria: </strong>
@@ -248,33 +241,8 @@
                           <figure class="my-3">
                             <figcaption>
                               {{ spec | separateObjects }}
-                              <strong>Escoja una opción</strong>
                             </figcaption>
-                            <div
-                              class="d-flex"
-                              *ngIf="(spec | separateObjects) == 'Color'"
-                            >
-                              <ng-container
-                                *ngFor="
-                                  let value of spec[spec | separateObjects]
-                                "
-                              >
-                                <div
-                                  class="rounded-circle mr-3"
-                                  style="
-                                    width: 30px;
-                                    height: 30px;
-                                    cursor: pointer;
-                                    border: 1px solid #bbb;
-                                  "
-                                  [ngStyle]="{ 'background-color': value }"
-                                ></div>
-                              </ng-container>
-                            </div>
-                            <div
-                              class="d-flex"
-                              *ngIf="(spec | separateObjects) != 'Color'"
-                            >
+                            <div class="d-flex">
                               <div
                                 class="py-2 px-3 mr-3"
                                 *ngFor="
@@ -312,197 +280,15 @@
                         ></div>
                       </div>
                     </li>
-                    <!--
-                    <li class="py-1">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Galeria: </strong>
-                      <div class="row">
-                        <figure
-                          *ngFor="let pic of element.gallery"
-                          class="col-12 col-lg-3"
-                        >
-                          <img
-                            *ngIf="!(pic == '' || pic == undefined)"
-                            src="{{ pic }}"
-                            class="img-thumbnail"
-                          />
-                          <img
-                            *ngIf="pic == '' || pic == undefined"
-                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                            class="img-thumbnail"
-                          />
-                        </figure>
-                      </div>
-                    </li>
-                    -->
-                    <!--
-                    <li class="py-1">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell">Banner superior: </strong>
-                      <div class="py-3">
-                        <p>
-                          <strong>H3 tag: </strong
-                          >{{ element.top_banner["H3_tag"] }}
-                        </p>
-                        <p>
-                          <strong>P1 tag: </strong
-                          >{{ element.top_banner["P1_tag"] }}
-                        </p>
-                        <p>
-                          <strong>H4 tag: </strong
-                          >{{ element.top_banner["H4_tag"] }}
-                        </p>
-                        <p>
-                          <strong>P2 tag: </strong
-                          >{{ element.top_banner["P2_tag"] }}
-                        </p>
-                        <p>
-                          <strong>Span tag: </strong
-                          >{{ element.top_banner["Span_tag"] }}
-                        </p>
-                        <p>
-                          <strong>Button tag: </strong
-                          >{{ element.top_banner["Button_tag"] }}
-                        </p>
-                        <p><strong>IMG tag: </strong></p>
-                        <img
-                          *ngIf="
-                            this.productsImages.has(element.id + '-top_banner');
-                            else noTopBanner
-                          "
-                          src="{{
-                            this.productsImages.get(element.id + '-top_banner')
-                          }}"
-                          class="img-fluid"
-                        />
-                        <ng-template #noTopBanner>
-                          <img
-                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                            class="img-fluid"
-                          />
-                        </ng-template>
-                      </div>
-                    </li>
-                    <li class="py-1">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell"
-                        >Banner por defecto:
-                      </strong>
-                      <div class="py-3">
-                        <img
-                          *ngIf="
-                            this.productsImages.has(
-                              element.id + '-default_banner'
-                            );
-                            else noDefaultBanner
-                          "
-                          src="{{
-                            this.productsImages.get(
-                              element.id + '-default_banner'
-                            )
-                          }}"
-                          class="img-fluid py-3"
-                        />
-                        <ng-template #noDefaultBanner>
-                          <img
-                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                            class="img-fluid py-3"
-                          />
-                        </ng-template>
-                      </div>
-                    </li>
-                    <li class="py-1">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell"
-                        >Deslizador horizontal:
-                      </strong>
-                      <div class="py-3">
-                        <p>
-                          <strong>H4 tag: </strong
-                          >{{ element.horizontal_slider["H4 tag"] }}
-                        </p>
-                        <p>
-                          <strong>H3-1 tag: </strong
-                          >{{ element.horizontal_slider["H3-1 tag"] }}
-                        </p>
-                        <p>
-                          <strong>H3-2 tag: </strong
-                          >{{ element.horizontal_slider["H3-2 tag"] }}
-                        </p>
-                        <p>
-                          <strong>H3-3 tag: </strong
-                          >{{ element.horizontal_slider["H3-3 tag"] }}
-                        </p>
-                        <p>
-                          <strong>H3-4s tag: </strong
-                          >{{ element.horizontal_slider["H3-4s tag"] }}
-                        </p>
-                        <p>
-                          <strong>Button tag: </strong
-                          >{{ element.horizontal_slider["Button tag"] }}
-                        </p>
-                        <p>
-                          <strong>IMG tag: </strong>
-                        </p>
-                        <img
-                          *ngIf="
-                            this.productsImages.has(
-                              element.id + '-horizontal_slider'
-                            );
-                            else noHorizontalSlider
-                          "
-                          src="{{
-                            this.productsImages.get(
-                              element.id + '-horizontal_slider'
-                            )
-                          }}"
-                          class="img-fluid"
-                        />
-                        <ng-template #noHorizontalSlider>
-                          <img
-                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                            class="img-fluid"
-                          />
-                        </ng-template>
-                      </div>
-                    </li>
-                    <li class="py-1">
-                      <span class="mx-2 text-muted"></span>
-                      <strong class="mat-header-cell"
-                        >Deslizador vertical:
-                      </strong>
-                      <div class="py-3">
-                        <img
-                          *ngIf="
-                            this.productsImages.has(
-                              element.id + '-vertical_slider'
-                            );
-                            else noVerticalSlider
-                          "
-                          src="{{
-                            this.productsImages.has(
-                              element.id + '-vertical_slider'
-                            )
-                          }}"
-                          class="img-fluid"
-                        />
-                        <ng-template #noVerticalSlider>
-                          <img
-                            src="../../../../assets/img/undraw_product_teardown_elol.svg"
-                            class="img-fluid"
-                          />
-                        </ng-template>
-                      </div>
-                    </li>
-                    -->
                     <li class="py-1">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Video: </strong>
                       <div
                         class="py-3"
                         *ngIf="
-                          element.video[1] == '' ||
-                          element.video[1] == undefined
+                          element.video &&
+                          (element.video[1] == '' ||
+                            element.video[1] == undefined)
                         "
                       >
                         <img
@@ -512,7 +298,7 @@
                         />
                       </div>
                       <iframe
-                        *ngIf="element.video[0] === 'youtube'"
+                        *ngIf="element.video && element.video[0] === 'youtube'"
                         class="mb-3"
                         [src]="
                           'https://www.youtube.com/embed/' + element.video[1]
@@ -525,7 +311,7 @@
                       ></iframe>
 
                       <iframe
-                        *ngIf="element.video[0] === 'vimeo'"
+                        *ngIf="element.video && element.video[0] === 'vimeo'"
                         class="mb-3"
                         [src]="
                           'https://player.vimeo.com/video/' + element.video[1]

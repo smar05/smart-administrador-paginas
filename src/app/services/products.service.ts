@@ -252,36 +252,31 @@ export class ProductsService {
   public formatProducts(array: any): Iproducts[] {
     let position: number = Object.keys(array).length;
     let products: Iproducts[] = array.map(
-      (a: Iproducts | any) =>
+      (a: Iproducts) =>
         ({
           id: a.id,
           position: position--,
           category: a.category,
           date_created: a.date_created,
+          date_updated: a.date_updated,
           delivery_time: a.delivery_time,
           description: a.description,
-          details: a.details ? JSON.parse(a.details) : '',
+          details: a.details ? JSON.parse(a.details) : null,
           feedback: a.feedback,
-          horizontal_slider: a.horizontal_slider
-            ? JSON.parse(a.horizontal_slider)
-            : '',
           name: a.name,
           offer: a.offer,
           price: a.price,
-          reviews: a.reviews ? JSON.parse(a.reviews) : '',
+          reviews: a.reviews ? JSON.parse(a.reviews) : null,
           sales: a.sales,
           shipping: a.shipping,
-          specification: a.specification ? JSON.parse(a.specification) : [],
+          specification: a.specification ? JSON.parse(a.specification) : null,
           stock: a.stock,
-          store: a.store,
           sub_category: a.sub_category,
-          summary: a.summary ? JSON.parse(a.summary) : '',
+          summary: a.summary ? JSON.parse(a.summary) : null,
           tags: a.tags,
           title_list: a.title_list,
-          top_banner: a.top_banner ? JSON.parse(a.top_banner) : '',
           url: a.url,
-          vertical_slider: a.vertical_slider,
-          video: a.video ? JSON.parse(a.video) : '',
+          video: a.video ? JSON.parse(a.video) : null,
           views: a.views,
           gallery: a.gallery,
           delete: a.delete,
@@ -304,12 +299,12 @@ export class ProductsService {
     returnData.feedback = producto.feedback;
     delete returnData.id;
     returnData.details = JSON.stringify(producto.details);
-    returnData.horizontal_slider = JSON.stringify(producto.horizontal_slider);
     returnData.reviews = JSON.stringify(producto.reviews);
     returnData.specification = JSON.stringify(producto.specification);
     returnData.summary = JSON.stringify(producto.summary);
-    returnData.top_banner = JSON.stringify(producto.top_banner);
     returnData.video = JSON.stringify(producto.video);
+
+    returnData.date_updated = new Date();
 
     return returnData;
   }

@@ -1,4 +1,3 @@
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { alerts } from './../../../../helpers/alerts';
@@ -67,29 +66,6 @@ export class NewProductComponent implements OnInit {
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
-    top_banner: new UntypedFormArray([
-      this.form.group({
-        H3_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        P1_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        P2_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Span_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
-      }),
-    ]),
-    default_banner: ['', [Validators.required]], //No se guarda en base de datos
-    horizontal_slider: new UntypedFormArray([
-      this.form.group({
-        H4_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_1_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_2_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_3_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        H3_4s_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        Button_tag: ['', [Validators.required, Validators.maxLength(50)]],
-        IMG_tag: ['', [Validators.required]], //No se guarda en base de datos
-      }),
-    ]),
     type_video: [''],
     id_video: [''],
     price: [
@@ -153,18 +129,6 @@ export class NewProductComponent implements OnInit {
 
   get tags() {
     return this.f.controls.tags;
-  }
-
-  get top_banner() {
-    return this.f.controls.top_banner as any;
-  }
-
-  get default_banner() {
-    return this.f.controls.default_banner;
-  }
-
-  get horizontal_slider() {
-    return this.f.controls.horizontal_slider as any;
   }
 
   get type_video() {
@@ -332,16 +296,11 @@ export class NewProductComponent implements OnInit {
     const dataProduct: Iproducts = {
       category: this.f.controls.category.value.split('_')[0],
       date_created: new Date(),
+      date_updated: new Date(),
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
       feedback: EnumProductReviewType.approved,
-      horizontal_slider: JSON.stringify(
-        this.horizontal_slider.value.map((top: any) => {
-          if (top.IMG_tag) delete top.IMG_tag;
-          return top;
-        })[0]
-      ),
       name: this.f.controls.name.value,
       offer: this.value_offer.value
         ? JSON.stringify([
@@ -356,19 +315,11 @@ export class NewProductComponent implements OnInit {
       shipping: this.f.controls.shipping.value,
       specification: specifications,
       stock: this.f.controls.stock.value,
-      store: '',
       sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
       title_list: this.titleList,
-      top_banner: JSON.stringify(
-        this.top_banner.value.map((top: any) => {
-          if (top.IMG_tag) delete top.IMG_tag;
-          return top;
-        })[0]
-      ),
       url: this.urlInput,
-      vertical_slider: '',
       video: this.id_video.value
         ? JSON.stringify([this.type_video.value, this.id_video.value])
         : '',

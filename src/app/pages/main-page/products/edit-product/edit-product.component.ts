@@ -1,7 +1,6 @@
 import { Isubcategories } from './../../../../interface/isubcategories';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Icategories } from './../../../../interface/icategories';
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { functions } from 'src/app/helpers/functions';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { CategoriesService } from './../../../../services/categories.service';
@@ -56,9 +55,6 @@ export class EditProductComponent implements OnInit {
       [],
       [Validators.required, Validators.pattern(/[0-9a-zA-ZáéíóúñÁÉÍÓÚ ]/)],
     ],
-    top_banner: new UntypedFormArray([]),
-    default_banner: ['', []], //No se guarda en base de datos
-    horizontal_slider: new UntypedFormArray([]),
     type_video: [''],
     id_video: [''],
     price: [
@@ -118,18 +114,6 @@ export class EditProductComponent implements OnInit {
 
   get tags() {
     return this.f.controls.tags;
-  }
-
-  get top_banner() {
-    return this.f.controls.top_banner as any;
-  }
-
-  get default_banner() {
-    return this.f.controls.default_banner;
-  }
-
-  get horizontal_slider() {
-    return this.f.controls.horizontal_slider as any;
   }
 
   get type_video() {
@@ -324,66 +308,6 @@ export class EditProductComponent implements OnInit {
           );
         }
 
-        this.top_banner.push(
-          this.form.group({
-            H3_tag: [
-              JSON.parse(resp2.top_banner)['H3_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            P1_tag: [
-              JSON.parse(resp2.top_banner)['P1_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            H4_tag: [
-              JSON.parse(resp2.top_banner)['H4_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            P2_tag: [
-              JSON.parse(resp2.top_banner)['P2_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            Span_tag: [
-              JSON.parse(resp2.top_banner)['Span_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            Button_tag: [
-              JSON.parse(resp2.top_banner)['Button_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            IMG_tag: ['', []], //No se guarda en base de datos
-          })
-        );
-
-        this.horizontal_slider.push(
-          this.form.group({
-            H4_tag: [
-              JSON.parse(resp2.horizontal_slider)['H4_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            H3_1_tag: [
-              JSON.parse(resp2.horizontal_slider)['H3_1_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            H3_2_tag: [
-              JSON.parse(resp2.horizontal_slider)['H3_2_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            H3_3_tag: [
-              JSON.parse(resp2.horizontal_slider)['H3_3_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            H3_4s_tag: [
-              JSON.parse(resp2.horizontal_slider)['H3_4s_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            Button_tag: [
-              JSON.parse(resp2.horizontal_slider)['Button_tag'],
-              [Validators.required, Validators.maxLength(50)],
-            ],
-            IMG_tag: ['', []], //No se guarda en base de datos
-          })
-        );
-
         //Obtener imagenes del producto
         this.imgTemp = await this.productsService.getImage(
           `${this.id}/${EnumProductImg.main}`
@@ -500,16 +424,11 @@ export class EditProductComponent implements OnInit {
     const dataProduct: Iproducts = {
       category: this.categoryName,
       date_created: this.productEnDb.date_created,
+      date_updated: new Date(),
       delivery_time: this.f.controls.delivery_time.value,
       description: this.f.controls.description.value,
       details: JSON.stringify(this.details.value),
       feedback: this.productEnDb.feedback,
-      horizontal_slider: JSON.stringify(
-        this.horizontal_slider.value.map((top: any) => {
-          if (top.IMG_tag) delete top.IMG_tag;
-          return top;
-        })[0]
-      ),
       name: this.f.controls.name.value,
       offer: this.value_offer.value
         ? JSON.stringify([
@@ -524,19 +443,11 @@ export class EditProductComponent implements OnInit {
       shipping: this.f.controls.shipping.value,
       specification: specifications,
       stock: this.f.controls.stock.value,
-      store: this.productEnDb.store,
       sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
       title_list: this.titleList,
-      top_banner: JSON.stringify(
-        this.top_banner.value.map((top: any) => {
-          if (top.IMG_tag) delete top.IMG_tag;
-          return top;
-        })[0]
-      ),
       url: this.urlInput,
-      vertical_slider: this.productEnDb.vertical_slider,
       video: this.id_video.value
         ? JSON.stringify([this.type_video.value, this.id_video.value])
         : '',
