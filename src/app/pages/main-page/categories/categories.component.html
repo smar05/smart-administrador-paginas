@@ -111,29 +111,6 @@
                 >
                   <ul class="pl-0">
                     <li class="py-2">
-                      <div
-                        *ngIf="
-                          this.categoriesImages.has(element.id);
-                          else defaultCategorieImage
-                        "
-                      >
-                        <img
-                          src="{{ this.categoriesImages.get(element.id) }}"
-                          class="rounded-circle"
-                          width="100px"
-                          alt="{{ element.name }}"
-                        />
-                      </div>
-                      <ng-template #defaultCategorieImage>
-                        <img
-                          src="../../../../assets/img/categories/default/categorie_default.svg"
-                          class="rounded-circle"
-                          width="100px"
-                          alt="{{ element.name }}"
-                        />
-                      </ng-template>
-                    </li>
-                    <li class="py-2">
                       <span class="mx-2 text-muted"></span>
                       <strong class="mat-header-cell">Url:</strong>
                       {{ element.url }}

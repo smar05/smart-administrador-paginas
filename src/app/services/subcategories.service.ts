@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { FireStorageService } from './fire-storage.service';
 import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from '../interface/ifireStoreRes';
 
 @Injectable({
   providedIn: 'root',
@@ -141,4 +142,19 @@ export class SubcategoriesService {
   }
 
   //------------ FireStorage---------------//
+
+  /**
+   *
+   *
+   * @param {IFireStoreRes} data
+   * @return {*}  {Isubcategories}
+   * @memberof SubcategoriesService
+   */
+  public formatIFireStoreResp(data: IFireStoreRes): Isubcategories {
+    let a: Isubcategories = {
+      id: data.id,
+      ...data.data,
+    };
+    return a;
+  }
 }

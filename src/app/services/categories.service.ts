@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { FireStorageService } from './fire-storage.service';
 import { QueryFn } from '@angular/fire/compat/firestore';
+import { IFireStoreRes } from '../interface/ifireStoreRes';
 
 @Injectable({
   providedIn: 'root',
@@ -220,5 +221,20 @@ export class CategoriesService {
     }
 
     return complete;
+  }
+
+  /**
+   * Dar formato a Icategories
+   *
+   * @param {IFireStoreRes} data
+   * @return {*}  {Icategories}
+   * @memberof CategoriesService
+   */
+  public formatIFireStoreRes(data: IFireStoreRes): Icategories {
+    let a: Icategories = {
+      id: data.id,
+      ...data.data,
+    };
+    return a;
   }
 }

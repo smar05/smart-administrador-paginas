@@ -1,7 +1,6 @@
 import { EnumPages } from './../../../enums/enum-pages';
 import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
-import { IQueryParams } from './../../../interface/i-query-params';
 import { ProductsService } from './../../../services/products.service';
 import { EditSubcategoriesComponent } from './edit-subcategories/edit-subcategories.component';
 import { NewSubcategoriesComponent } from './new-subcategories/new-subcategories.component';
@@ -98,15 +97,8 @@ export class SubcategoriesComponent implements OnInit {
         this.subcategories = resp.map(
           (a: IFireStoreRes) =>
             ({
-              id: a.id,
               position: position--,
-              category: a.data.category,
-              name: a.data.name,
-              products_inventory: a.data.products_inventory,
-              title_list: a.data.title_list,
-              url: a.data.url,
-              view: a.data.view,
-              idShop: a.data.idShop,
+              ...this.subcategoriesService.formatIFireStoreResp(a),
             } as Isubcategories)
         );
         this.dataSource = new MatTableDataSource(this.subcategories);

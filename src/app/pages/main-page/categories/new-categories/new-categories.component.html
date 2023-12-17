@@ -32,52 +32,6 @@
             </div>
             <span class="invalid-feedback">Por favor coloque un icono</span>
           </div>
-          <!--Imagen-->
-          <div class="form-group">
-            <label for="customFile">
-              <img
-                *ngIf="!imgTemp"
-                src="../../../../../assets/img/undraw_Images_re_0kll.svg"
-                alt=""
-                width="170px"
-                class="img-fluid"
-              />
-              <img
-                *ngIf="imgTemp"
-                [src]="imgTemp"
-                alt=""
-                width="170px"
-                class="img-fluid"
-              />
-            </label>
-            <div class="custom-file">
-              <input
-                [ngClass]="{ 'is-invalid': invalidField('image') }"
-                formControlName="image"
-                type="file"
-                class="custom-file-input"
-                id="customFile"
-                (change)="validateImage($event)"
-                accept="image/jpeg,image/jpg,image/png"
-              />
-              <span class="invalid-feedback">Por favor coloque una imagen</span>
-              <label
-                class="custom-file-label"
-                for="customFile"
-                *ngIf="!image.value"
-                >Escoje la imagen</label
-              >
-              <label
-                class="custom-file-label"
-                for="customFile"
-                *ngIf="image.value"
-                >{{ image.value }}</label
-              >
-              <small class="mt-2"
-                >tamaño: 170px * 170px | formato: jpg o png</small
-              >
-            </div>
-          </div>
           <!--Nombre-->
           <div class="form-group">
             <label for="inputName">Nombre</label>

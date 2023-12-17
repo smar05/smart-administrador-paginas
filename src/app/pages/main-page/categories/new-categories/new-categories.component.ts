@@ -1,4 +1,3 @@
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
 import {
   EnumCategorieImg,
@@ -107,27 +106,6 @@ export class NewCategoriesComponent implements OnInit {
     //Guardar en base de datos la categoria
     this.categoriesService.postDataFS(dataCategory).then(
       async (resp: any) => {
-        //Guardar la imagen en storage
-        let name: string = `${EnumCategorieImg.main}.${
-          this.imageFile.name.split('.')[1]
-        }`;
-
-        try {
-          if (this.imageFile && this.imgTemp && resp.id)
-            await this.categoriesService.saveImage(
-              this.imageFile,
-              `${resp.id}/${EnumCategorieImg.main}/${name}`
-            );
-        } catch (error) {
-          alerts.basicAlert(
-            'Error',
-            'Ha ocurrido un error guardando la imagen de la categoria',
-            'error'
-          );
-          this.loadData = false;
-          return;
-        }
-
         this.loadData = false;
         this.dialogRef.close('save');
         alerts.basicAlert('Listo', 'La categoria ha sido guardada', 'success');

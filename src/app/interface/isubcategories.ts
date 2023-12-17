@@ -1,7 +1,7 @@
 export interface Isubcategories {
+  id: string;
   category: string;
   name: string;
-  products_inventory: number;
   title_list: string;
   url: string;
   view: number;

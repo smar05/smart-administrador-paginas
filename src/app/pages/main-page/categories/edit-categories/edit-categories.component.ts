@@ -1,4 +1,3 @@
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { alerts } from './../../../../helpers/alerts';
 import {
   EnumCategorieImg,
@@ -32,6 +31,17 @@ export class EditCategoriesComponent implements OnInit {
   public f = this.form.group({
     icon: ['', Validators.required],
     image: '',
+    name: [
+      '',
+      {
+        validators: [
+          Validators.required,
+          Validators.pattern('[,\\a-zA-ZáéíóúñÁÉÍÓÚ ]*'),
+        ],
+        asyncValidators: [this.isRepeatCategory()],
+        updateOn: 'blur',
+      },
+    ],
   });
   //Validacion personalizada
   get icon() {
@@ -40,6 +50,10 @@ export class EditCategoriesComponent implements OnInit {
   get image() {
     return this.f.controls.image;
   }
+  get name() {
+    return this.f.controls.name;
+  }
+
   public formSubmit: boolean = false;
   public imgTemp: string = '';
   public imageFile!: File;
@@ -74,6 +88,7 @@ export class EditCategoriesComponent implements OnInit {
         this.imgTemp = await this.categoriesService.getImage(
           `${this.data.id}/${EnumCategorieImg.main}`
         );
+        this.name.setValue(resp.data.name);
         this.nameView = resp.data.name;
         this.urlInput = resp.data.url;
         this.titleView = JSON.parse(resp.data.title_list);
@@ -102,7 +117,7 @@ export class EditCategoriesComponent implements OnInit {
     //Capturamos la informacion del formulario en la interfaz
     const dataCategory: Icategories = {
       icon: icon,
-      name: this.nameView,
+      name: this.f.controls.name.value,
       title_list: JSON.stringify(this.titleView),
       url: this.urlInput,
       view: Number(this.view),

@@ -32,64 +32,37 @@
             </div>
             <span class="invalid-feedback">Por favor coloque un icono</span>
           </div>
-          <!--Imagen-->
-          <div class="form-group">
-            <label for="customFile">
-              <img
-                *ngIf="imgTemp; else noCategorieImage"
-                [src]="imgTemp"
-                alt=""
-                width="170px"
-                class="img-fluid"
-              />
-              <ng-template #noCategorieImage>
-                <img
-                  src="../../../../../assets/img/categories/default/categorie_default.svg"
-                  alt=""
-                  width="170px"
-                  class="img-fluid"
-                />
-              </ng-template>
-            </label>
-            <div class="custom-file">
-              <input
-                [ngClass]="{ 'is-invalid': invalidField('image') }"
-                formControlName="image"
-                type="file"
-                class="custom-file-input"
-                id="customFile"
-                (change)="validateImage($event)"
-                accept="image/jpeg,image/jpg,image/png"
-              />
-              <span class="invalid-feedback">Por favor coloque una imagen</span>
-              <label
-                class="custom-file-label"
-                for="customFile"
-                *ngIf="!image.value"
-                >Escoje la imagen</label
-              >
-              <label
-                class="custom-file-label"
-                for="customFile"
-                *ngIf="image.value"
-                >{{ image.value }}</label
-              >
-              <small class="mt-2"
-                >tamaño: 170px * 170px | formato: jpg o png</small
-              >
-            </div>
-          </div>
           <!--Nombre-->
           <div class="form-group">
             <label for="inputName">Nombre</label>
             <input
+              formControlName="name"
               type="text"
               id="inputName"
               class="form-control"
               placeholder="Nombre"
-              value="{{ nameView }}"
-              readonly
+              [ngClass]="{
+                'is-invalid':
+                  invalidField('name') ||
+                  (name.invalid && name.errors?.pattern) ||
+                  (name.invalid && name.errors?.category)
+              }"
             />
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.required"
+              >Por favor coloque un nombre</span
+            >
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.pattern"
+              >Por favor escriba correctamente el nombre</span
+            >
+            <span
+              class="invalid-feedback"
+              *ngIf="name.invalid && name.errors?.category"
+              >La categoria ya existe</span
+            >
           </div>
           <!--URL-->
           <div class="form-group">
