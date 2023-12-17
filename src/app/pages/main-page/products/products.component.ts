@@ -1,7 +1,6 @@
 import { EnumPages } from './../../../enums/enum-pages';
 import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
-import { IQueryParams } from './../../../interface/i-query-params';
 import { alerts } from './../../../helpers/alerts';
 import { ProductsService } from './../../../services/products.service';
 
@@ -159,8 +158,11 @@ export class ProductsComponent implements OnInit {
       .then((result: any) => {
         if (result.isConfirmed) {
           if (product) {
+            let data: Iproducts = this.productsService.dataToSave(product);
+            data.delete = true;
+
             this.productsService
-              .patchDataFS(id, { delete: true } as Iproducts)
+              .patchDataFS(id, data)
               .then(() => {
                 this.products = this.products.filter(
                   (producto: Iproducts) => producto.id != id

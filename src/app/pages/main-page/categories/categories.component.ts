@@ -101,18 +101,13 @@ export class CategoriesComponent implements OnInit {
         let position = Object.keys(resp).length;
         this.categories = resp.map((a: IFireStoreRes) => {
           return {
-            id: a.id,
             position: position--,
-            ...a.data,
+            ...this.categoriesService.formatIFireStoreRes(a),
           };
-        });
+        }) as Icategories[];
         this.dataSource = new MatTableDataSource(this.categories);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        this.categories.forEach(async (categorie: Icategories) => {
-          await this.getCategorieImage(categorie);
-        });
 
         this.loadData = false;
       });
@@ -245,20 +240,6 @@ export class CategoriesComponent implements OnInit {
             });
         }
       });
-  }
-
-  public async getCategorieImage(categorie: Icategories): Promise<void> {
-    let urlImage: string = '';
-
-    if (categorie.id) {
-      urlImage = await this.categoriesService.getImage(
-        `${categorie.id}/${EnumCategorieImg.main}`
-      );
-    }
-
-    if (urlImage) {
-      this.categoriesImages.set(categorie.id!, urlImage);
-    }
   }
 
   public hasPermission(type: string): boolean | any {

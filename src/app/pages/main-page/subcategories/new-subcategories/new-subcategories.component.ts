@@ -1,4 +1,3 @@
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { functions } from 'src/app/helpers/functions';
@@ -14,7 +13,7 @@ import { Component, OnInit } from '@angular/core';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
-import { Icategories } from 'src/app/interface/icategories';
+import { EnumCategorieState, Icategories } from 'src/app/interface/icategories';
 
 @Component({
   selector: 'app-new-subcategories',
@@ -72,7 +71,9 @@ export class NewSubcategoriesComponent implements OnInit {
     //Capturamos la informacion de categorias
     this.loadData = true;
     let qf: QueryFn = (ref) =>
-      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+      ref
+        .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
+        .where('state', '==', EnumCategorieState.show);
 
     this.categoriesService
       .getDataFS(qf)
@@ -81,9 +82,8 @@ export class NewSubcategoriesComponent implements OnInit {
         this.categories = resp.map(
           (a: IFireStoreRes) =>
             ({
-              name: a.data.name,
               titleList: JSON.parse(a.data.title_list),
-              idShop: a.data.idShop,
+              ...this.categoriesService.formatIFireStoreRes(a),
             } as Icategories)
         );
         this.loadData = false;
@@ -100,12 +100,11 @@ export class NewSubcategoriesComponent implements OnInit {
     }
     this.loadData = true;
     //Capturamos la informacion del formulario en la interfaz
-    const dataCategory: Isubcategories = {
+    const dataCategory: Isubcategories | any = {
       category: this.f.controls.category.value,
       name: this.f.controls.name.value,
       title_list: this.f.controls.titleList.value,
       url: this.urlInput,
-      products_inventory: 0,
       view: 0,
       idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
@@ -159,7 +158,7 @@ export class NewSubcategoriesComponent implements OnInit {
   //Filtrar el listado de titulo
   public selectCategory(e: any): any {
     this.categories.filter((category: any) => {
-      if (category.name == e.target.value) {
+      if (category.id == e.target.value) {
         this.titleListArray = category.titleList;
       }
     });

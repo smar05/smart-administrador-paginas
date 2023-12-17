@@ -1,4 +1,3 @@
-import { IQueryParams } from './../../../../interface/i-query-params';
 import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { Isubcategories } from './../../../../interface/isubcategories';
@@ -11,6 +10,7 @@ import '../../../../shared/spinkit/sk-cube-grid.css';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { EnumCategorieState, Icategories } from 'src/app/interface/icategories';
 
 export interface IDialogData {
   id: string;
@@ -25,10 +25,14 @@ export class EditSubcategoriesComponent implements OnInit {
   //Grupo de controles
   public f = this.form.group({
     titleList: ['', Validators.required],
+    category: ['', Validators.required],
   });
   //Validacion personalizada
   get titleList() {
     return this.f.controls.titleList;
+  }
+  get category() {
+    return this.f.controls.category;
   }
 
   //Variable que valida el envio del formulario
@@ -41,11 +45,12 @@ export class EditSubcategoriesComponent implements OnInit {
   public urlInput: string = '';
   //Variables de inventario y visualizacion
   public products_inventory: string = '';
-  public view: string = '';
+  public view: number = 0;
   public selectTL: string = '';
   public titleListArray: any = [];
   //Variable de precarga
   public loadData: boolean = false;
+  public categories: any = [];
 
   constructor(
     private form: UntypedFormBuilder,
@@ -64,14 +69,14 @@ export class EditSubcategoriesComponent implements OnInit {
       .getItemFS(this.data.id, qf)
       .toPromise()
       .then((resp1: IFireStoreRes) => {
-        let resp2: any = { id: resp1.id, ...resp1.data };
+        let resp2: Isubcategories =
+          this.subcategoriesService.formatIFireStoreResp(resp1);
 
         this.categoryView = resp2.category;
         this.titleList.setValue(resp2.title_list);
         this.selectTL = resp2.title_list;
         this.nameView = resp2.name;
         this.urlInput = resp2.url;
-        this.products_inventory = resp2.products_inventory;
         this.view = resp2.view;
 
         //Traer la informacion de la categoria seleccionada
@@ -82,17 +87,32 @@ export class EditSubcategoriesComponent implements OnInit {
               '==',
               localStorage.getItem(EnumLocalStorage.localId)
             )
-            .where('name', '==', resp2.category);
+            .where('state', '==', EnumCategorieState.show);
 
         this.categoriesService
-          .getDataFS(qf)
+          .getItemFS(resp2.category, qf)
           .toPromise()
-          .then((resp2: IFireStoreRes[]) => {
-            this.titleListArray = resp2.map((a: IFireStoreRes) =>
-              JSON.parse(a.data.title_list)
-            );
+          .then((resp2: IFireStoreRes) => {
+            let cat: Icategories = {
+              ...this.categoriesService.formatIFireStoreRes(resp2),
+            };
+            this.category.setValue(cat.id);
+            this.titleListArray = JSON.parse(cat.title_list);
             this.loadData = false;
           });
+      });
+
+    this.categoriesService
+      .getDataFS(qf)
+      .toPromise()
+      .then((resp: IFireStoreRes[]) => {
+        this.categories = resp.map(
+          (a: IFireStoreRes) =>
+            ({
+              ...this.categoriesService.formatIFireStoreRes(a),
+            } as Icategories)
+        );
+        this.loadData = false;
       });
   }
 
@@ -103,12 +123,11 @@ export class EditSubcategoriesComponent implements OnInit {
       return;
     }
     this.loadData = true;
-    const dataSubcategory: Isubcategories = {
+    const dataSubcategory: Isubcategories | any = {
       category: this.categoryView,
       name: this.nameView,
       title_list: this.f.controls.titleList.value,
       url: this.urlInput,
-      products_inventory: Number(this.products_inventory),
       view: Number(this.view),
       idShop: localStorage.getItem(EnumLocalStorage.localId),
     };
@@ -137,5 +156,14 @@ export class EditSubcategoriesComponent implements OnInit {
   //Validar formulario
   public invalidField(field: string): any {
     return functions.invalidField(field, this.f, this.formSubmitted);
+  }
+
+  //Filtrar el listado de titulo
+  public selectCategory(e: any): any {
+    this.categories.filter((category: any) => {
+      if (category.name == e.target.value) {
+        this.titleListArray = category.titleList;
+      }
+    });
   }
 }
