@@ -268,8 +268,10 @@ export class EditProductComponent implements OnInit {
         this.stock.setValue(resp2.stock);
         this.summary.setValue(JSON.parse(resp2.summary));
         this.tags.setValue(JSON.parse(resp2.tags));
-        this.type_video.setValue(JSON.parse(resp2.video)[0]);
-        this.id_video.setValue(JSON.parse(resp2.video)[1]);
+        this.type_video.setValue(
+          resp2.video ? JSON.parse(resp2.video)[0] : null
+        );
+        this.id_video.setValue(resp2.video ? JSON.parse(resp2.video)[1] : null);
         this.type_offer.setValue(JSON.parse(resp2.offer)[0]);
         this.value_offer.setValue(JSON.parse(resp2.offer)[1]);
         this.date_offer.setValue(JSON.parse(resp2.offer)[2]);
@@ -337,6 +339,7 @@ export class EditProductComponent implements OnInit {
             return category.url == resp2.category;
           }
         );
+        console.log('🚀 ~ EditProductComponent ~ .then ~ category:', category);
 
         //Informacion de las subcategorias
         let qf: QueryFn = (ref) =>
@@ -346,7 +349,7 @@ export class EditProductComponent implements OnInit {
               '==',
               localStorage.getItem(EnumLocalStorage.localId)
             )
-            .where('category', '==', category.name);
+            .where('category', '==', category.id);
 
         this.subcategoriesService
           .getDataFS(qf)
@@ -368,7 +371,7 @@ export class EditProductComponent implements OnInit {
             );
 
             this.sub_category.setValue(
-              `${subCategory.url}_${subCategory.name}`
+              `${subCategory?.url}_${subCategory?.name}`
             );
           });
 
@@ -797,6 +800,7 @@ export class EditProductComponent implements OnInit {
         this.categories = resp.map(
           (a: IFireStoreRes) =>
             ({
+              id: a.id,
               name: a.data.name,
               titleList: JSON.parse(a.data.title_list),
               url: a.data.url,

@@ -430,7 +430,7 @@ export class NewProductComponent implements OnInit {
               '==',
               localStorage.getItem(EnumLocalStorage.localId)
             )
-            .where('category', '==', category.name);
+            .where('category', '==', category.id);
 
         this.subcategoriesService
           .getDataFS(qf)
@@ -625,6 +625,7 @@ export class NewProductComponent implements OnInit {
         this.categories = resp.map(
           (a: IFireStoreRes) =>
             ({
+              id: a.id,
               name: a.data.name,
               titleList: JSON.parse(a.data.title_list),
               url: a.data.url,
