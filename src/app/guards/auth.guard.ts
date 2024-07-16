@@ -2,7 +2,7 @@ import { EnumCountPermission } from './../interface/icount';
 import { CountService } from './../services/count.service';
 import { EnumPages } from './../enums/enum-pages';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { EnumLocalStorage } from '../enums/enum-local-storage';
@@ -10,7 +10,7 @@ import { EnumLocalStorage } from '../enums/enum-local-storage';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard  {
   constructor(
     private router: Router,
     private http: HttpClient,
