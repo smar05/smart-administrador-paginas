@@ -1,4 +1,4 @@
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { LoginService } from './../../../../services/login.service';
 import { EnumLocalStorage } from './../../../../enums/enum-local-storage';
 import { functions } from 'src/app/helpers/functions';

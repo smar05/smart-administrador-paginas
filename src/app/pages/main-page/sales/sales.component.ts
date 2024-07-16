@@ -2,9 +2,9 @@ import { EnumPages } from './../../../enums/enum-pages';
 import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { SalesService } from './../../../services/sales.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { Isales } from './../../../interface/isales';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import {
   animate,
   state,

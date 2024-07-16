@@ -11,7 +11,6 @@ import { functions } from '../../helpers/functions';
 import { Ilogin } from '../../interface/ilogin';
 import { alerts } from '../../helpers/alerts';
 import { Router } from '@angular/router';
-import '../../shared/spinkit/sk-cube-grid.css';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 

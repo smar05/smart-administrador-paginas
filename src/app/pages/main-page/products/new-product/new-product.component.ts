@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { alerts } from './../../../../helpers/alerts';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Icategories } from './../../../../interface/icategories';
@@ -19,7 +19,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import '../../../../shared/spinkit/sk-cube-grid.css';
 import { Router } from '@angular/router';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';

@@ -1,5 +1,5 @@
 import { Isubcategories } from './../../../../interface/isubcategories';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { Icategories } from './../../../../interface/icategories';
 import { functions } from 'src/app/helpers/functions';
 import { SubcategoriesService } from './../../../../services/subcategories.service';

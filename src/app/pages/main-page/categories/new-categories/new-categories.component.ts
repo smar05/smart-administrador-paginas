@@ -13,9 +13,8 @@ import {
 } from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialogRef } from '@angular/material/dialog';
-import '../../../../shared/spinkit/sk-cube-grid.css';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
