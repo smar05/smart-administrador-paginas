@@ -11,8 +11,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { functions } from 'src/app/helpers/functions';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import '../../../../shared/spinkit/sk-cube-grid.css';
+import {
+  MatLegacyDialogRef as MatDialogRef,
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+} from '@angular/material/legacy-dialog';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';

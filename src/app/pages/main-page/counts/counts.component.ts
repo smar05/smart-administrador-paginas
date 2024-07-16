@@ -4,7 +4,7 @@ import { EditCountsComponent } from './edit-counts/edit-counts.component';
 import { IQueryParams } from './../../../interface/i-query-params';
 import { NewCountsComponent } from './new-counts/new-counts.component';
 import { alerts } from 'src/app/helpers/alerts';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { ICountries } from './../../../interface/icountries';
 import { ICities } from './../../../interface/icities';
 import { IState } from './../../../interface/istate';
@@ -20,8 +20,8 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort } from '@angular/material/sort';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';

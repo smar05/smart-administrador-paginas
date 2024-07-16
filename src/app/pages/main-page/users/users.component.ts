@@ -7,10 +7,9 @@ import { LocationService } from './../../../services/location.service';
 import { UsersService } from './../../../services/users.service';
 import { Iusers } from './../../../interface/iusers';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import '../../../shared/spinkit/sk-cube-grid.css';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import {
   animate,
   state,

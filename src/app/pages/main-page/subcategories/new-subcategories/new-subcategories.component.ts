@@ -2,7 +2,7 @@ import { CategoriesService } from './../../../../services/categories.service';
 import { alerts } from './../../../../helpers/alerts';
 import { functions } from 'src/app/helpers/functions';
 import { Isubcategories } from './../../../../interface/isubcategories';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { SubcategoriesService } from './../../../../services/subcategories.service';
 import {
   UntypedFormBuilder,

@@ -5,7 +5,7 @@ import {
   EnumMessagesStatus,
 } from './../../../../interface/imessages';
 import { MessageService } from './../../../../services/message.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, Inject } from '@angular/core';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
