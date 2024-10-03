@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
     sales: 0,
     users: 0,
   };
-  public loadItems: any = {
+  public loadItems = {
     products: false,
     sales: false,
     users: false,
@@ -132,26 +132,31 @@ export class HomeComponent implements OnInit {
 
     this.loadItems.sales = true;
 
-    let params: IQueryParams = {
-      orderBy: '"date"',
-      startAt: `"${functions.formatDate(this.startDate)}"`,
-      endAt: `"${functions.formatDate(this.endDate)}"`,
-    };
+    const start = new Date(functions.formatDate(this.startDate));
+    const end = new Date(functions.formatDate(this.endDate));
+    end.setDate(this.endDate.getDate() + 1);
+
     let qf: QueryFn = (ref) =>
-      ref.where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId));
+      ref
+        .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
+        .where('date', '>=', start)
+        .where('date', '<=', end);
 
     this.salesService
       .getDataFS(qf)
       .toPromise()
       .then((resp: IFireStoreRes[]) => {
         this.itemsQuantity.sales = Object.keys(resp).length;
+        this.loadItems.sales = false;
 
         //Separar mes y total
         let sales: any[] = [];
         resp.map((a: IFireStoreRes) => {
           if (a.data.status == EnumSalesStatus.success) {
             sales.push({
-              date: a.data.date.substring(0, 7),
+              date: new Date(a.data.date.seconds * 1000)
+                .toISOString()
+                .substring(0, 7),
               total: Number(a.data.total),
             });
           }
