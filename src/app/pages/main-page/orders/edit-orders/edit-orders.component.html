@@ -65,19 +65,8 @@
                       checked
                       id="status-pending{{ i }}"
                       name="status{{ i }}"
-                      *ngIf="nextProcess.status == 'pending'"
-                      #status
-                      (change)="changeProcess('status', status, i)"
-                    />
-                    <input
-                      type="radio"
-                      class="custom-control-input"
-                      value="pending"
-                      id="status-pending{{ i }}"
-                      name="status{{ i }}"
-                      *ngIf="nextProcess.status == 'ok'"
-                      #status
-                      (change)="changeProcess('status', status, i)"
+                      #statusPending
+                      (change)="changeProcess('status', statusPending, i)"
                     />
                     <label
                       for="status-pending{{ i }}"
@@ -95,20 +84,8 @@
                       value="ok"
                       id="status-ok{{ i }}"
                       name="status{{ i }}"
-                      #status
-                      (change)="changeProcess('status', status, i)"
-                      *ngIf="nextProcess.status == 'pending'"
-                    />
-                    <input
-                      type="radio"
-                      class="custom-control-input"
-                      value="pending"
-                      id="status-ok{{ i }}"
-                      name="status{{ i }}"
-                      #status
-                      (change)="changeProcess('status', status, i)"
-                      *ngIf="nextProcess.status == 'ok'"
-                      checked
+                      #statusOk
+                      (change)="changeProcess('status', statusOk, i)"
                     />
                     <label for="status-ok{{ i }}" class="custom-control-label"
                       >Ok</label

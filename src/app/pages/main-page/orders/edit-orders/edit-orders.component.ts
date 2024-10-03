@@ -1,19 +1,23 @@
-import { Isales } from './../../../../interface/isales';
-import { IQueryParams } from './../../../../interface/i-query-params';
-import { SalesService } from './../../../../services/sales.service';
-import { environment } from './../../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { alerts } from './../../../../helpers/alerts';
-import { Iorders, EnumOrderStatus } from './../../../../interface/iorders';
-import { OrdersService } from './../../../../services/orders.service';
-import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { EnumOrderProcessStatus } from 'src/app/interface/iorders';
-import { EnumSalesStatus } from 'src/app/interface/isales';
+import { Component, Inject, OnInit } from '@angular/core';
 import { QueryFn } from '@angular/fire/compat/firestore';
+import { UntypedFormBuilder } from '@angular/forms';
+import {
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialogRef as MatDialogRef,
+} from '@angular/material/legacy-dialog';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
+import { EnumOrderProcessStatus } from 'src/app/interface/iorders';
+import { EnumSalesStatus } from 'src/app/interface/isales';
+import { alerts } from './../../../../helpers/alerts';
+import {
+  EnumOrderStatus,
+  IorderProcess,
+  Iorders,
+} from './../../../../interface/iorders';
+import { Isales } from './../../../../interface/isales';
+import { OrdersService } from './../../../../services/orders.service';
+import { SalesService } from './../../../../services/sales.service';
 
 export interface IDialogData {
   id: string;
@@ -34,8 +38,8 @@ export class EditOrdersComponent implements OnInit {
     return this.f.controls.process;
   }
 
-  public processOrder: any[] = []; // VIsualizar el proceso de la orden
-  public newNextProcess: any[] = [
+  public processOrder: IorderProcess[] = []; // VIsualizar el proceso de la orden
+  public newNextProcess: IorderProcess[] = [
     { stage: '', status: '', comment: '', date: '' },
     { stage: '', status: '', comment: '', date: '' },
     { stage: '', status: '', comment: '', date: '' },
@@ -97,6 +101,19 @@ export class EditOrdersComponent implements OnInit {
 
       return item;
     });
+
+    if (
+      this.f.controls.process.value[0].status === EnumOrderProcessStatus.ok &&
+      this.f.controls.process.value[1].status != EnumOrderProcessStatus.ok
+    ) {
+      this.f.controls.process.value[1].status = EnumOrderProcessStatus.pending;
+    }
+    if (
+      this.f.controls.process.value[1].status === EnumOrderProcessStatus.ok &&
+      this.f.controls.process.value[2].status != EnumOrderProcessStatus.ok
+    ) {
+      this.f.controls.process.value[2].status = EnumOrderProcessStatus.pending;
+    }
 
     // Si es la ultima parte del proceso
     let status: string = '';

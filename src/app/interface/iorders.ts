@@ -29,3 +29,10 @@ export enum EnumOrderProcessStatus {
   ok = 'ok',
   delivered = 'delivered',
 }
+
+export interface IorderProcess {
+  stage: string;
+  status: EnumOrderProcessStatus | string;
+  comment: string;
+  date: string;
+}
