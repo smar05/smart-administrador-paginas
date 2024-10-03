@@ -86,12 +86,6 @@
             <p>Disputes</p>
           </a>
         </li>
-        <li class="nav-item" *ngIf="hasPermission('messages_read')">
-          <a [routerLink]="['/messages']" class="nav-link">
-            <i class="nav-icon fas fa-comments"></i>
-            <p>Messages</p>
-          </a>
-        </li>
         <li class="nav-item">
           <a class="nav-link btn text-left" (click)="logout()">
             <i class="nav-icon fas fa-sign-out-alt"></i>

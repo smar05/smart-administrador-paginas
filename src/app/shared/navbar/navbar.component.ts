@@ -1,12 +1,9 @@
-import { LoginService } from './../../services/login.service';
-import { EnumDisputesStatus } from './../../interface/idisputes';
-import { EnumMessagesStatus } from './../../interface/imessages';
-import { IQueryParams } from './../../interface/i-query-params';
-import { DisputesService } from './../../services/disputes.service';
-import { MessageService } from './../../services/message.service';
 import { Component, OnInit } from '@angular/core';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
+import { EnumDisputesStatus } from './../../interface/idisputes';
+import { DisputesService } from './../../services/disputes.service';
+import { LoginService } from './../../services/login.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,30 +12,16 @@ import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 })
 export class NavbarComponent implements OnInit {
   constructor(
-    public messageService: MessageService,
     public disputesService: DisputesService,
     private loginService: LoginService
   ) {}
 
   ngOnInit(): void {
-    this.getMessages();
     this.getDisputes();
   }
 
   public logout(): void {
     this.loginService.logout();
-  }
-
-  public getMessages(): void {
-    let qf: QueryFn = (ref) =>
-      ref
-        .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
-        .where('status', '==', EnumMessagesStatus.not_answered);
-
-    this.messageService
-      .getDataFS(qf)
-      .toPromise()
-      .then((resp: any) => {});
   }
 
   public getDisputes(): void {

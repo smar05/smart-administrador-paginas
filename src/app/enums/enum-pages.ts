@@ -9,7 +9,6 @@ export enum EnumPages {
   products = 'products',
   orders = 'orders',
   sales = 'sales',
-  messages = 'messages',
   home = '',
   counts = 'counts',
   error = '**',
