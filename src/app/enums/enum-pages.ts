@@ -13,5 +13,4 @@ export enum EnumPages {
   home = '',
   counts = 'counts',
   error = '**',
-  stores = 'stores',
 }
