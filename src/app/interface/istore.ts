@@ -1,14 +1,13 @@
 export interface IStore {
-  id: string;
-  abaout: string;
-  address: string | any;
-  celphone: string;
-  email: string;
-  idType: string;
-  idValue: string;
+  id?: string;
+  back_color: string;
+  border_color: string;
+  footer_color: string;
+  menu_color: string;
   name: string;
-  principalColor: string;
-  social: string | any;
-  url: string;
+  navbar_color: string;
+  slogan: string;
+  email: string;
+  celphone: string;
   idShop: string;
 }

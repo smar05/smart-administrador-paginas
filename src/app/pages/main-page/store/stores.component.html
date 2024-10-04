@@ -1,0 +1,140 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Stores</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+            <li class="breadcrumb-item active">Stores</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <!-- Default box -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title text-center mb-4">
+          <strong>Modificar Configuración de Tienda</strong>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="f" (ngSubmit)="saveStoreData()">
+          <div class="form-group">
+            <label for="name">Nombre de la Tienda</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              [ngClass]="{ 'is-invalid': name.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="slogan">Slogan</label>
+            <input
+              type="text"
+              class="form-control"
+              id="slogan"
+              formControlName="slogan"
+              [ngClass]="{ 'is-invalid': slogan.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo Electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              [ngClass]="{ 'is-invalid': email.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="celphone">Celular</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="celphone"
+              formControlName="celphone"
+              [ngClass]="{ 'is-invalid': celphone.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="back_color">Color de Fondo</label>
+            <input
+              type="color"
+              class="form-control"
+              id="back_color"
+              formControlName="back_color"
+              [ngClass]="{ 'is-invalid': back_color.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="border_color">Color del Borde</label>
+            <input
+              type="color"
+              class="form-control"
+              id="border_color"
+              formControlName="border_color"
+              [ngClass]="{ 'is-invalid': border_color.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="footer_color">Color del Pie de Página</label>
+            <input
+              type="color"
+              class="form-control"
+              id="footer_color"
+              formControlName="footer_color"
+              [ngClass]="{ 'is-invalid': footer_color.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="menu_color">Color del Menú</label>
+            <input
+              type="color"
+              class="form-control"
+              id="menu_color"
+              formControlName="menu_color"
+              [ngClass]="{ 'is-invalid': menu_color.invalid }"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="navbar_color">Color de la Barra de Navegación</label>
+            <input
+              type="color"
+              class="form-control"
+              id="navbar_color"
+              formControlName="navbar_color"
+              [ngClass]="{ 'is-invalid': navbar_color.invalid }"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </form>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer"></div>
+      <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+</div>

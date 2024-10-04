@@ -53,6 +53,11 @@ const routes: Routes = [
           ),
       },
       {
+        path: EnumPages.store,
+        loadChildren: () =>
+          import('./main-page/store/stores.module').then((m) => m.StoresModule),
+      },
+      {
         path: EnumPages.products,
         loadChildren: () =>
           import('./main-page/products/products.module').then(

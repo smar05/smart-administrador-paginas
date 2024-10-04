@@ -38,6 +38,7 @@ export const environment = {
     stores: 'stores',
     versions: 'versions',
     alerts: 'alerts',
+    shops_data: 'shops_data',
   },
   urls_program: {
     // No pertenecen a las colecciones de la bd, URL's del programa
