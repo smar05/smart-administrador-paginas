@@ -299,7 +299,7 @@ export class CountsComponent implements OnInit {
   }
 
   //Cambia el estado del producto
-  public cambiarEstado(count: any, estado: boolean): void {
+  public cambiarEstado(count: ICount, estado: boolean): void {
     if (estado) {
       //Desactivar el estado
       alerts
@@ -311,10 +311,11 @@ export class CountsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            let data: ICount = {
-              activeCount: false,
-            };
-            this.countService.patchDataFS(count.id, data).then(
+            let idCount: string = count.id;
+            count.activeCount = false;
+            delete count.id;
+
+            this.countService.patchDataFS(idCount, count).then(
               () => {
                 this.getCounts();
                 alerts.basicAlert(
@@ -344,10 +345,11 @@ export class CountsComponent implements OnInit {
         )
         .then((result: any) => {
           if (result.isConfirmed) {
-            let data: ICount = {
-              activeCount: true,
-            };
-            this.countService.patchDataFS(count.id, data).then(
+            let idCount: string = count.id;
+            count.activeCount = true;
+            delete count.id;
+
+            this.countService.patchDataFS(idCount, count).then(
               () => {
                 this.getCounts();
                 alerts.basicAlert(

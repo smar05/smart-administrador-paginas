@@ -9,7 +9,10 @@ import { Validators, UntypedFormArray, FormBuilder } from '@angular/forms';
 import { ICities } from './../../../../interface/icities';
 import { IState } from './../../../../interface/istate';
 import { ICountries } from './../../../../interface/icountries';
-import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import {
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialogRef as MatDialogRef,
+} from '@angular/material/legacy-dialog';
 import { Component, OnInit, Inject } from '@angular/core';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
 
@@ -27,6 +30,7 @@ export class EditCountsComponent implements OnInit {
   public allStatesByCountry: IState[] = [];
   public allCities: ICities[] = [];
   public cuentaActual: ICount | any = {};
+  private cuenta: ICount = {};
 
   //Grupo de controles
   public f: any = this.form.group({
@@ -128,6 +132,7 @@ export class EditCountsComponent implements OnInit {
       .getItemFS(this.id)
       .toPromise();
     let res: ICount = { id: res1.id, ...res1.data };
+    this.cuenta = res;
 
     let permission: any =
       res.permission == EnumCountPermission.admin
@@ -217,6 +222,7 @@ export class EditCountsComponent implements OnInit {
           : EnumCountPermission.admin;
 
       const count: ICount = {
+        ...this.cuenta,
         name: this.name.value,
         celphone: this.celphone.value,
         sex: this.sex.value,
@@ -227,6 +233,8 @@ export class EditCountsComponent implements OnInit {
         idType: this.idType.value,
         idValue: this.idValue.value,
       };
+
+      delete count.id;
 
       await this.countService.patchDataFS(this.id, count).then();
 
