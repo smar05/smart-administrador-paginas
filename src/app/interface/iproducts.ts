@@ -17,10 +17,8 @@ export interface Iproducts {
   specification: string;
   stock: number;
   // store: string;
-  sub_category: string;
   summary: string;
   tags: string;
-  title_list: string;
   // top_banner: string;
   url: string;
   // vertical_slider: string;

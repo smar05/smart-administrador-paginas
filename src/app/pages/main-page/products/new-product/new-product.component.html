@@ -89,7 +89,6 @@
               class="form-control"
               formControlName="category"
               [ngClass]="{ 'is-invalid': invalidField('category') }"
-              (change)="selectCategory($event)"
             >
               <option value="" disabled>Seleccione una categoria</option>
               <option
@@ -105,44 +104,6 @@
             >
               Porfavor seleccione una categoria
             </span>
-          </div>
-          <!--Subcategoria del producto-->
-          <div class="form-group" *ngIf="!category.invalid">
-            <label for="inputSubcategory"
-              >Subcategoria <sup class="text-danger">*</sup></label
-            >
-            <select
-              class="form-control"
-              formControlName="sub_category"
-              [ngClass]="{ 'is-invalid': invalidField('sub_category') }"
-              (change)="selectSubcategory($event)"
-            >
-              <option value="" disabled>Seleccione una subcategoria</option>
-              <option
-                value="{{ subcategory.url }}_{{ subcategory.name }}"
-                *ngFor="let subcategory of subcategories"
-              >
-                {{ subcategory.name }}
-              </option>
-            </select>
-            <span
-              class="invalid-feedback"
-              *ngIf="sub_category.invalid && sub_category.errors?.required"
-            >
-              Porfavor seleccione una subcategoria
-            </span>
-          </div>
-          <!--Listado de titulo-->
-          <div class="form-group" *ngIf="titleList != ''">
-            <label for="titleList">Listado de titulo</label>
-            <input
-              type="text"
-              id="titleList"
-              class="form-control"
-              placeholder="Listado de titulo"
-              value="{{ titleList }}"
-              readonly
-            />
           </div>
           <!--Imagen del producto-->
           <div class="form-group">

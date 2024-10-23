@@ -104,51 +104,6 @@
                             ></i>
                           </div>
 
-                          <!--subcategories_read-->
-                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                            <label for="">Lectura de subcategorias: </label>
-                            <i
-                              class="fas fa-check"
-                              *ngIf="
-                                getPermissionsData(
-                                  myCount,
-                                  'subcategories_read'
-                                )
-                              "
-                            ></i>
-                            <i
-                              class="fas fa-times"
-                              *ngIf="
-                                !getPermissionsData(
-                                  myCount,
-                                  'subcategories_read'
-                                )
-                              "
-                            ></i>
-                          </div>
-                          <!--subcategories_write-->
-                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                            <label for="">Edicion de subcategorias: </label>
-                            <i
-                              class="fas fa-check"
-                              *ngIf="
-                                getPermissionsData(
-                                  myCount,
-                                  'subcategories_write'
-                                )
-                              "
-                            ></i>
-                            <i
-                              class="fas fa-times"
-                              *ngIf="
-                                !getPermissionsData(
-                                  myCount,
-                                  'subcategories_write'
-                                )
-                              "
-                            ></i>
-                          </div>
-
                           <!--store_read-->
                           <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
                             <label for="">Lectura de tienda: </label>
@@ -743,55 +698,6 @@
                                       !getPermissionsData(
                                         element,
                                         'categories_write'
-                                      )
-                                    "
-                                  ></i>
-                                </div>
-
-                                <!--subcategories_read-->
-                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                                  <label for=""
-                                    >Lectura de subcategorias:
-                                  </label>
-                                  <i
-                                    class="fas fa-check"
-                                    *ngIf="
-                                      getPermissionsData(
-                                        element,
-                                        'subcategories_read'
-                                      )
-                                    "
-                                  ></i>
-                                  <i
-                                    class="fas fa-times"
-                                    *ngIf="
-                                      !getPermissionsData(
-                                        element,
-                                        'subcategories_read'
-                                      )
-                                    "
-                                  ></i>
-                                </div>
-                                <!--subcategories_write-->
-                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                                  <label for=""
-                                    >Edicion de subcategorias:
-                                  </label>
-                                  <i
-                                    class="fas fa-check"
-                                    *ngIf="
-                                      getPermissionsData(
-                                        element,
-                                        'subcategories_write'
-                                      )
-                                    "
-                                  ></i>
-                                  <i
-                                    class="fas fa-times"
-                                    *ngIf="
-                                      !getPermissionsData(
-                                        element,
-                                        'subcategories_write'
                                       )
                                     "
                                   ></i>

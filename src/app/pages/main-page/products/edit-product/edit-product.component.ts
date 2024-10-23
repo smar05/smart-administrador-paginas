@@ -1,8 +1,6 @@
-import { Isubcategories } from './../../../../interface/isubcategories';
 import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { Icategories } from './../../../../interface/icategories';
 import { functions } from 'src/app/helpers/functions';
-import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { CategoriesService } from './../../../../services/categories.service';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Iproducts, EnumProductImg } from './../../../../interface/iproducts';
@@ -45,7 +43,6 @@ export class EditProductComponent implements OnInit {
         updateOn: 'blur',
       },
     ],
-    sub_category: ['', [Validators.required]],
     image: ['', []], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
@@ -86,10 +83,6 @@ export class EditProductComponent implements OnInit {
   //Validaciones personalizadas
   get name() {
     return this.f.controls.name;
-  }
-
-  get sub_category() {
-    return this.f.controls.sub_category;
   }
 
   get image() {
@@ -165,9 +158,6 @@ export class EditProductComponent implements OnInit {
   public categories: any[] = [];
   public categoryName: string = '';
 
-  //Variable con las subcategorias
-  public subcategories: any[] = [];
-
   //Variable para el listado de titulo
   public titleList: string = '';
 
@@ -230,7 +220,6 @@ export class EditProductComponent implements OnInit {
     private productsService: ProductsService,
     private form: UntypedFormBuilder,
     private categoriesService: CategoriesService,
-    private subcategoriesService: SubcategoriesService,
     private router: Router
   ) {}
 
@@ -260,7 +249,6 @@ export class EditProductComponent implements OnInit {
         this.name.setValue(resp2.name);
         this.urlInput = resp2.url;
         this.categoryName = resp2.category;
-        this.titleList = resp2.title_list;
         this.delivery_time.setValue(resp2.delivery_time);
         this.description.setValue(resp2.description);
         this.price.setValue(resp2.price);
@@ -272,9 +260,12 @@ export class EditProductComponent implements OnInit {
           resp2.video ? JSON.parse(resp2.video)[0] : null
         );
         this.id_video.setValue(resp2.video ? JSON.parse(resp2.video)[1] : null);
-        this.type_offer.setValue(JSON.parse(resp2.offer)[0]);
-        this.value_offer.setValue(JSON.parse(resp2.offer)[1]);
-        this.date_offer.setValue(JSON.parse(resp2.offer)[2]);
+        const offer: string = resp2?.offer;
+        if (offer) {
+          this.type_offer.setValue(JSON.parse(offer)[0]);
+          this.value_offer.setValue(JSON.parse(offer)[1]);
+          this.date_offer.setValue(JSON.parse(offer)[2]);
+        }
 
         JSON.parse(resp2.summary).forEach((sum: string, index: number) => {
           this.summaryGroup[index] = { input: sum };
@@ -333,47 +324,6 @@ export class EditProductComponent implements OnInit {
             this.galeriaValores.set(urlImage, galleryItem);
           });
         }
-
-        let category: Icategories = this.categories.find(
-          (category: Icategories) => {
-            return category.url == resp2.category;
-          }
-        );
-        console.log('🚀 ~ EditProductComponent ~ .then ~ category:', category);
-
-        //Informacion de las subcategorias
-        let qf: QueryFn = (ref) =>
-          ref
-            .where(
-              'idShop',
-              '==',
-              localStorage.getItem(EnumLocalStorage.localId)
-            )
-            .where('category', '==', category.id);
-
-        this.subcategoriesService
-          .getDataFS(qf)
-          .toPromise()
-          .then((res: IFireStoreRes[]) => {
-            this.subcategories = res.map(
-              (a: IFireStoreRes) =>
-                ({
-                  name: a.data.name,
-                  titleList: a.data.title_list,
-                  url: a.data.url,
-                  idShop: a.data.idShop,
-                } as Isubcategories | any)
-            );
-
-            let subCategory: Isubcategories = this.subcategories.find(
-              (subCategory: Isubcategories) =>
-                subCategory.url == resp2.sub_category
-            );
-
-            this.sub_category.setValue(
-              `${subCategory?.url}_${subCategory?.name}`
-            );
-          });
 
         this.loadData = false;
       });
@@ -446,10 +396,8 @@ export class EditProductComponent implements OnInit {
       shipping: this.f.controls.shipping.value,
       specification: specifications,
       stock: this.f.controls.stock.value,
-      sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
-      title_list: this.titleList,
       url: this.urlInput,
       video: this.id_video.value
         ? JSON.stringify([this.type_video.value, this.id_video.value])
@@ -593,46 +541,6 @@ export class EditProductComponent implements OnInit {
           });
       });
     };
-  }
-
-  //Filtro de subcategorias
-  public selectCategory(e: any): void {
-    this.categories.filter((category: Icategories) => {
-      if (category.name == e.target.value.split('_')[1]) {
-        //Informacion de las subcategorias
-        let qf: QueryFn = (ref) =>
-          ref
-            .where(
-              'idShop',
-              '==',
-              localStorage.getItem(EnumLocalStorage.localId)
-            )
-            .where('category', '==', category.name);
-
-        this.subcategoriesService
-          .getDataFS(qf)
-          .toPromise()
-          .then((resp: IFireStoreRes[]) => {
-            this.subcategories = resp.map((a: IFireStoreRes) => {
-              return {
-                name: a.data.name,
-                titleList: a.data.title_list,
-                url: a.data.url,
-                idShop: a.data.idShop,
-              };
-            });
-          });
-      }
-    });
-  }
-
-  //Filtro para el listado de titulo
-  public selectSubcategory(e: any): void {
-    this.subcategories.filter((subcategory: any) => {
-      if (subcategory.name == e.target.value.split('_')[1]) {
-        this.titleList = subcategory.titleList;
-      }
-    });
   }
 
   //Validamos imagen
@@ -802,7 +710,6 @@ export class EditProductComponent implements OnInit {
             ({
               id: a.id,
               name: a.data.name,
-              titleList: JSON.parse(a.data.title_list),
               url: a.data.url,
               idShop: a.data.idShop,
             } as Icategories)

@@ -56,12 +56,6 @@
             <p>Categories</p>
           </a>
         </li>
-        <li class="nav-item" *ngIf="hasPermission('subcategories_read')">
-          <a [routerLink]="['/subcategories']" class="nav-link">
-            <i class="nav-icon fas fa-th"></i>
-            <p>Subcategories</p>
-          </a>
-        </li>
         <li class="nav-item" *ngIf="hasPermission('store_read')">
           <a [routerLink]="['/store']" class="nav-link">
             <i class="nav-icon fas fa-store"></i>

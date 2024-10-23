@@ -40,13 +40,6 @@ export class NewCategoriesComponent implements OnInit {
         updateOn: 'blur',
       },
     ],
-    titleList: [
-      [],
-      [
-        Validators.required,
-        Validators.pattern('["\\[\\]\\-\\,\\0-9a-zA-ZáéíóúñÁÉÍÓÚ ]*'),
-      ],
-    ],
   });
   //Validacion personalizada
   get name() {
@@ -54,9 +47,6 @@ export class NewCategoriesComponent implements OnInit {
   }
   get image() {
     return this.f.controls.image;
-  }
-  get titleList() {
-    return this.f.controls.titleList;
   }
   get icon() {
     return this.f.controls.icon;
@@ -95,7 +85,6 @@ export class NewCategoriesComponent implements OnInit {
     const dataCategory: Icategories = {
       icon: this.f.controls.icon.value.split('"')[1],
       name: this.f.controls.name.value,
-      title_list: JSON.stringify(this.f.controls.titleList.value),
       url: this.urlInput,
       view: 0,
       state: EnumCategorieState.hidden,
@@ -169,28 +158,6 @@ export class NewCategoriesComponent implements OnInit {
           });
       });
     };
-  }
-
-  public add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.f.controls.titleList.value.push(value.trim());
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
-    this.f.controls.titleList.updateValueAndValidity();
-  }
-
-  public remove(titulo: any): void {
-    const index = this.f.controls.titleList.value.indexOf(titulo);
-
-    if (index >= 0) {
-      this.f.controls.titleList.value.splice(index, 1);
-    }
-    this.f.controls.titleList.updateValueAndValidity();
   }
 
   //Visualizar icono

@@ -46,13 +46,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: EnumPages.subcategories,
-        loadChildren: () =>
-          import('./main-page/subcategories/subcategories.module').then(
-            (m) => m.SubcategoriesModule
-          ),
-      },
-      {
         path: EnumPages.store,
         loadChildren: () =>
           import('./main-page/store/stores.module').then((m) => m.StoresModule),

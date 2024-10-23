@@ -1,8 +1,6 @@
 import { EnumPages } from './../../../enums/enum-pages';
 import { AlertsPagesService } from './../../../services/alerts-pages.service';
 import { CountService } from './../../../services/count.service';
-import { IQueryParams } from './../../../interface/i-query-params';
-import { SubcategoriesService } from './../../../services/subcategories.service';
 import { alerts } from './../../../helpers/alerts';
 import { EditCategoriesComponent } from './edit-categories/edit-categories.component';
 import { CategoriesService } from './../../../services/categories.service';
@@ -67,7 +65,6 @@ export class CategoriesComponent implements OnInit {
 
   constructor(
     private categoriesService: CategoriesService,
-    private subcategoriesService: SubcategoriesService,
     public dialog: MatDialog,
     public countService: CountService,
     private alertsPagesService: AlertsPagesService
@@ -179,64 +176,26 @@ export class CategoriesComponent implements OnInit {
         'warning',
         'Si, eliminar'
       )
-      .then((result: any) => {
+      .then(async (result: any) => {
         if (result.isConfirmed) {
-          //Validar que la categoria no tenga una subcategoria
-          let qf: QueryFn = (ref) =>
-            ref
-              .where(
-                'idShop',
-                '==',
-                localStorage.getItem(EnumLocalStorage.localId)
-              )
-              .where('category', '==', name)
-              .limit(1);
-          this.subcategoriesService
-            .getDataFS(qf)
-            .toPromise()
-            .then(async (resp: IFireStoreRes[]) => {
-              if (Object.keys(resp).length > 0) {
-                alerts.basicAlert(
-                  'Error',
-                  'La categoria tiene subcategorias',
-                  'error'
-                );
-              } else {
-                //Eliminar imagen de categoria
-                try {
-                  if (name && id)
-                    await this.categoriesService.deleteImages(
-                      `${id}/${EnumCategorieImg.main}/`
-                    );
-                } catch (error) {
-                  alerts.basicAlert(
-                    'Error',
-                    'No se pudo eliminar la imagen de la categoria',
-                    'error'
-                  );
-                  return;
-                }
-
-                //Eliminar registro de la base de datos
-                this.categoriesService.deleteDataFS(id).then(
-                  (resp: any) => {
-                    alerts.basicAlert(
-                      'Listo',
-                      'La categoria ha sido eliminada',
-                      'success'
-                    );
-                    this.getData();
-                  },
-                  (err) => {
-                    alerts.basicAlert(
-                      'Error',
-                      'No se ha podido eliminar la categoria',
-                      'error'
-                    );
-                  }
-                );
-              }
-            });
+          //Eliminar registro de la base de datos
+          this.categoriesService.deleteDataFS(id).then(
+            (resp: any) => {
+              alerts.basicAlert(
+                'Listo',
+                'La categoria ha sido eliminada',
+                'success'
+              );
+              this.getData();
+            },
+            (err) => {
+              alerts.basicAlert(
+                'Error',
+                'No se ha podido eliminar la categoria',
+                'error'
+              );
+            }
+          );
         }
       });
   }

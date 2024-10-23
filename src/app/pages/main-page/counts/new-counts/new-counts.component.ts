@@ -58,8 +58,6 @@ export class NewCountsComponent implements OnInit {
         users_write: [true, []],
         categories_read: [true, []],
         categories_write: [true, []],
-        subcategories_read: [true, []],
-        subcategories_write: [true, []],
         store_read: [true, []],
         store_write: [true, []],
         products_read: [true, []],

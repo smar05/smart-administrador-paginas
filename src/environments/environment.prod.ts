@@ -24,7 +24,6 @@ export const environment = {
   collections: {
     categories: 'categories',
     products: 'products',
-    subCategories: 'sub-categories',
     users: 'users',
     counts: 'counts', // Coleccion por fuera de la agrupacion por cuentas
     orders: 'orders',

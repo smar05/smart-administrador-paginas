@@ -31,8 +31,6 @@ export enum EnumCountPermission {
   users_write = 'users_write',
   categories_read = 'categories_read',
   categories_write = 'categories_write',
-  subcategories_read = 'subcategories_read',
-  subcategories_write = 'subcategories_write',
   store_read = 'store_read',
   store_write = 'store_write',
   products_read = 'products_read',

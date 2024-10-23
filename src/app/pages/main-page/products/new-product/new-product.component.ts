@@ -1,7 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { alerts } from './../../../../helpers/alerts';
-import { SubcategoriesService } from './../../../../services/subcategories.service';
 import { Icategories } from './../../../../interface/icategories';
 import { CategoriesService } from './../../../../services/categories.service';
 import {
@@ -23,7 +22,6 @@ import { Router } from '@angular/router';
 import { QueryFn } from '@angular/fire/compat/firestore';
 import { EnumLocalStorage } from 'src/app/enums/enum-local-storage';
 import { IFireStoreRes } from 'src/app/interface/ifireStoreRes';
-import { Isubcategories } from 'src/app/interface/isubcategories';
 @Component({
   selector: 'app-new-product',
   templateUrl: './new-product.component.html',
@@ -45,7 +43,6 @@ export class NewProductComponent implements OnInit {
       },
     ],
     category: ['', [Validators.required]],
-    sub_category: ['', [Validators.required]],
     image: ['', [Validators.required]], //No se guarda en base de datos
     description: ['', [Validators.required]],
     summary: [[], [Validators.required]],
@@ -100,10 +97,6 @@ export class NewProductComponent implements OnInit {
 
   get category() {
     return this.f.controls.category;
-  }
-
-  get sub_category() {
-    return this.f.controls.sub_category;
   }
 
   get image() {
@@ -178,9 +171,6 @@ export class NewProductComponent implements OnInit {
   //Variable con las categorias
   public categories: any[] = [];
 
-  //Variable con las subcategorias
-  public subcategories: any[] = [];
-
   //Variable para el listado de titulo
   public titleList: string = '';
 
@@ -240,7 +230,6 @@ export class NewProductComponent implements OnInit {
     private form: UntypedFormBuilder,
     private productsService: ProductsService,
     private categoriesService: CategoriesService,
-    private subcategoriesService: SubcategoriesService,
     private router: Router
   ) {}
 
@@ -252,6 +241,8 @@ export class NewProductComponent implements OnInit {
   //Guardar producto
   public async saveProduct(): Promise<void> {
     this.formSubmitted = true;
+
+    console.log('🚀 ~ NewProductComponent ~ saveProduct ~ this.f:', this.f);
 
     //Validamos que el formulario este correcto
     if (this.f.invalid || this.files.length > 4) {
@@ -314,10 +305,8 @@ export class NewProductComponent implements OnInit {
       shipping: this.f.controls.shipping.value,
       specification: specifications,
       stock: this.f.controls.stock.value,
-      sub_category: this.f.controls.sub_category.value.split('_')[0],
       summary: JSON.stringify(this.f.controls.summary.value),
       tags: JSON.stringify(this.f.controls.tags.value),
-      title_list: this.titleList,
       url: this.urlInput,
       video: this.id_video.value
         ? JSON.stringify([this.type_video.value, this.id_video.value])
@@ -415,47 +404,6 @@ export class NewProductComponent implements OnInit {
           });
       });
     };
-  }
-
-  //Filtro de subcategorias
-  public selectCategory(e: any): void {
-    this.categories.filter((category: Icategories) => {
-      if (category.name == e.target.value.split('_')[1]) {
-        //Informacion de las subcategorias
-        let qf: QueryFn = (ref) =>
-          ref
-            .where(
-              'idShop',
-              '==',
-              localStorage.getItem(EnumLocalStorage.localId)
-            )
-            .where('category', '==', category.id);
-
-        this.subcategoriesService
-          .getDataFS(qf)
-          .toPromise()
-          .then((resp: IFireStoreRes[]) => {
-            this.subcategories = resp.map(
-              (a: IFireStoreRes) =>
-                ({
-                  name: a.data.name,
-                  titleList: a.data.title_list,
-                  url: a.data.url,
-                  idShop: a.data.idShop,
-                } as Isubcategories | any)
-            );
-          });
-      }
-    });
-  }
-
-  //Filtro para el listado de titulo
-  public selectSubcategory(e: any): void {
-    this.subcategories.filter((subcategory: any) => {
-      if (subcategory.name == e.target.value.split('_')[1]) {
-        this.titleList = subcategory.titleList;
-      }
-    });
   }
 
   //Validamos imagen
@@ -626,7 +574,6 @@ export class NewProductComponent implements OnInit {
             ({
               id: a.id,
               name: a.data.name,
-              titleList: JSON.parse(a.data.title_list),
               url: a.data.url,
               idShop: a.data.idShop,
             } as Icategories)

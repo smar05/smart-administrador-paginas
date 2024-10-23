@@ -64,7 +64,6 @@ export class EditCategoriesComponent implements OnInit {
   public iconView: string = '';
   public loadData: boolean = false;
   public nameView: string = '';
-  public titleView: any = {};
   public state: string = '';
   public view: number = 0;
   private idShop: string = '';
@@ -93,7 +92,6 @@ export class EditCategoriesComponent implements OnInit {
         this.name.setValue(resp.data.name);
         this.nameView = resp.data.name;
         this.urlInput = resp.data.url;
-        this.titleView = JSON.parse(resp.data.title_list);
         this.state = resp.data.state;
         this.view = resp.data.view;
         this.idShop = resp.data.idShop;
@@ -120,7 +118,6 @@ export class EditCategoriesComponent implements OnInit {
     const dataCategory: Icategories = {
       icon: icon,
       name: this.f.controls.name.value,
-      title_list: JSON.stringify(this.titleView),
       url: this.urlInput,
       view: Number(this.view),
       state: this.state,

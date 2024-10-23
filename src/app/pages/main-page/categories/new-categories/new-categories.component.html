@@ -76,45 +76,6 @@
               readonly
             />
           </div>
-          <!--Lista de titulos-->
-          <div class="form-group">
-            <label>Lista de titulos</label>
-            <div
-              class="form-control"
-              [ngClass]="{ 'is-invalid': invalidField('titleList') }"
-            >
-              <mat-chip-list #chipList aria-label="Lista de titulos">
-                <mat-chip
-                  *ngFor="let title of titleList.value"
-                  [selectable]="selectable"
-                  [removable]="removable"
-                  (removed)="remove(title)"
-                >
-                  {{ title }}
-                  <button matChipRemove *ngIf="removable">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip>
-                <input
-                  placeholder="Nuevo titulo..."
-                  [matChipInputFor]="chipList"
-                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                  [matChipInputAddOnBlur]="addOnBlur"
-                  (matChipInputTokenEnd)="add($event)"
-                />
-              </mat-chip-list>
-            </div>
-            <span
-              *ngIf="titleList.invalid && titleList.errors?.required"
-              class="invalid-feedback"
-              >Por favor ingrese un titulo</span
-            >
-            <span
-              *ngIf="titleList.invalid && titleList.errors?.pattern"
-              class="invalid-feedback"
-              >Escribe correctamente el titulo</span
-            >
-          </div>
         </ng-container>
         <ng-container *ngIf="loadData">
           <app-spinners [type]="'sk-cube'"></app-spinners>
