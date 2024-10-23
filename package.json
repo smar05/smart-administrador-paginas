@@ -7,8 +7,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build_dev": "ng build --configuration development",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy": "firebase deploy"
   },
   "private": true,
   "dependencies": {
