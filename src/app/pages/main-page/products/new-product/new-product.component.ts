@@ -242,8 +242,6 @@ export class NewProductComponent implements OnInit {
   public async saveProduct(): Promise<void> {
     this.formSubmitted = true;
 
-    console.log('🚀 ~ NewProductComponent ~ saveProduct ~ this.f:', this.f);
-
     //Validamos que el formulario este correcto
     if (this.f.invalid || this.files.length > 4) {
       alerts.basicAlert(

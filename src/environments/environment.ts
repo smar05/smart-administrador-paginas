@@ -14,7 +14,7 @@ export const environment = {
   urlGetUser: `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
   urlRefreshToken: `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
   urlStorage: {
-    img: `/img/${localStorage.getItem('localId')}`,
+    img: `/img/`,
   },
   firebaseConfig: {
     apiKey: apiKey,

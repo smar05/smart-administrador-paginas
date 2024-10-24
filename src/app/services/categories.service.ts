@@ -14,7 +14,9 @@ import { IFireStoreRes } from '../interface/ifireStoreRes';
 })
 export class CategoriesService {
   private urlCategories: string = environment.collections.categories;
-  private urlImage: string = `${environment.urlStorage.img}/categories`;
+  private urlImage: string = `${
+    environment.urlStorage.img
+  }${localStorage.getItem('localId')}/categories`;
 
   constructor(
     private httpService: HttpService,

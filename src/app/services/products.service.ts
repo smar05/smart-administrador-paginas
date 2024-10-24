@@ -13,7 +13,9 @@ import { QueryFn } from '@angular/fire/compat/firestore';
 })
 export class ProductsService {
   private urlProducts: string = environment.collections.products;
-  private urlImage: string = `${environment.urlStorage.img}/products`;
+  private urlImage: string = `${
+    environment.urlStorage.img
+  }${localStorage.getItem('localId')}/products`;
 
   constructor(
     private httpService: HttpService,
