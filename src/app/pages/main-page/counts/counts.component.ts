@@ -384,9 +384,7 @@ export class CountsComponent implements OnInit {
   }
 
   public hasPermission(type: string): boolean | any {
-    let algo = this.countService.hasPermission(type);
-    console.log('🚀 ~ CountsComponent ~ hasPermission ~ algo:', algo);
-    return algo;
+    return this.countService.hasPermission(type);
   }
 
   public alertPage(): void {
