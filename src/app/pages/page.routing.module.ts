@@ -70,13 +70,6 @@ const routes: Routes = [
           import('./main-page/sales/sales.module').then((m) => m.SalesModule),
       },
       {
-        path: EnumPages.disputes,
-        loadChildren: () =>
-          import('./main-page/disputes/disputes.module').then(
-            (m) => m.DisputesModule
-          ),
-      },
-      {
         path: EnumPages.counts,
         loadChildren: () =>
           import('./main-page/counts/counts.module').then(

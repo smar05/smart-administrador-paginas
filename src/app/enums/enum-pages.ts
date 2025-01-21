@@ -3,7 +3,6 @@ export enum EnumPages {
   register = 'register',
   forgot_password = 'forgot-password',
   categories = 'categories',
-  disputes = 'disputes',
   users = 'users',
   products = 'products',
   orders = 'orders',

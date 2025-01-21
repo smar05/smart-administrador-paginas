@@ -221,40 +221,6 @@
                               "
                             ></i>
                           </div>
-
-                          <!--disputes_read-->
-                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                            <label for="">Lectura de disputas: </label>
-                            <i
-                              class="fas fa-check"
-                              *ngIf="
-                                getPermissionsData(myCount, 'disputes_read')
-                              "
-                            ></i>
-                            <i
-                              class="fas fa-times"
-                              *ngIf="
-                                !getPermissionsData(myCount, 'disputes_read')
-                              "
-                            ></i>
-                          </div>
-                          <!--disputes_write-->
-                          <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                            <label for="">Edicion de disputas: </label>
-                            <i
-                              class="fas fa-check"
-                              *ngIf="
-                                getPermissionsData(myCount, 'disputes_write')
-                              "
-                            ></i>
-                            <i
-                              class="fas fa-times"
-                              *ngIf="
-                                !getPermissionsData(myCount, 'disputes_write')
-                              "
-                            ></i>
-                          </div>
-
                           <!--messages_read-->
                           <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
                             <label for="">Lectura de mensajes: </label>
@@ -857,51 +823,6 @@
                                       !getPermissionsData(
                                         element,
                                         'sales_write'
-                                      )
-                                    "
-                                  ></i>
-                                </div>
-
-                                <!--disputes_read-->
-                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                                  <label for="">Lectura de disputas: </label>
-                                  <i
-                                    class="fas fa-check"
-                                    *ngIf="
-                                      getPermissionsData(
-                                        element,
-                                        'disputes_read'
-                                      )
-                                    "
-                                  ></i>
-                                  <i
-                                    class="fas fa-times"
-                                    *ngIf="
-                                      !getPermissionsData(
-                                        element,
-                                        'disputes_read'
-                                      )
-                                    "
-                                  ></i>
-                                </div>
-                                <!--disputes_write-->
-                                <div class="col-12 col-lg-3 mx-0 pr-0 mb-3">
-                                  <label for="">Edicion de disputas: </label>
-                                  <i
-                                    class="fas fa-check"
-                                    *ngIf="
-                                      getPermissionsData(
-                                        element,
-                                        'disputes_write'
-                                      )
-                                    "
-                                  ></i>
-                                  <i
-                                    class="fas fa-times"
-                                    *ngIf="
-                                      !getPermissionsData(
-                                        element,
-                                        'disputes_write'
                                       )
                                     "
                                   ></i>

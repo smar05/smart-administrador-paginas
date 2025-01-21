@@ -80,12 +80,6 @@
             <p>Sales</p>
           </a>
         </li>
-        <li class="nav-item" *ngIf="hasPermission('disputes_read')">
-          <a [routerLink]="['/disputes']" class="nav-link">
-            <i class="nav-icon fas fa-comment-alt"></i>
-            <p>Disputes</p>
-          </a>
-        </li>
         <li class="nav-item">
           <a class="nav-link btn text-left" (click)="logout()">
             <i class="nav-icon fas fa-sign-out-alt"></i>

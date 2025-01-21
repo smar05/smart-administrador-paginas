@@ -66,8 +66,6 @@ export class NewCountsComponent implements OnInit {
         orders_write: [true, []],
         sales_read: [true, []],
         sales_write: [true, []],
-        disputes_read: [true, []],
-        disputes_write: [true, []],
         messages_read: [true, []],
         messages_write: [true, []],
         counts_read: [true, []],

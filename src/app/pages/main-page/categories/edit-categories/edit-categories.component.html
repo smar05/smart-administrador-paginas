@@ -45,7 +45,9 @@
                 'is-invalid':
                   invalidField('name') ||
                   (name.invalid && name.errors?.pattern) ||
-                  (name.invalid && name.errors?.category)
+                  (name.invalid &&
+                    name.errors?.category &&
+                    name.value != dbCategory.name)
               }"
             />
             <span
@@ -60,7 +62,11 @@
             >
             <span
               class="invalid-feedback"
-              *ngIf="name.invalid && name.errors?.category"
+              *ngIf="
+                name.invalid &&
+                name.errors?.category &&
+                name.value != dbCategory.name
+              "
               >La categoria ya existe</span
             >
           </div>

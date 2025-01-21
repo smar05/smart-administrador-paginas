@@ -39,8 +39,6 @@ export enum EnumCountPermission {
   orders_write = 'orders_write',
   sales_read = 'sales_read',
   sales_write = 'sales_write',
-  disputes_read = 'disputes_read',
-  disputes_write = 'disputes_write',
   messages_read = 'messages_read',
   messages_write = 'messages_write',
   counts_read = 'counts_read',

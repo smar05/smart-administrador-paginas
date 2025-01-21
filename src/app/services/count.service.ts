@@ -225,10 +225,6 @@ export class CountService {
           valido = this.hasPermission(EnumCountPermission.categories_read);
           break;
 
-        case environment.collections.disputes:
-          valido = this.hasPermission(EnumCountPermission.disputes_read);
-          break;
-
         case environment.collections.messages:
           valido = this.hasPermission(EnumCountPermission.messages_read);
           break;

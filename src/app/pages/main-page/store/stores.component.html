@@ -127,7 +127,13 @@
             />
           </div>
 
-          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            *ngIf="hasPermission('store_write')"
+          >
+            Guardar Cambios
+          </button>
         </form>
       </div>
       <!-- /.card-body -->

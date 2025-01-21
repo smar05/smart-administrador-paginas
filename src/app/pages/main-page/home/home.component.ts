@@ -261,10 +261,6 @@ export class HomeComponent implements OnInit {
   public lastOrders(): void {
     this.loadItems.loadOrders = true;
     // Se traen las ultimas 5 ventas
-    let params: IQueryParams = {
-      orderBy: '"date"',
-      limitToLast: 5,
-    };
     let qf: QueryFn = (ref) =>
       ref
         .where('idShop', '==', localStorage.getItem(EnumLocalStorage.localId))
@@ -275,6 +271,8 @@ export class HomeComponent implements OnInit {
       .getDataFS(qf)
       .toPromise()
       .then((resp: IFireStoreRes[]) => {
+        if (resp?.length <= 0) this.loadItems.loadOrders = false;
+
         resp.map((a: IFireStoreRes, i: number) => {
           this.latestOrders[i] = {};
 
@@ -287,7 +285,7 @@ export class HomeComponent implements OnInit {
                 id: a.id,
                 product: resp2.data.product,
                 status: resp2.data.status,
-                date: a.data.date,
+                date: new Date(a.data.date.seconds * 1000),
               };
 
               this.loadItems.loadOrders = false;

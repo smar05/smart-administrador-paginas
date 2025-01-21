@@ -67,6 +67,7 @@ export class EditCategoriesComponent implements OnInit {
   public state: string = '';
   public view: number = 0;
   private idShop: string = '';
+  public dbCategory: Icategories = null;
 
   constructor(
     private form: UntypedFormBuilder,
@@ -84,6 +85,7 @@ export class EditCategoriesComponent implements OnInit {
       .getItemFS(this.data.id, qf)
       .toPromise()
       .then(async (resp: IFireStoreRes) => {
+        this.dbCategory = { ...resp.data, id: resp.id };
         this.icon.setValue(resp.data.icon);
         this.iconView = `<i class="${resp.data.icon}"></i>`;
         this.imgTemp = await this.categoriesService.getImage(

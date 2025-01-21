@@ -10,18 +10,6 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
-    <!-- Notifications Dropdown Menu -->
-    <li class="nav-item">
-      <a class="nav-link" [routerLink]="['/disputes']">
-        <i class="far fa-bell"></i>
-        <span
-          *ngIf="disputesService.disputes > 0"
-          class="badge badge-danger navbar-badge"
-        >
-          {{ disputesService.disputes }}
-        </span>
-      </a>
-    </li>
     <li class="nav-item">
       <a class="nav-link" data-widget="fullscreen" href="#" role="button">
         <i class="fas fa-expand-arrows-alt"></i>

@@ -31,7 +31,6 @@ export const environment = {
     users: 'users',
     counts: 'counts', // Coleccion por fuera de la agrupacion por cuentas
     orders: 'orders',
-    disputes: 'disputes',
     messages: 'messages',
     sales: 'sales',
     stores: 'stores',
